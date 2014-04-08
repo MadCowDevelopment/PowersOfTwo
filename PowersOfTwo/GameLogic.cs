@@ -179,6 +179,14 @@ namespace PowersOfTwo
             AddRandomCell();
         }
 
+        public event Action OutOfMoves;
+
+        private void RaiseOutOfMoves()
+        {
+            var handler = OutOfMoves;
+            if (handler != null) handler();
+        }
+
         private void AddRandomCell()
         {
             if (Cells.Any(p => p.Number == null))
@@ -193,7 +201,7 @@ namespace PowersOfTwo
             }
             else
             {
-                Application.Current.Shutdown();
+                RaiseOutOfMoves();
             }
         }
     }

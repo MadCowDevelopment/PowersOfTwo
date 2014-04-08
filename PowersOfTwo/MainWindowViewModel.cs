@@ -41,7 +41,8 @@ namespace PowersOfTwo
         private void Initialize()
         {
             //_hubConnection = new HubConnection("http://localhost:8369");
-            _hubConnection = new HubConnection("http://powersoftwo.apphb.com");
+            //_hubConnection = new HubConnection("http://powersoftwo.apphb.com");
+            _hubConnection = new HubConnection("http://pc-mgr-2:8369");
 
             _hubConnection.TraceLevel = TraceLevels.All;
             _hubConnection.TraceWriter = Console.Out;
@@ -83,7 +84,13 @@ namespace PowersOfTwo
 
             _gameLogic = new GameLogic(Rows, Columns);
             _gameLogic.CellsMatched += _gameLogic_CellsMatched;
+            _gameLogic.OutOfMoves += _gameLogic_OutOfMoves;
             OnPropertyChanged("Cells");
+        }
+
+        void _gameLogic_OutOfMoves()
+        {
+            _gameProxy.Invoke("OutOfMoves", _gameInfo.GroupName);
         }
 
         private void _gameLogic_CellsMatched(int points)

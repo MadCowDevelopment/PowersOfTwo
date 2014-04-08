@@ -6,11 +6,11 @@ namespace WebService
 {
     public class GameHub : Hub
     {
-        private const int StartPoints = 128;
+        private const int StartPoints = 1024;
 
         private static readonly Queue<Player> QueuedPlayers = new Queue<Player>();
 
-        private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>(); 
+        private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
 
         private static readonly object QueueSyncLock = new object();
 
@@ -40,6 +40,25 @@ namespace WebService
             lock (game)
             {
                 UpdateGame(points, game);
+            }
+        }
+
+        public void OutOfMoves(string groupName)
+        {
+            GameInformation game;
+            if (!RunningGames.TryGetValue(groupName, out game)) return;
+
+            lock (game)
+            {
+                if (game.IsFinished) return;
+                var player = game.GetPlayer(Context.ConnectionId);
+                if (player == null) return;
+                var otherPlayer = game.OtherPlayer(player);
+                if (otherPlayer == null) return;
+
+                game.IsFinished = true;
+                Clients.Client(player.ConnectionId).GameOver(false);
+                Clients.Client(otherPlayer.ConnectionId).GameOver(true);
             }
         }
 
