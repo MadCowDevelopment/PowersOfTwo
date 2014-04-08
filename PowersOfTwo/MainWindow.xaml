@@ -1,0 +1,32 @@
+﻿<Window x:Class="PowersOfTwo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:powersOfTwo="clr-namespace:PowersOfTwo"
+        Title="MainWindow" Height="390" Width="370">
+
+  <Window.InputBindings>
+    <KeyBinding Key="Left" Command="{Binding LeftCommand}"/>
+    <KeyBinding Key="Right" Command="{Binding RightCommand}"/>
+    <KeyBinding Key="Up" Command="{Binding UpCommand}"/>
+    <KeyBinding Key="Down" Command="{Binding DownCommand}"/>
+  </Window.InputBindings>
+  <Grid Background="BlanchedAlmond">
+    <ItemsControl ItemsSource="{Binding Cells}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type powersOfTwo:NumberCell}">
+          <Border CornerRadius="10" Background="BurlyWood" Margin="5">
+            <Viewbox Stretch="Fill">
+              <TextBlock Text="{Binding Number}" Margin="5"/>
+            </Viewbox>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <UniformGrid Columns="4" Rows="4"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+    </ItemsControl>
+  </Grid>
+  
+</Window>
