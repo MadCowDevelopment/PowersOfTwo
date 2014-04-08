@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client;
@@ -39,7 +40,12 @@ namespace PowersOfTwo
 
         private void Initialize()
         {
-            _hubConnection = new HubConnection("http://localhost:8369");
+            //_hubConnection = new HubConnection("http://localhost:8369");
+            _hubConnection = new HubConnection("http://powersoftwo.apphb.com");
+
+            _hubConnection.TraceLevel = TraceLevels.All;
+            _hubConnection.TraceWriter = Console.Out;
+
             _gameProxy = _hubConnection.CreateHubProxy("GameHub");
             _gameProxy.On<StartGameInformation>("StartGame", GameStarted);
             _gameProxy.On<bool>("GameOver", GameOver);
@@ -58,7 +64,9 @@ namespace PowersOfTwo
         public int RemainingPoints
         {
             get { return _remainingPoints; }
-            set { _remainingPoints = value; OnPropertyChanged();
+            set
+            {
+                _remainingPoints = value; OnPropertyChanged();
             }
         }
 

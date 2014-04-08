@@ -80,7 +80,6 @@ namespace WebService
         private void StartNewGame(Player player1, Player player2)
         {
             var groupName = Guid.NewGuid().ToString();
-            Groups.Add(player1.ConnectionId, player2.ConnectionId);
             RunningGames.Add(groupName, new GameInformation(groupName, player1, player2));
 
             Clients.Client(player1.ConnectionId)
