@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
+using Microsoft.AspNet.SignalR.Client;
+using WebService;
 
 namespace PowersOfTwo
 {
@@ -9,6 +12,11 @@ namespace PowersOfTwo
 
         private const int Rows = 4;
         private const int Columns = 4;
+
+        private IHubProxy _gameProxy;
+        private HubConnection _hubConnection;
+        private StartGameInformation _gameInfo;
+        private int _remainingPoints;
 
         public MainWindowViewModel()
         {
@@ -31,7 +39,48 @@ namespace PowersOfTwo
 
         private void Initialize()
         {
+            _hubConnection = new HubConnection("http://localhost:8369");
+            _gameProxy = _hubConnection.CreateHubProxy("GameHub");
+            _gameProxy.On<StartGameInformation>("StartGame", GameStarted);
+            _gameProxy.On<bool>("GameOver", GameOver);
+            _gameProxy.On<int>("UpdatePoints", UpdatePoints);
+
+            _hubConnection.Start().Wait();
+
+            _gameProxy.Invoke("Queue", "TEST");
+        }
+
+        private void UpdatePoints(int remainingPoints)
+        {
+            RemainingPoints = remainingPoints;
+        }
+
+        public int RemainingPoints
+        {
+            get { return _remainingPoints; }
+            set { _remainingPoints = value; OnPropertyChanged();
+            }
+        }
+
+        private void GameOver(bool win)
+        {
+            MessageBox.Show(win ? "You win." : "You lose.");
+            Application.Current.Shutdown();
+        }
+
+        private void GameStarted(StartGameInformation startGameInformation)
+        {
+            _gameInfo = startGameInformation;
+            RemainingPoints = startGameInformation.StartPoints;
+
             _gameLogic = new GameLogic(Rows, Columns);
+            _gameLogic.CellsMatched += _gameLogic_CellsMatched;
+            OnPropertyChanged("Cells");
+        }
+
+        private void _gameLogic_CellsMatched(int points)
+        {
+            _gameProxy.Invoke("MatchTiles", _gameInfo.GroupName, points);
         }
 
         private void MoveLeft()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -26,6 +27,14 @@ namespace PowersOfTwo
 
         public List<NumberCell> Cells { get; private set; }
 
+        public event Action<int> CellsMatched;
+
+        private void RaiseCellsMatched(int points)
+        {
+            var handler = CellsMatched;
+            if (handler != null) handler(points);
+        }
+
         public void MoveLeft()
         {
             for (int row = 0; row < Rows; row++)
@@ -45,6 +54,7 @@ namespace PowersOfTwo
 
                     if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
                     {
+                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
                     }
@@ -80,6 +90,7 @@ namespace PowersOfTwo
 
                     if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
                     {
+                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
                     }
@@ -115,6 +126,7 @@ namespace PowersOfTwo
 
                     if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
                     {
+                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
                     }
@@ -150,6 +162,7 @@ namespace PowersOfTwo
 
                     if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
                     {
+                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
                     }
