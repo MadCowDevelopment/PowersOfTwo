@@ -56,6 +56,7 @@ namespace PowersOfTwo.Core
 
         public void MoveDown()
         {
+            bool movedCell = false;
             for (int column = Columns - 1; column >= 0; column--)
             {
                 var emptyCellIndex = Rows * (Columns - 1) + column;
@@ -76,22 +77,28 @@ namespace PowersOfTwo.Core
                         RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
+                        movedCell = true;
                     }
                     else
                     {
                         emptyCell.Number = currentCell.Number;
                         lastCellWithNumber = emptyCell;
-                        if (emptyCell != currentCell) currentCell.Number = null;
+                        if (emptyCell != currentCell)
+                        {
+                            movedCell = true;
+                            currentCell.Number = null;
+                        }
                         emptyCellIndex -= Columns;
                     }
                 }
             }
 
-            AddRandomCell();
+            if(movedCell) AddRandomCell();
         }
 
         public void MoveLeft()
         {
+            bool movedCell = false;
             for (int row = 0; row < Rows; row++)
             {
                 var emptyCellIndex = row * Columns;
@@ -112,22 +119,28 @@ namespace PowersOfTwo.Core
                         RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
+                        movedCell = true;
                     }
                     else
                     {
                         emptyCell.Number = currentCell.Number;
                         lastCellWithNumber = emptyCell;
-                        if (emptyCell != currentCell) currentCell.Number = null;
+                        if (emptyCell != currentCell)
+                        {
+                            currentCell.Number = null;
+                            movedCell = true;
+                        }
                         emptyCellIndex++;
                     }
                 }
             }
 
-            AddRandomCell();
+            if (movedCell) AddRandomCell();
         }
 
         public void MoveRight()
         {
+            bool movedCell = false;
             for (int row = Rows - 1; row >= 0; row--)
             {
                 var emptyCellIndex = (row + 1) * Columns - 1;
@@ -148,22 +161,28 @@ namespace PowersOfTwo.Core
                         RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
+                        movedCell = true;
                     }
                     else
                     {
                         emptyCell.Number = currentCell.Number;
                         lastCellWithNumber = emptyCell;
-                        if (emptyCell != currentCell) currentCell.Number = null;
+                        if (emptyCell != currentCell)
+                        {
+                            currentCell.Number = null;
+                            movedCell = true;
+                        }
                         emptyCellIndex--;
                     }
                 }
             }
 
-            AddRandomCell();
+            if (movedCell) AddRandomCell();
         }
 
         public void MoveUp()
         {
+            bool movedCell = false;
             for (int column = 0; column < Columns; column++)
             {
                 var emptyCellIndex = column;
@@ -184,18 +203,23 @@ namespace PowersOfTwo.Core
                         RaiseCellsMatched(lastCellWithNumber.Number.Value);
                         lastCellWithNumber.Number *= 2;
                         currentCell.Number = null;
+                        movedCell = true;
                     }
                     else
                     {
                         emptyCell.Number = currentCell.Number;
                         lastCellWithNumber = emptyCell;
-                        if (emptyCell != currentCell) currentCell.Number = null;
+                        if (emptyCell != currentCell)
+                        {
+                            currentCell.Number = null;
+                            movedCell = true;
+                        }
                         emptyCellIndex += Columns;
                     }
                 }
             }
 
-            AddRandomCell();
+            if (movedCell) AddRandomCell();
         }
 
         #endregion Public Methods
