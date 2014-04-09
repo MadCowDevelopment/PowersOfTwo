@@ -1,4 +1,6 @@
-﻿namespace WebService
+﻿using PowersOfTwo.Core;
+
+namespace WebService
 {
     public class Player
     {
@@ -14,5 +16,6 @@
         public string Name { get; private set; }
 
         public int RemainingPoints { get; set; }
+        public GameLogic GameLogic { get; set; }
     }
 }

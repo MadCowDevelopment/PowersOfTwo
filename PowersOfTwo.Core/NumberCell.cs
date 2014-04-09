@@ -1,6 +1,6 @@
-﻿namespace PowersOfTwo
+﻿namespace PowersOfTwo.Core
 {
-    public class NumberCell : ViewModel
+    public class NumberCell
     {
         private int? _number;
 
@@ -11,10 +11,9 @@
                 return _number;
             }
 
-            set 
-            { 
+            set
+            {
                 _number = value;
-                OnPropertyChanged();
             }
         }
     }

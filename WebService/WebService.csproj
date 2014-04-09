@@ -106,6 +106,12 @@
     <Compile Include="StartGameInformation.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PowersOfTwo.Core\PowersOfTwo.Core.csproj">
+      <Project>{D12668C9-0BA4-4B76-8E33-16AC92ED6050}</Project>
+      <Name>PowersOfTwo.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

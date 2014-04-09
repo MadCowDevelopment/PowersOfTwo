@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client;
+using PowersOfTwo.Core;
 using WebService;
 
 namespace PowersOfTwo
 {
     public class MainWindowViewModel : ViewModel
     {
-        private GameLogic _gameLogic;
-
-        private const int Rows = 4;
-        private const int Columns = 4;
-
         private IHubProxy _gameProxy;
         private HubConnection _hubConnection;
-        private StartGameInformation _gameInfo;
         private int _remainingPoints;
+        private List<NumberCell> _cells;
 
         public MainWindowViewModel()
         {
@@ -36,7 +32,11 @@ namespace PowersOfTwo
 
         public ICommand DownCommand { get; private set; }
 
-        public List<NumberCell> Cells { get { return _gameLogic.Cells; } }
+        public List<NumberCell> Cells
+        {
+            get { return _cells; }
+            private set { _cells = value; OnPropertyChanged(); }
+        }
 
         private void Initialize()
         {
@@ -79,43 +79,31 @@ namespace PowersOfTwo
 
         private void GameStarted(StartGameInformation startGameInformation)
         {
-            _gameInfo = startGameInformation;
             RemainingPoints = startGameInformation.StartPoints;
-
-            _gameLogic = new GameLogic(Rows, Columns);
-            _gameLogic.CellsMatched += _gameLogic_CellsMatched;
-            _gameLogic.OutOfMoves += _gameLogic_OutOfMoves;
-            OnPropertyChanged("Cells");
+            GroupName = startGameInformation.GroupName;
+            Cells = startGameInformation.Cells;
         }
 
-        void _gameLogic_OutOfMoves()
-        {
-            _gameProxy.Invoke("OutOfMoves", _gameInfo.GroupName);
-        }
-
-        private void _gameLogic_CellsMatched(int points)
-        {
-            _gameProxy.Invoke("MatchTiles", _gameInfo.GroupName, points);
-        }
+        private string GroupName { get; set; }
 
         private void MoveLeft()
         {
-            _gameLogic.MoveLeft();
+            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName).Result;
         }
 
         private void MoveRight()
         {
-            _gameLogic.MoveRight();
+            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName).Result;
         }
 
         private void MoveUp()
         {
-            _gameLogic.MoveUp();
+            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName).Result;
         }
 
         private void MoveDown()
         {
-            _gameLogic.MoveDown();
+            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName).Result;
         }
     }
 }

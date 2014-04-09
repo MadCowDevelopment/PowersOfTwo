@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.Core
 {
     public class GameLogic
     {

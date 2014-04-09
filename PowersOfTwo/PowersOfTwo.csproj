@@ -71,10 +71,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GameLogic.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="RNG.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -90,7 +88,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NumberCell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +118,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PowersOfTwo.Core\PowersOfTwo.Core.csproj">
+      <Project>{D12668C9-0BA4-4B76-8E33-16AC92ED6050}</Project>
+      <Name>PowersOfTwo.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebService\WebService.csproj">
       <Project>{964EB502-08E6-4219-BB97-890D27A5C4AA}</Project>
       <Name>WebService</Name>
