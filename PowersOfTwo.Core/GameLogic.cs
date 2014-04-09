@@ -37,17 +37,20 @@ namespace PowersOfTwo.Core
 
         public List<NumberCell> Cells
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public int Columns
         {
-            get; set;
+            get;
+            set;
         }
 
         public int Rows
         {
-            get; set;
+            get;
+            set;
         }
 
         #endregion Public Properties
@@ -93,7 +96,12 @@ namespace PowersOfTwo.Core
                 }
             }
 
-            if(movedCell) AddRandomCell();
+            if (movedCell)
+            {
+                AddRandomCell();
+            }
+
+            CheckOutOfMoves();
         }
 
         public void MoveLeft()
@@ -135,7 +143,12 @@ namespace PowersOfTwo.Core
                 }
             }
 
-            if (movedCell) AddRandomCell();
+            if (movedCell)
+            {
+                AddRandomCell();
+            }
+
+            CheckOutOfMoves();
         }
 
         public void MoveRight()
@@ -177,7 +190,12 @@ namespace PowersOfTwo.Core
                 }
             }
 
-            if (movedCell) AddRandomCell();
+            if (movedCell)
+            {
+                AddRandomCell();
+            }
+
+            CheckOutOfMoves();
         }
 
         public void MoveUp()
@@ -219,7 +237,43 @@ namespace PowersOfTwo.Core
                 }
             }
 
-            if (movedCell) AddRandomCell();
+            if (movedCell)
+            {
+                AddRandomCell();
+            }
+
+            CheckOutOfMoves();
+        }
+
+        private void CheckOutOfMoves()
+        {
+            for (int row = 0; row < Rows; row++)
+            {
+                for (int column = 0; column < Columns - 1; column++)
+                {
+                    var cellIndex = row*Columns + column;
+                    var cell = Cells[cellIndex];
+                    var nextCell = Cells[cellIndex + 1];
+
+                    if (cell.Number == null || nextCell.Number == null) return;
+                    if (cell.Number == nextCell.Number) return;
+                }
+            }
+
+            for (int column = 0; column < Columns; column++)
+            {
+                for (int row = 0; row < Rows-1; row+=Columns)
+                {
+                    var cellIndex = row * Columns + column;
+                    var cell = Cells[cellIndex];
+                    var nextCell = Cells[cellIndex + Columns];
+
+                    if (cell.Number == null || nextCell.Number == null) return;
+                    if (cell.Number == nextCell.Number) return;
+                }
+            }
+
+            RaiseOutOfMoves();
         }
 
         #endregion Public Methods
@@ -228,20 +282,13 @@ namespace PowersOfTwo.Core
 
         private void AddRandomCell()
         {
-            if (Cells.Any(p => p.Number == null))
+            NumberCell randomCell;
+            do
             {
-                NumberCell randomCell;
-                do
-                {
-                    randomCell = Cells[RNG.Next(0, 16)];
-                } while (randomCell.Number != null);
+                randomCell = Cells[RNG.Next(0, 16)];
+            } while (randomCell.Number != null);
 
-                randomCell.Number = 2;
-            }
-            else
-            {
-                RaiseOutOfMoves();
-            }
+            randomCell.Number = 2;
         }
 
         private void RaiseCellsMatched(int points)

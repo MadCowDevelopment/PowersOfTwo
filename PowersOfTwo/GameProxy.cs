@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using PowersOfTwo.Core;
 using WebService;
@@ -61,24 +62,24 @@ namespace PowersOfTwo
             if (handler != null) handler(win);
         }
 
-        public List<NumberCell> MoveLeft()
+        public async Task<List<NumberCell>> MoveLeft()
         {
-            return _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName).Result;
+            return await _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName);
         }
 
-        public List<NumberCell> MoveRight()
+        public async Task<List<NumberCell>> MoveRight()
         {
-            return _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName).Result;
+            return await _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName);
         }
 
-        public List<NumberCell> MoveUp()
+        public async Task<List<NumberCell>> MoveUp()
         {
-            return _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName).Result;
+            return await _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName);
         }
 
-        public List<NumberCell> MoveDown()
+        public async Task<List<NumberCell>> MoveDown()
         {
-            return _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName).Result;
+            return await _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
         }
     }
 }
