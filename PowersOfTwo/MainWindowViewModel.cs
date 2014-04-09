@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.AspNet.SignalR.Client;
+
 using PowersOfTwo.Core;
+
 using WebService;
 
 namespace PowersOfTwo
 {
     public class MainWindowViewModel : ViewModel
     {
-        private IHubProxy _gameProxy;
-        private HubConnection _hubConnection;
-        private int _remainingPoints;
+        #region Fields
+
         private List<NumberCell> _cells;
+        private GameProxy _gameProxy;
+        private int _remainingPoints;
+
+        #endregion Fields
+
+        #region Constructors
 
         public MainWindowViewModel()
         {
@@ -24,13 +29,9 @@ namespace PowersOfTwo
             DownCommand = new RelayCommand(p => MoveDown());
         }
 
-        public ICommand LeftCommand { get; private set; }
+        #endregion Constructors
 
-        public ICommand RightCommand { get; private set; }
-
-        public ICommand UpCommand { get; private set; }
-
-        public ICommand DownCommand { get; private set; }
+        #region Public Properties
 
         public List<NumberCell> Cells
         {
@@ -38,28 +39,14 @@ namespace PowersOfTwo
             private set { _cells = value; OnPropertyChanged(); }
         }
 
-        private void Initialize()
+        public ICommand DownCommand
         {
-            //_hubConnection = new HubConnection("http://localhost:8369");
-            //_hubConnection = new HubConnection("http://powersoftwo.apphb.com");
-            _hubConnection = new HubConnection("http://pc-mgr-2:8369");
-
-            _hubConnection.TraceLevel = TraceLevels.All;
-            _hubConnection.TraceWriter = Console.Out;
-
-            _gameProxy = _hubConnection.CreateHubProxy("GameHub");
-            _gameProxy.On<StartGameInformation>("StartGame", GameStarted);
-            _gameProxy.On<bool>("GameOver", GameOver);
-            _gameProxy.On<int>("UpdatePoints", UpdatePoints);
-
-            _hubConnection.Start().Wait();
-
-            _gameProxy.Invoke("Queue", "TEST");
+            get; private set;
         }
 
-        private void UpdatePoints(int remainingPoints)
+        public ICommand LeftCommand
         {
-            RemainingPoints = remainingPoints;
+            get; private set;
         }
 
         public int RemainingPoints
@@ -71,39 +58,70 @@ namespace PowersOfTwo
             }
         }
 
+        public ICommand RightCommand
+        {
+            get; private set;
+        }
+
+        public ICommand UpCommand
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Private Methods
+
         private void GameOver(bool win)
         {
-            MessageBox.Show(win ? "You win." : "You lose.");
-            Application.Current.Shutdown();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(win ? "You win." : "You lose.");
+                Application.Current.Shutdown();
+            });
         }
 
         private void GameStarted(StartGameInformation startGameInformation)
         {
             RemainingPoints = startGameInformation.StartPoints;
-            GroupName = startGameInformation.GroupName;
             Cells = startGameInformation.Cells;
         }
 
-        private string GroupName { get; set; }
-
-        private void MoveLeft()
+        private void Initialize()
         {
-            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName).Result;
-        }
+            _gameProxy = new GameProxy();
+            _gameProxy.GameOver += GameOver;
+            _gameProxy.GameStarted += GameStarted;
+            _gameProxy.PointsUpdated += PointsUpdated;
 
-        private void MoveRight()
-        {
-            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName).Result;
-        }
-
-        private void MoveUp()
-        {
-            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName).Result;
+            _gameProxy.Queue();
         }
 
         private void MoveDown()
         {
-            Cells = _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName).Result;
+            Cells = _gameProxy.MoveDown();
         }
+
+        private void MoveLeft()
+        {
+            Cells = _gameProxy.MoveLeft();
+        }
+
+        private void MoveRight()
+        {
+            Cells = _gameProxy.MoveRight();
+        }
+
+        private void MoveUp()
+        {
+            Cells = _gameProxy.MoveUp();
+        }
+
+        private void PointsUpdated(int remainingPoints)
+        {
+            RemainingPoints = remainingPoints;
+        }
+
+        #endregion Private Methods
     }
 }

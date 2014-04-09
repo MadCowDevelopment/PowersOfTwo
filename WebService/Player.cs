@@ -4,6 +4,8 @@ namespace WebService
 {
     public class Player
     {
+        #region Constructors
+
         public Player(string connectionId, string name, int remainingPoints)
         {
             ConnectionId = connectionId;
@@ -11,11 +13,30 @@ namespace WebService
             RemainingPoints = remainingPoints;
         }
 
-        public string ConnectionId { get; private set; }
+        #endregion Constructors
 
-        public string Name { get; private set; }
+        #region Public Properties
 
-        public int RemainingPoints { get; set; }
-        public GameLogic GameLogic { get; set; }
+        public string ConnectionId
+        {
+            get; private set;
+        }
+
+        public GameLogic GameLogic
+        {
+            get; set;
+        }
+
+        public string Name
+        {
+            get; private set;
+        }
+
+        public int RemainingPoints
+        {
+            get; set;
+        }
+
+        #endregion Public Properties
     }
 }

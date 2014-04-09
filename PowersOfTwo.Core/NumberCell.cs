@@ -2,7 +2,13 @@
 {
     public class NumberCell
     {
+        #region Fields
+
         private int? _number;
+
+        #endregion Fields
+
+        #region Public Properties
 
         public int? Number
         {
@@ -16,5 +22,7 @@
                 _number = value;
             }
         }
+
+        #endregion Public Properties
     }
 }

@@ -6,8 +6,7 @@ namespace PowersOfTwo.Core
 {
     public class GameLogic
     {
-        public int Rows { get; set; }
-        public int Columns { get; set; }
+        #region Constructors
 
         public GameLogic(int rows, int columns)
         {
@@ -24,14 +23,71 @@ namespace PowersOfTwo.Core
             AddRandomCell();
         }
 
-        public List<NumberCell> Cells { get; private set; }
+        #endregion Constructors
+
+        #region Events
 
         public event Action<int> CellsMatched;
 
-        private void RaiseCellsMatched(int points)
+        public event Action OutOfMoves;
+
+        #endregion Events
+
+        #region Public Properties
+
+        public List<NumberCell> Cells
         {
-            var handler = CellsMatched;
-            if (handler != null) handler(points);
+            get; private set;
+        }
+
+        public int Columns
+        {
+            get; set;
+        }
+
+        public int Rows
+        {
+            get; set;
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void MoveDown()
+        {
+            for (int column = Columns - 1; column >= 0; column--)
+            {
+                var emptyCellIndex = Rows * (Columns - 1) + column;
+                NumberCell lastCellWithNumber = null;
+                for (int row = Rows - 1; row >= 0; row--)
+                {
+                    var currentCellIndex = row * Columns + column;
+                    var currentCell = Cells[currentCellIndex];
+                    var emptyCell = Cells[emptyCellIndex];
+
+                    if (currentCell.Number == null)
+                    {
+                        continue;
+                    }
+
+                    if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
+                    {
+                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
+                        lastCellWithNumber.Number *= 2;
+                        currentCell.Number = null;
+                    }
+                    else
+                    {
+                        emptyCell.Number = currentCell.Number;
+                        lastCellWithNumber = emptyCell;
+                        if (emptyCell != currentCell) currentCell.Number = null;
+                        emptyCellIndex -= Columns;
+                    }
+                }
+            }
+
+            AddRandomCell();
         }
 
         public void MoveLeft()
@@ -142,49 +198,9 @@ namespace PowersOfTwo.Core
             AddRandomCell();
         }
 
-        public void MoveDown()
-        {
-            for (int column = Columns - 1; column >= 0; column--)
-            {
-                var emptyCellIndex = Rows * (Columns - 1) + column;
-                NumberCell lastCellWithNumber = null;
-                for (int row = Rows - 1; row >= 0; row--)
-                {
-                    var currentCellIndex = row * Columns + column;
-                    var currentCell = Cells[currentCellIndex];
-                    var emptyCell = Cells[emptyCellIndex];
+        #endregion Public Methods
 
-                    if (currentCell.Number == null)
-                    {
-                        continue;
-                    }
-
-                    if (lastCellWithNumber != null && currentCell.Number == lastCellWithNumber.Number)
-                    {
-                        RaiseCellsMatched(lastCellWithNumber.Number.Value);
-                        lastCellWithNumber.Number *= 2;
-                        currentCell.Number = null;
-                    }
-                    else
-                    {
-                        emptyCell.Number = currentCell.Number;
-                        lastCellWithNumber = emptyCell;
-                        if (emptyCell != currentCell) currentCell.Number = null;
-                        emptyCellIndex -= Columns;
-                    }
-                }
-            }
-
-            AddRandomCell();
-        }
-
-        public event Action OutOfMoves;
-
-        private void RaiseOutOfMoves()
-        {
-            var handler = OutOfMoves;
-            if (handler != null) handler();
-        }
+        #region Private Methods
 
         private void AddRandomCell()
         {
@@ -203,5 +219,19 @@ namespace PowersOfTwo.Core
                 RaiseOutOfMoves();
             }
         }
+
+        private void RaiseCellsMatched(int points)
+        {
+            var handler = CellsMatched;
+            if (handler != null) handler(points);
+        }
+
+        private void RaiseOutOfMoves()
+        {
+            var handler = OutOfMoves;
+            if (handler != null) handler();
+        }
+
+        #endregion Private Methods
     }
 }

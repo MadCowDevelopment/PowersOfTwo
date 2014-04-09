@@ -1,37 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Microsoft.AspNet.SignalR;
+
 using PowersOfTwo.Core;
 
 namespace WebService
 {
     public class GameHub : Hub
     {
+        #region Fields
+
+        private const int Columns = 4;
+        private const int Rows = 4;
         private const int StartPoints = 1024;
 
         private static readonly Queue<Player> QueuedPlayers = new Queue<Player>();
-
+        private static readonly object QueueSyncLock = new object();
         private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
 
-        private static readonly object QueueSyncLock = new object();
-        private const int Columns = 4;
-        private const int Rows = 4;
+        #endregion Fields
 
-        public void Queue(string userName)
+        #region Public Methods
+
+        public void LeaveQueue(string userName)
         {
-            lock (QueueSyncLock)
-            {
-                var player1 = new Player(Context.ConnectionId, userName, StartPoints);
+            // TODO
+        }
 
-                if (QueuedPlayers.Count >= 1)
-                {
-                    var player2 = QueuedPlayers.Dequeue();
-                    StartNewGame(player1, player2);
-                }
-                else
-                {
-                    QueuedPlayers.Enqueue(player1);
-                }
+        public List<NumberCell> MoveDown(string groupName)
+        {
+            GameInformation game;
+            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
+
+            lock (game)
+            {
+                if (game.IsFinished) return new List<NumberCell>();
+                var player = game.GetPlayer(Context.ConnectionId);
+                if (player == null) return new List<NumberCell>();
+
+                player.GameLogic.MoveDown();
+                return player.GameLogic.Cells;
             }
         }
 
@@ -82,25 +91,22 @@ namespace WebService
             }
         }
 
-        public List<NumberCell> MoveDown(string groupName)
+        public void Queue(string userName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
-
-            lock (game)
+            lock (QueueSyncLock)
             {
-                if (game.IsFinished) return new List<NumberCell>();
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return new List<NumberCell>();
+                var player1 = new Player(Context.ConnectionId, userName, StartPoints);
 
-                player.GameLogic.MoveDown();
-                return player.GameLogic.Cells;
+                if (QueuedPlayers.Count >= 1)
+                {
+                    var player2 = QueuedPlayers.Dequeue();
+                    StartNewGame(player1, player2);
+                }
+                else
+                {
+                    QueuedPlayers.Enqueue(player1);
+                }
             }
-        }
-
-        public void LeaveQueue(string userName)
-        {
-            // TODO
         }
 
         public void QuitGame(string groupName)
@@ -108,28 +114,9 @@ namespace WebService
             // TODO
         }
 
-        private void UpdateGame(Player player, int points, GameInformation game)
-        {
-            if (game.IsFinished) return;
-            if (player == null) return;
-            var otherPlayer = game.OtherPlayer(player);
-            if (otherPlayer == null) return;
+        #endregion Public Methods
 
-            player.RemainingPoints += (points * 3 / 4);
-            otherPlayer.RemainingPoints -= points;
-
-            if (otherPlayer.RemainingPoints <= 0)
-            {
-                game.IsFinished = true;
-                Clients.Client(player.ConnectionId).GameOver(true);
-                Clients.Client(otherPlayer.ConnectionId).GameOver(false);
-            }
-            else
-            {
-                Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
-                Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
-            }
-        }
+        #region Private Methods
 
         private void StartNewGame(Player player1, Player player2)
         {
@@ -161,5 +148,30 @@ namespace WebService
             Clients.Client(player2.ConnectionId)
                 .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells));
         }
+
+        private void UpdateGame(Player player, int points, GameInformation game)
+        {
+            if (game.IsFinished) return;
+            if (player == null) return;
+            var otherPlayer = game.OtherPlayer(player);
+            if (otherPlayer == null) return;
+
+            player.RemainingPoints += (points * 3 / 4);
+            otherPlayer.RemainingPoints -= points;
+
+            if (otherPlayer.RemainingPoints <= 0)
+            {
+                game.IsFinished = true;
+                Clients.Client(player.ConnectionId).GameOver(true);
+                Clients.Client(otherPlayer.ConnectionId).GameOver(false);
+            }
+            else
+            {
+                Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
+                Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

@@ -5,8 +5,14 @@ namespace PowersOfTwo
 {
     public class RelayCommand : ICommand
     {
+        #region Fields
+
         private readonly Predicate<object> _canExecute;
         private readonly Action<object> _execute;
+
+        #endregion Fields
+
+        #region Constructors
 
         public RelayCommand(Action execute)
             : this(p => execute(), null)
@@ -29,11 +35,19 @@ namespace PowersOfTwo
             _canExecute = canExecute;
         }
 
+        #endregion Constructors
+
+        #region Events
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
+
+        #endregion Events
+
+        #region Public Methods
 
         public bool CanExecute(object parameter)
         {
@@ -47,5 +61,7 @@ namespace PowersOfTwo
                 _execute(parameter);
             }
         }
+
+        #endregion Public Methods
     }
 }

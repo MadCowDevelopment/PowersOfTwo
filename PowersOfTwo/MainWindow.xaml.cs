@@ -20,11 +20,15 @@ namespace PowersOfTwo
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Constructors
+
         public MainWindow()
         {
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
         }
+
+        #endregion Constructors
     }
 }
