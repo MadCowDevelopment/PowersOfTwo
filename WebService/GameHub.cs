@@ -28,67 +28,24 @@ namespace WebService
             // TODO
         }
 
-        public List<NumberCell> MoveDown(string groupName)
+        public void MoveDown(string groupName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
-
-            lock (game)
-            {
-                if (game.IsFinished) return new List<NumberCell>();
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return new List<NumberCell>();
-
-                player.GameLogic.MoveDown();
-                return player.GameLogic.Cells;
-            }
+            Move(groupName, Direction.Down);
         }
 
-        public List<NumberCell> MoveLeft(string groupName)
+        public void MoveLeft(string groupName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
-
-            lock (game)
-            {
-                if (game.IsFinished) return new List<NumberCell>();
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return new List<NumberCell>();
-
-                player.GameLogic.MoveLeft();
-                return player.GameLogic.Cells;
-            }
+            Move(groupName, Direction.Left);
         }
 
-        public List<NumberCell> MoveRight(string groupName)
+        public void MoveRight(string groupName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
-
-            lock (game)
-            {
-                if (game.IsFinished) return new List<NumberCell>();
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return new List<NumberCell>();
-
-                player.GameLogic.MoveRight();
-                return player.GameLogic.Cells;
-            }
+            Move(groupName, Direction.Right);
         }
 
-        public List<NumberCell> MoveUp(string groupName)
+        public void MoveUp(string groupName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return new List<NumberCell>();
-
-            lock (game)
-            {
-                if (game.IsFinished) return new List<NumberCell>();
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return new List<NumberCell>();
-                player.GameLogic.MoveUp();
-                return player.GameLogic.Cells;
-            }
+            Move(groupName, Direction.Up);
         }
 
         public void Queue(string userName)
@@ -114,6 +71,37 @@ namespace WebService
             // TODO
         }
 
+        private void Move(string groupName, Direction direction)
+        {
+            GameInformation game;
+            if (!RunningGames.TryGetValue(groupName, out game)) return;
+
+            lock (game)
+            {
+                if (game.IsFinished) return;
+                var player = game.GetPlayer(Context.ConnectionId);
+                if (player == null) return;
+
+                switch (direction)
+                {
+                    case Direction.Up:
+                        player.GameLogic.MoveUp();
+                        break;
+                    case Direction.Down:
+                        player.GameLogic.MoveDown();
+                        break;
+                    case Direction.Left:
+                        player.GameLogic.MoveLeft();
+                        break;
+                    case Direction.Right:
+                        player.GameLogic.MoveRight();
+                        break;
+                }
+
+                SendCells(player, game.OtherPlayer(player));
+            }
+        }
+
         #endregion Public Methods
 
         #region Private Methods
@@ -129,8 +117,7 @@ namespace WebService
             {
                 gameInfo.IsFinished = true;
                 SendCells(player1, player2);
-                Clients.Client(player1.ConnectionId).GameOver(false);
-                Clients.Client(player2.ConnectionId).GameOver(true);
+                SendGameOver(player2, player1);
             };
 
             player2.GameLogic = new GameLogic(Rows, Columns);
@@ -139,8 +126,7 @@ namespace WebService
             {
                 gameInfo.IsFinished = true;
                 SendCells(player2, player1);
-                Clients.Client(player1.ConnectionId).GameOver(true);
-                Clients.Client(player2.ConnectionId).GameOver(false);
+                SendGameOver(player1, player2);
             };
 
             RunningGames.Add(groupName, gameInfo);
@@ -149,6 +135,12 @@ namespace WebService
                 .StartGame(new StartGameInformation(groupName, player2.Name, StartPoints, player1.GameLogic.Cells));
             Clients.Client(player2.ConnectionId)
                 .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells));
+        }
+
+        private void SendGameOver(Player winner, Player loser)
+        {
+            Clients.Client(winner.ConnectionId).GameOver(true);
+            Clients.Client(loser.ConnectionId).GameOver(false);
         }
 
         private void SendCells(Player currentPlayer, Player otherPlayer)
@@ -164,14 +156,13 @@ namespace WebService
             var otherPlayer = game.OtherPlayer(player);
             if (otherPlayer == null) return;
 
-            player.RemainingPoints += (points * 3 / 4);
+            player.RemainingPoints += (points/2);
             otherPlayer.RemainingPoints -= points;
 
             if (otherPlayer.RemainingPoints <= 0)
             {
                 game.IsFinished = true;
-                Clients.Client(player.ConnectionId).GameOver(true);
-                Clients.Client(otherPlayer.ConnectionId).GameOver(false);
+                SendGameOver(player, otherPlayer);
             }
             else
             {
@@ -181,5 +172,13 @@ namespace WebService
         }
 
         #endregion Private Methods
+
+        private enum Direction
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
     }
 }

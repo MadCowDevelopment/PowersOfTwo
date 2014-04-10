@@ -103,24 +103,24 @@ namespace PowersOfTwo
             Cells = cells;
         }
 
-        private async void MoveDown()
+        private void MoveDown()
         {
-            Cells = await _gameProxy.MoveDown();
+            _gameProxy.MoveDown();
         }
 
-        private async void MoveLeft()
+        private void MoveLeft()
         {
-            Cells = await _gameProxy.MoveLeft();
+            _gameProxy.MoveLeft();
         }
 
-        private async void MoveRight()
+        private void MoveRight()
         {
-            Cells = await _gameProxy.MoveRight();
+            _gameProxy.MoveRight();
         }
 
-        private async void MoveUp()
+        private void MoveUp()
         {
-            Cells = await _gameProxy.MoveUp();
+            _gameProxy.MoveUp();
         }
 
         private void PointsUpdated(int remainingPoints)

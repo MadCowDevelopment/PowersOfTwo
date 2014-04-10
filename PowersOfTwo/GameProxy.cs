@@ -71,24 +71,24 @@ namespace PowersOfTwo
             if (handler != null) handler(win);
         }
 
-        public async Task<List<NumberCell>> MoveLeft()
+        public void MoveLeft()
         {
-            return await _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName);
+            _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName);
         }
 
-        public async Task<List<NumberCell>> MoveRight()
+        public void MoveRight()
         {
-            return await _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName);
+            _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName);
         }
 
-        public async Task<List<NumberCell>> MoveUp()
+        public void MoveUp()
         {
-            return await _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName);
+            _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName);
         }
 
-        public async Task<List<NumberCell>> MoveDown()
+        public void MoveDown()
         {
-            return await _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
+            _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
         }
     }
 }
