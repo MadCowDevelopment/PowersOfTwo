@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using PowersOfTwo.Core;
 using WebService;
@@ -26,6 +25,8 @@ namespace PowersOfTwo
             _gameProxy.On<bool>("GameOver", RaiseGameOver);
             _gameProxy.On<int>("UpdatePoints", RaisePointsUpdated);
             _gameProxy.On<List<NumberCell>>("CellsChanged", RaiseCellsChanged);
+            _gameProxy.On<List<NumberCell>>("OpponentCellsChanged", RaiseOpponentCellsChanged);
+            _gameProxy.On<int>("UpdateOpponentPoints", RaiseOpponentPointsUpdated);
 
             await _hubConnection.Start();
             await _gameProxy.Invoke("Queue", "TEST");
@@ -38,6 +39,23 @@ namespace PowersOfTwo
         }
 
         private string GroupName { get; set; }
+
+        public event Action<List<NumberCell>> OpponentCellsChanged;
+
+        public event Action<int> OpponentPointsUpdated;
+
+        private void RaiseOpponentPointsUpdated(int remainingPoints)
+        {
+            var handler = OpponentPointsUpdated;
+            if (handler != null) handler(remainingPoints);
+        }
+
+        private void RaiseOpponentCellsChanged(List<NumberCell> cells)
+        {
+            var handler = OpponentCellsChanged;
+            if (handler != null) handler(cells);
+        }
+
 
         public event Action<List<NumberCell>> CellsChanged;
 

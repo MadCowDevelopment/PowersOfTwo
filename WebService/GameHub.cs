@@ -75,13 +75,12 @@ namespace WebService
         {
             GameInformation game;
             if (!RunningGames.TryGetValue(groupName, out game)) return;
+            if (game.IsFinished) return;
+            var player = game.GetPlayer(Context.ConnectionId);
+            if (player == null) return;
 
-            lock (game)
+            lock (player.GameLogic)
             {
-                if (game.IsFinished) return;
-                var player = game.GetPlayer(Context.ConnectionId);
-                if (player == null) return;
-
                 switch (direction)
                 {
                     case Direction.Up:
@@ -117,28 +116,35 @@ namespace WebService
             {
                 gameInfo.IsFinished = true;
                 SendCells(player1, player2);
-                SendGameOver(player2, player1);
+                SendGameOver(gameInfo, player2, player1);
             };
 
             player2.GameLogic = new GameLogic(Rows, Columns);
             player2.GameLogic.CellsMatched += points => UpdateGame(player2, points, gameInfo);
             player2.GameLogic.OutOfMoves += () =>
             {
-                gameInfo.IsFinished = true;
                 SendCells(player2, player1);
-                SendGameOver(player1, player2);
+                SendGameOver(gameInfo, player1, player2);
             };
 
             RunningGames.Add(groupName, gameInfo);
 
             Clients.Client(player1.ConnectionId)
-                .StartGame(new StartGameInformation(groupName, player2.Name, StartPoints, player1.GameLogic.Cells));
+                .StartGame(new StartGameInformation(groupName, player2.Name, StartPoints, player1.GameLogic.Cells,
+                    player2.GameLogic.Cells));
             Clients.Client(player2.ConnectionId)
-                .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells));
+                .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells,
+                    player1.GameLogic.Cells));
         }
 
-        private void SendGameOver(Player winner, Player loser)
+        private void SendGameOver(GameInformation gameInfo, Player winner, Player loser)
         {
+            gameInfo.IsFinished = true;
+            lock (RunningGames)
+            {
+                if (RunningGames.ContainsKey(gameInfo.GroupName)) RunningGames.Remove(gameInfo.GroupName);
+            }
+
             Clients.Client(winner.ConnectionId).GameOver(true);
             Clients.Client(loser.ConnectionId).GameOver(false);
         }
@@ -156,19 +162,27 @@ namespace WebService
             var otherPlayer = game.OtherPlayer(player);
             if (otherPlayer == null) return;
 
-            player.RemainingPoints += (points/2);
+            player.RemainingPoints += (points / 2);
             otherPlayer.RemainingPoints -= points;
 
             if (otherPlayer.RemainingPoints <= 0)
             {
                 game.IsFinished = true;
-                SendGameOver(player, otherPlayer);
+                SendGameOver(game, player, otherPlayer);
             }
             else
             {
-                Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
-                Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
+                SendUpdatePoints(player, otherPlayer);
             }
+        }
+
+        private void SendUpdatePoints(Player player, Player otherPlayer)
+        {
+            Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
+            Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
+
+            Clients.Client(player.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
+            Clients.Client(otherPlayer.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
         }
 
         #endregion Private Methods

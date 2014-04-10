@@ -12,9 +12,9 @@ namespace PowersOfTwo
     {
         #region Fields
 
-        private List<NumberCell> _cells;
         private GameProxy _gameProxy;
-        private int _remainingPoints;
+        private PlayerViewModel _player;
+        private PlayerViewModel _opponent;
 
         #endregion Fields
 
@@ -33,12 +33,6 @@ namespace PowersOfTwo
 
         #region Public Properties
 
-        public List<NumberCell> Cells
-        {
-            get { return _cells; }
-            private set { _cells = value; OnPropertyChanged(); }
-        }
-
         public ICommand DownCommand
         {
             get; private set;
@@ -49,13 +43,16 @@ namespace PowersOfTwo
             get; private set;
         }
 
-        public int RemainingPoints
+        public PlayerViewModel Player
         {
-            get { return _remainingPoints; }
-            set
-            {
-                _remainingPoints = value; OnPropertyChanged();
-            }
+            get { return _player; }
+            private set { _player = value; OnPropertyChanged(); }
+        }
+
+        public PlayerViewModel Opponent
+        {
+            get { return _opponent; }
+            private set { _opponent = value; OnPropertyChanged(); }
         }
 
         public ICommand RightCommand
@@ -83,8 +80,13 @@ namespace PowersOfTwo
 
         private void GameStarted(StartGameInformation startGameInformation)
         {
-            RemainingPoints = startGameInformation.StartPoints;
-            Cells = startGameInformation.Cells;
+            Player = new PlayerViewModel();
+            Player.Cells = startGameInformation.Cells;
+            Player.RemainingPoints = startGameInformation.StartPoints;
+
+            Opponent = new PlayerViewModel();
+            Opponent.Cells = startGameInformation.OpponentCells;
+            Opponent.RemainingPoints = startGameInformation.StartPoints;
         }
 
         private void Initialize()
@@ -94,13 +96,25 @@ namespace PowersOfTwo
             _gameProxy.GameStarted += GameStarted;
             _gameProxy.PointsUpdated += PointsUpdated;
             _gameProxy.CellsChanged += CellsChanged;
+            _gameProxy.OpponentCellsChanged += OpponentCellsChanged;
+            _gameProxy.OpponentPointsUpdated += OpponentPointsUpdated;
 
             _gameProxy.Queue();
         }
 
+        private void OpponentPointsUpdated(int remainingPoints)
+        {
+            Opponent.RemainingPoints = remainingPoints;
+        }
+
+        private void OpponentCellsChanged(List<NumberCell> cells)
+        {
+            Opponent.Cells = cells;
+        }
+
         private void CellsChanged(List<NumberCell> cells)
         {
-            Cells = cells;
+            Player.Cells = cells;
         }
 
         private void MoveDown()
@@ -125,7 +139,7 @@ namespace PowersOfTwo
 
         private void PointsUpdated(int remainingPoints)
         {
-            RemainingPoints = remainingPoints;
+            Player.RemainingPoints = remainingPoints;
         }
 
         #endregion Private Methods

@@ -8,9 +8,10 @@ namespace WebService
     {
         #region Constructors
 
-        public StartGameInformation(string groupName, string name, int startPoints, List<NumberCell> cells)
+        public StartGameInformation(string groupName, string name, int startPoints, List<NumberCell> cells, List<NumberCell> opponentCells)
         {
             Cells = cells;
+            OpponentCells = opponentCells;
             GroupName = groupName;
             Name = name;
             StartPoints = startPoints;
@@ -24,6 +25,8 @@ namespace WebService
         {
             get; private set;
         }
+
+        public List<NumberCell> OpponentCells { get; private set; }
 
         public string GroupName
         {
