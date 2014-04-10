@@ -128,6 +128,7 @@ namespace WebService
             player1.GameLogic.OutOfMoves += () =>
             {
                 gameInfo.IsFinished = true;
+                SendCells(player1, player2);
                 Clients.Client(player1.ConnectionId).GameOver(false);
                 Clients.Client(player2.ConnectionId).GameOver(true);
             };
@@ -137,6 +138,7 @@ namespace WebService
             player2.GameLogic.OutOfMoves += () =>
             {
                 gameInfo.IsFinished = true;
+                SendCells(player2, player1);
                 Clients.Client(player1.ConnectionId).GameOver(true);
                 Clients.Client(player2.ConnectionId).GameOver(false);
             };
@@ -147,6 +149,12 @@ namespace WebService
                 .StartGame(new StartGameInformation(groupName, player2.Name, StartPoints, player1.GameLogic.Cells));
             Clients.Client(player2.ConnectionId)
                 .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells));
+        }
+
+        private void SendCells(Player currentPlayer, Player otherPlayer)
+        {
+            Clients.Client(currentPlayer.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
+            Clients.Client(otherPlayer.ConnectionId).OpponentCellsChanged(currentPlayer.GameLogic.Cells);
         }
 
         private void UpdateGame(Player player, int points, GameInformation game)

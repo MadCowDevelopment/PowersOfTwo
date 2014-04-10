@@ -282,6 +282,8 @@ namespace PowersOfTwo.Core
 
         private void AddRandomCell()
         {
+            if (Cells.All(p => p.Number != null)) return;
+
             NumberCell randomCell;
             do
             {

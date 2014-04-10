@@ -25,6 +25,7 @@ namespace PowersOfTwo
             _gameProxy.On<StartGameInformation>("StartGame", OnGameStarted);
             _gameProxy.On<bool>("GameOver", RaiseGameOver);
             _gameProxy.On<int>("UpdatePoints", RaisePointsUpdated);
+            _gameProxy.On<List<NumberCell>>("CellsChanged", RaiseCellsChanged);
 
             await _hubConnection.Start();
             await _gameProxy.Invoke("Queue", "TEST");
@@ -38,11 +39,19 @@ namespace PowersOfTwo
 
         private string GroupName { get; set; }
 
+        public event Action<List<NumberCell>> CellsChanged;
+
+        private void RaiseCellsChanged(List<NumberCell> cells)
+        {
+            var handler = CellsChanged;
+            if (handler != null) handler(cells);
+        }
+
         public event Action<int> PointsUpdated;
 
         private void RaisePointsUpdated(int remainingPoints)
         {
-            Action<int> handler = PointsUpdated;
+            var handler = PointsUpdated;
             if (handler != null) handler(remainingPoints);
         }
 
@@ -52,13 +61,13 @@ namespace PowersOfTwo
 
         private void RaiseGameStarted(StartGameInformation startGameInformation)
         {
-            Action<StartGameInformation> handler = GameStarted;
+            var handler = GameStarted;
             if (handler != null) handler(startGameInformation);
         }
 
         private void RaiseGameOver(bool win)
         {
-            Action<bool> handler = GameOver;
+            var handler = GameOver;
             if (handler != null) handler(win);
         }
 

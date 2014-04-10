@@ -93,8 +93,14 @@ namespace PowersOfTwo
             _gameProxy.GameOver += GameOver;
             _gameProxy.GameStarted += GameStarted;
             _gameProxy.PointsUpdated += PointsUpdated;
+            _gameProxy.CellsChanged += CellsChanged;
 
             _gameProxy.Queue();
+        }
+
+        private void CellsChanged(List<NumberCell> cells)
+        {
+            Cells = cells;
         }
 
         private async void MoveDown()
