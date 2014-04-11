@@ -6,7 +6,7 @@ using WebService;
 
 namespace PowersOfTwo
 {
-    public class DuelViewModel : ViewModel, IMovementCommandProvider
+    public class DuelPlayViewModel : ViewModel, IMovementCommandProvider
     {
         #region Fields
 
@@ -16,7 +16,7 @@ namespace PowersOfTwo
 
         #region Constructors
 
-        public DuelViewModel(GameProxy gameProxy)
+        public DuelPlayViewModel(GameProxy gameProxy)
         {
             _gameProxy = gameProxy;
             _gameProxy.GameOver += GameOver;
