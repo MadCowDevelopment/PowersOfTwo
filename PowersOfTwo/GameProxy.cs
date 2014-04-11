@@ -9,8 +9,7 @@ namespace PowersOfTwo
     public class GameProxy
     {
         private readonly IHubProxy _gameProxy;
-        private HubConnection _hubConnection;
-        private ConnectionState _connectionState;
+        private readonly HubConnection _hubConnection;
 
         public GameProxy()
         {
@@ -21,7 +20,7 @@ namespace PowersOfTwo
             _hubConnection.TraceLevel = TraceLevels.All;
             _hubConnection.TraceWriter = Console.Out;
 
-            _hubConnection.StateChanged += _hubConnection_StateChanged;
+            _hubConnection.StateChanged += HubConnectionStateChanged;
 
             _gameProxy = _hubConnection.CreateHubProxy("GameHub");
             _gameProxy.On<StartGameInformation>("StartGame", OnGameStarted);
@@ -34,7 +33,7 @@ namespace PowersOfTwo
             _hubConnection.Start();
         }
 
-        private void _hubConnection_StateChanged(StateChange stateChange)
+        private void HubConnectionStateChanged(StateChange stateChange)
         {
             ConnectionState = stateChange.NewState;
             RaiseConnectionStateChanged(stateChange);
