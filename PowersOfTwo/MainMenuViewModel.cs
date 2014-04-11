@@ -16,8 +16,14 @@ namespace PowersOfTwo
             _gameProxy = new GameProxy();
             _gameProxy.ConnectionStateChanged += change => CanStartDuel = change.NewState == ConnectionState.Connected;
 
-            PlayDuelCommand = new RelayCommand(p => QueueForDuel());
+            PlayDuelCommand = new RelayCommand(p => QueueForDuelGame());
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
+            PlayRankedCommand = new RelayCommand(p => QueueForRankedGame());
+        }
+
+        private void QueueForRankedGame()
+        {
+            // TODO
         }
 
         private void StartSoloGame()
@@ -27,7 +33,9 @@ namespace PowersOfTwo
 
         public bool CanStartDuel { get; private set; }
 
-        private void QueueForDuel()
+        public bool CanStartRanked { get; private set; }
+
+        private void QueueForDuelGame()
         {
             var duelViewModel = new DuelPlayViewModel(_gameProxy);
             _mainWindowViewModel.Content = new QueueViewModel(_mainWindowViewModel, _gameProxy);
@@ -38,5 +46,7 @@ namespace PowersOfTwo
         public ICommand PlayDuelCommand { get; private set; }
 
         public ICommand PlaySoloCommand { get; private set; }
+
+        public ICommand PlayRankedCommand { get; private set; }
     }
 }
