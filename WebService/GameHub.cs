@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.AspNet.SignalR;
 
 using PowersOfTwo.Core;
@@ -15,17 +15,20 @@ namespace WebService
         private const int Rows = 4;
         private const int StartPoints = 1024;
 
-        private static readonly Queue<Player> QueuedPlayers = new Queue<Player>();
-        private static readonly object QueueSyncLock = new object();
+        private static readonly List<Player> QueuedPlayers = new List<Player>();
         private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
 
         #endregion Fields
 
         #region Public Methods
 
-        public void LeaveQueue(string userName)
+        public void LeaveQueue()
         {
-            // TODO
+            lock (QueuedPlayers)
+            {
+                var player = QueuedPlayers.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
+                QueuedPlayers.Remove(player);
+            }
         }
 
         public void MoveDown(string groupName)
@@ -50,18 +53,18 @@ namespace WebService
 
         public void Queue(string userName)
         {
-            lock (QueueSyncLock)
+            lock (QueuedPlayers)
             {
                 var player1 = new Player(Context.ConnectionId, userName, StartPoints);
 
                 if (QueuedPlayers.Count >= 1)
                 {
-                    var player2 = QueuedPlayers.Dequeue();
+                    var player2 = QueuedPlayers.First();
                     StartNewGame(player1, player2);
                 }
                 else
                 {
-                    QueuedPlayers.Enqueue(player1);
+                    QueuedPlayers.Add(player1);
                 }
             }
         }

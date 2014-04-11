@@ -8,10 +8,11 @@ namespace PowersOfTwo
 {
     public class GameProxy
     {
-        private IHubProxy _gameProxy;
+        private readonly IHubProxy _gameProxy;
         private HubConnection _hubConnection;
+        private ConnectionState _connectionState;
 
-        public async void Queue()
+        public GameProxy()
         {
             //_hubConnection = new HubConnection("http://localhost:8369");
             //_hubConnection = new HubConnection("http://powersoftwo.apphb.com");
@@ -19,6 +20,8 @@ namespace PowersOfTwo
 
             _hubConnection.TraceLevel = TraceLevels.All;
             _hubConnection.TraceWriter = Console.Out;
+
+            _hubConnection.StateChanged += _hubConnection_StateChanged;
 
             _gameProxy = _hubConnection.CreateHubProxy("GameHub");
             _gameProxy.On<StartGameInformation>("StartGame", OnGameStarted);
@@ -28,8 +31,28 @@ namespace PowersOfTwo
             _gameProxy.On<List<NumberCell>>("OpponentCellsChanged", RaiseOpponentCellsChanged);
             _gameProxy.On<int>("UpdateOpponentPoints", RaiseOpponentPointsUpdated);
 
-            await _hubConnection.Start();
-            await _gameProxy.Invoke("Queue", "TEST");
+            _hubConnection.Start();
+        }
+
+        private void _hubConnection_StateChanged(StateChange stateChange)
+        {
+            ConnectionState = stateChange.NewState;
+            RaiseConnectionStateChanged(stateChange);
+        }
+
+        public ConnectionState ConnectionState { get; private set; }
+
+        public event Action<StateChange> ConnectionStateChanged;
+
+        private void RaiseConnectionStateChanged(StateChange stateChange)
+        {
+            Action<StateChange> handler = ConnectionStateChanged;
+            if (handler != null) handler(stateChange);
+        }
+
+        public void Queue()
+        {
+            _gameProxy.Invoke("Queue", "TEST");
         }
 
         private void OnGameStarted(StartGameInformation startGameInformation)
@@ -107,6 +130,11 @@ namespace PowersOfTwo
         public void MoveDown()
         {
             _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
+        }
+
+        public void LeaveQueue()
+        {
+            _gameProxy.Invoke("LeaveQueue");
         }
     }
 }

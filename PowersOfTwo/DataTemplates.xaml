@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:powersOfTwo="clr-namespace:PowersOfTwo">
+  
+  <DataTemplate DataType="{x:Type powersOfTwo:MainMenuViewModel}">
+    <powersOfTwo:MainMenuView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type powersOfTwo:QueueViewModel}">
+    <powersOfTwo:QueueView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type powersOfTwo:DuelViewModel}">
+    <powersOfTwo:DuelView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type powersOfTwo:PlayerViewModel}">
+    <powersOfTwo:PlayerControl/>
+  </DataTemplate>
+  
+</ResourceDictionary>
