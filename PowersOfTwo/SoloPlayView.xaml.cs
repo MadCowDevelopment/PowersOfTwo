@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace PowersOfTwo
 {
     /// <summary>
-    /// Interaction logic for DuelView.xaml
+    /// Interaction logic for SoloPlayView.xaml
     /// </summary>
-    public partial class DuelView : UserControl
+    public partial class SoloPlayView : UserControl
     {
-        public DuelView()
+        public SoloPlayView()
         {
             InitializeComponent();
         }

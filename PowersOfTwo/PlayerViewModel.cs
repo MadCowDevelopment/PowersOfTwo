@@ -7,6 +7,6 @@ namespace PowersOfTwo
     {
         public List<NumberCell> Cells { get; set; }
 
-        public int RemainingPoints { get; set; }
+        public int Points { get; set; }
     }
 }

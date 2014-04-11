@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 using PowersOfTwo.Core;
 using WebService;
 
 namespace PowersOfTwo
 {
-    public class DuelViewModel : ViewModel, IMovementCommandProvider
+    public class DuelPlayViewModel : PlayViewModel
     {
         #region Fields
 
@@ -16,7 +15,7 @@ namespace PowersOfTwo
 
         #region Constructors
 
-        public DuelViewModel(GameProxy gameProxy)
+        public DuelPlayViewModel(GameProxy gameProxy)
         {
             _gameProxy = gameProxy;
             _gameProxy.GameOver += GameOver;
@@ -25,44 +24,13 @@ namespace PowersOfTwo
             _gameProxy.CellsChanged += CellsChanged;
             _gameProxy.OpponentCellsChanged += OpponentCellsChanged;
             _gameProxy.OpponentPointsUpdated += OpponentPointsUpdated;
-
-            LeftCommand = new RelayCommand(p => MoveLeft());
-            RightCommand = new RelayCommand(p => MoveRight());
-            UpCommand = new RelayCommand(p => MoveUp());
-            DownCommand = new RelayCommand(p => MoveDown());
         }
 
         #endregion Constructors
 
         #region Public Properties
 
-        public ICommand DownCommand
-        {
-            get;
-            private set;
-        }
-
-        public ICommand LeftCommand
-        {
-            get;
-            private set;
-        }
-
-        public PlayerViewModel Player { get; private set; }
-
         public PlayerViewModel Opponent { get; private set; }
-
-        public ICommand RightCommand
-        {
-            get;
-            private set;
-        }
-
-        public ICommand UpCommand
-        {
-            get;
-            private set;
-        }
 
         #endregion Public Properties
 
@@ -81,16 +49,16 @@ namespace PowersOfTwo
         {
             Player = new PlayerViewModel();
             Player.Cells = startGameInformation.Cells;
-            Player.RemainingPoints = startGameInformation.StartPoints;
+            Player.Points = startGameInformation.StartPoints;
 
             Opponent = new PlayerViewModel();
             Opponent.Cells = startGameInformation.OpponentCells;
-            Opponent.RemainingPoints = startGameInformation.StartPoints;
+            Opponent.Points = startGameInformation.StartPoints;
         }
 
         private void OpponentPointsUpdated(int remainingPoints)
         {
-            Opponent.RemainingPoints = remainingPoints;
+            Opponent.Points = remainingPoints;
         }
 
         private void OpponentCellsChanged(List<NumberCell> cells)
@@ -103,29 +71,29 @@ namespace PowersOfTwo
             Player.Cells = cells;
         }
 
-        private void MoveDown()
+        protected override void MoveDown()
         {
             _gameProxy.MoveDown();
         }
 
-        private void MoveLeft()
+        protected override void MoveLeft()
         {
             _gameProxy.MoveLeft();
         }
 
-        private void MoveRight()
+        protected override void MoveRight()
         {
             _gameProxy.MoveRight();
         }
 
-        private void MoveUp()
+        protected override void MoveUp()
         {
             _gameProxy.MoveUp();
         }
 
         private void PointsUpdated(int remainingPoints)
         {
-            Player.RemainingPoints = remainingPoints;
+            Player.Points = remainingPoints;
         }
 
         #endregion Private Methods

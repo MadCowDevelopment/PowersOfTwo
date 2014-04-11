@@ -77,10 +77,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DuelView.xaml.cs">
-      <DependentUpon>DuelView.xaml</DependentUpon>
+    <Compile Include="DuelPlayView.xaml.cs">
+      <DependentUpon>DuelPlayView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DuelViewModel.cs" />
+    <Compile Include="DuelPlayViewModel.cs" />
     <Compile Include="GameProxy.cs" />
     <Compile Include="GlobalCommandBroker.cs" />
     <Compile Include="IMovementCommandProvider.cs" />
@@ -93,17 +93,22 @@
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlayerViewModel.cs" />
+    <Compile Include="PlayViewModel.cs" />
     <Compile Include="QueueView.xaml.cs">
       <DependentUpon>QueueView.xaml</DependentUpon>
     </Compile>
     <Compile Include="QueueViewModel.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="SoloPlayView.xaml.cs">
+      <DependentUpon>SoloPlayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SoloPlayViewModel.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DuelView.xaml">
+    <Page Include="DuelPlayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,6 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="QueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SoloPlayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
