@@ -28,8 +28,9 @@ namespace PowersOfTwo
 
         private void QueueForDuel()
         {
+            var duelViewModel = new DuelViewModel(_gameProxy);
             _mainWindowViewModel.Content = new QueueViewModel(_mainWindowViewModel, _gameProxy);
-            _gameProxy.GameStarted += p => _mainWindowViewModel.Content = new DuelViewModel(_gameProxy);
+            _gameProxy.GameStarted += p => _mainWindowViewModel.Content = duelViewModel;
             _gameProxy.Queue();
         }
 

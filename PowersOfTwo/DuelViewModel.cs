@@ -6,7 +6,7 @@ using WebService;
 
 namespace PowersOfTwo
 {
-    public class DuelViewModel : ViewModel
+    public class DuelViewModel : ViewModel, IMovementCommandProvider
     {
         #region Fields
 

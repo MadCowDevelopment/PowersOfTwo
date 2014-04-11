@@ -82,6 +82,8 @@
     </Compile>
     <Compile Include="DuelViewModel.cs" />
     <Compile Include="GameProxy.cs" />
+    <Compile Include="GlobalCommandBroker.cs" />
+    <Compile Include="IMovementCommandProvider.cs" />
     <Compile Include="MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
