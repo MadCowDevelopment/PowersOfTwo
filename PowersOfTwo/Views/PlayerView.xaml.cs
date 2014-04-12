@@ -3,9 +3,9 @@
     /// <summary>
     /// Interaction logic for PlayerControl.xaml
     /// </summary>
-    public partial class PlayerControl
+    public partial class PlayerView
     {
-        public PlayerControl()
+        public PlayerView()
         {
             InitializeComponent();
         }

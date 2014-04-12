@@ -77,6 +77,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\MenuButton.xaml.cs">
+      <DependentUpon>MenuButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MenuHeader.xaml.cs">
+      <DependentUpon>MenuHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DuelPlayView.xaml.cs">
       <DependentUpon>DuelPlayView.xaml</DependentUpon>
     </Compile>
@@ -93,8 +99,8 @@
     </Compile>
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Views\PlayerControl.xaml.cs">
-      <DependentUpon>PlayerControl.xaml</DependentUpon>
+    <Compile Include="Views\PlayerView.xaml.cs">
+      <DependentUpon>PlayerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\PlayViewModel.cs" />
@@ -108,6 +114,14 @@
     </Compile>
     <Compile Include="ViewModels\SoloPlayViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
+    <Page Include="Controls\MenuButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MenuHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DataTemplates\DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,7 +150,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\PlayerControl.xaml">
+    <Page Include="Views\PlayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
