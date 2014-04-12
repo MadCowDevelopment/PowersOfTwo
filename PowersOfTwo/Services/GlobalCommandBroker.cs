@@ -1,6 +1,9 @@
 using System.Windows.Input;
+using PowersOfTwo.Framework;
+using PowersOfTwo.Interfaces;
+using PowersOfTwo.ViewModels;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.Services
 {
     public class GlobalCommandBroker
     {

@@ -4,7 +4,7 @@ using Microsoft.AspNet.SignalR.Client;
 using PowersOfTwo.Core;
 using WebService;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.Services
 {
     public class GameProxy
     {

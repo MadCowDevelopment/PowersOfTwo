@@ -1,4 +1,4 @@
-﻿namespace PowersOfTwo
+﻿namespace PowersOfTwo.Views
 {
     /// <summary>
     /// Interaction logic for Queue.xaml

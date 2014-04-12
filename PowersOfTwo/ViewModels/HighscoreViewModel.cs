@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
+using PowersOfTwo.Framework;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class HighscoreViewModel : ViewModel
     {

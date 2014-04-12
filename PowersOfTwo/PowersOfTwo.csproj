@@ -77,54 +77,54 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DuelPlayView.xaml.cs">
+    <Compile Include="Views\DuelPlayView.xaml.cs">
       <DependentUpon>DuelPlayView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DuelPlayViewModel.cs" />
-    <Compile Include="GameProxy.cs" />
-    <Compile Include="GlobalCommandBroker.cs" />
-    <Compile Include="HighscoreView.xaml.cs">
+    <Compile Include="ViewModels\DuelPlayViewModel.cs" />
+    <Compile Include="Services\GameProxy.cs" />
+    <Compile Include="Services\GlobalCommandBroker.cs" />
+    <Compile Include="Views\HighscoreView.xaml.cs">
       <DependentUpon>HighscoreView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HighscoreViewModel.cs" />
-    <Compile Include="IMovementCommandProvider.cs" />
-    <Compile Include="MainMenuView.xaml.cs">
+    <Compile Include="ViewModels\HighscoreViewModel.cs" />
+    <Compile Include="Interfaces\IMovementCommandProvider.cs" />
+    <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainMenuViewModel.cs" />
-    <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="PlayerControl.xaml.cs">
+    <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlayerViewModel.cs" />
-    <Compile Include="PlayViewModel.cs" />
-    <Compile Include="QueueView.xaml.cs">
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
+    <Compile Include="ViewModels\PlayViewModel.cs" />
+    <Compile Include="Views\QueueView.xaml.cs">
       <DependentUpon>QueueView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="QueueViewModel.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="SoloPlayView.xaml.cs">
+    <Compile Include="ViewModels\QueueViewModel.cs" />
+    <Compile Include="Framework\RelayCommand.cs" />
+    <Compile Include="Views\SoloPlayView.xaml.cs">
       <DependentUpon>SoloPlayView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SoloPlayViewModel.cs" />
-    <Compile Include="ViewModel.cs" />
-    <Page Include="DataTemplates.xaml">
+    <Compile Include="ViewModels\SoloPlayViewModel.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Page Include="DataTemplates\DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DuelPlayView.xaml">
+    <Page Include="Views\DuelPlayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HighscoreView.xaml">
+    <Page Include="Views\HighscoreView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainMenuView.xaml">
+    <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -132,23 +132,23 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PlayerControl.xaml">
+    <Page Include="Views\PlayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="QueueView.xaml">
+    <Page Include="Views\QueueView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SoloPlayView.xaml">
+    <Page Include="Views\SoloPlayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles.xaml">
+    <Page Include="DataTemplates\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -213,6 +213,7 @@
   <ItemGroup>
     <Resource Include="Images\Home.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

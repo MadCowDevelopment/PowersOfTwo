@@ -1,6 +1,8 @@
 ﻿using System.Windows.Input;
+using PowersOfTwo.Framework;
+using PowersOfTwo.Services;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class QueueViewModel : ViewModel
     {

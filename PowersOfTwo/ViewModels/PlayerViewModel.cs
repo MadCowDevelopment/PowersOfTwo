@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PowersOfTwo.Core;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class PlayerViewModel : ViewModel
     {

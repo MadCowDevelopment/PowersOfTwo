@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client;
+using PowersOfTwo.Framework;
+using PowersOfTwo.Services;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class MainMenuViewModel : ViewModel
     {

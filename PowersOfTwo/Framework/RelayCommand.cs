@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.Framework
 {
     public class RelayCommand : ICommand
     {

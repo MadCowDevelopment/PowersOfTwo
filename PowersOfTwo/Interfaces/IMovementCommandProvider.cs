@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.Interfaces
 {
     public interface IMovementCommandProvider
     {

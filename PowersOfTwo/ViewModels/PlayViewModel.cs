@@ -1,6 +1,8 @@
 using System.Windows.Input;
+using PowersOfTwo.Framework;
+using PowersOfTwo.Interfaces;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public abstract class PlayViewModel : ViewModel, IMovementCommandProvider
     {

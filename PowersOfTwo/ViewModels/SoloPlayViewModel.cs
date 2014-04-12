@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using PowersOfTwo.Core;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class SoloPlayViewModel : PlayViewModel
     {

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using PowersOfTwo.Core;
+using PowersOfTwo.Services;
 using WebService;
 
-namespace PowersOfTwo
+namespace PowersOfTwo.ViewModels
 {
     public class DuelPlayViewModel : PlayViewModel
     {

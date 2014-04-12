@@ -1,4 +1,6 @@
-﻿namespace PowersOfTwo
+﻿using PowersOfTwo.Services;
+
+namespace PowersOfTwo.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
