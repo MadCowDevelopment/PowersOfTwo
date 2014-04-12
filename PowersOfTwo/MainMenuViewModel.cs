@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using Microsoft.AspNet.SignalR.Client;
 
 namespace PowersOfTwo
@@ -19,6 +20,7 @@ namespace PowersOfTwo
             PlayDuelCommand = new RelayCommand(p => QueueForDuelGame());
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
             PlayRankedCommand = new RelayCommand(p => QueueForRankedGame());
+            QuitCommand = new RelayCommand(p => Application.Current.Shutdown());
         }
 
         private void QueueForRankedGame()
@@ -48,5 +50,7 @@ namespace PowersOfTwo
         public ICommand PlaySoloCommand { get; private set; }
 
         public ICommand PlayRankedCommand { get; private set; }
+
+        public ICommand QuitCommand { get; private set; }
     }
 }
