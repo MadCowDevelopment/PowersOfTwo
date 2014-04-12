@@ -11,10 +11,8 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <TextBlock Grid.Row="0" Text="Searching opponent..." 
-               HorizontalAlignment="Center" VerticalAlignment="Center"
-               TextWrapping="Wrap" FontSize="32" Margin="20"/>
-
+    <Controls:MenuHeader Grid.Row="0" Text="Searching..." Image="../Images/Search.png"/>
+    
     <Controls:PlayFieldControl Grid.Row="1" Width="200" Height="200" DataContext="{Binding Cells}"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
     
