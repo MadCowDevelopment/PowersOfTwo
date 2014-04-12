@@ -4,17 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="430" d:DesignWidth="490">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <TextBlock Grid.Row="0" Text="Waiting for a suitable opponent... Please wait..." 
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+      <TextBlock Grid.Row="0" Text="Waiting for an opponent..." 
                HorizontalAlignment="Center" VerticalAlignment="Center"
                TextWrapping="Wrap" FontSize="32" Margin="20"/>
-    <ProgressBar Grid.Row="1" IsIndeterminate="True" Margin="10"/>
+      <TextBlock Grid.Row="0" Text="Please wait..." 
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               TextWrapping="Wrap" FontSize="32" Margin="20"/>
+    </StackPanel>
+    <ProgressBar Grid.Row="1" IsIndeterminate="True" Margin="20" Height="10"/>
     <Button Grid.Row="2" Content="Leave queue" Command="{Binding LeaveQueueCommand}" FontSize="32" Margin="20"/>
   </Grid>
 </UserControl>
