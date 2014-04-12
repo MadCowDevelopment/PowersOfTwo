@@ -83,6 +83,9 @@
     <Compile Include="Controls\MenuHeader.xaml.cs">
       <DependentUpon>MenuHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PlayFieldControl.xaml.cs">
+      <DependentUpon>PlayFieldControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DuelPlayView.xaml.cs">
       <DependentUpon>DuelPlayView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MenuHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayFieldControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

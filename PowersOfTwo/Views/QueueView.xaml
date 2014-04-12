@@ -8,20 +8,17 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
-      <TextBlock Grid.Row="0" Text="Waiting for an opponent..." 
+    <TextBlock Grid.Row="0" Text="Searching opponent..." 
                HorizontalAlignment="Center" VerticalAlignment="Center"
                TextWrapping="Wrap" FontSize="32" Margin="20"/>
-      <TextBlock Grid.Row="0" Text="Please wait..." 
-               HorizontalAlignment="Center" VerticalAlignment="Center"
-               TextWrapping="Wrap" FontSize="32" Margin="20"/>
-    </StackPanel>
-    <ProgressBar Grid.Row="1" IsIndeterminate="True" Margin="20" Height="10"/>
-    <Controls:MenuButton Grid.Row="4" Margin="0,0,0,10"
+
+    <Controls:PlayFieldControl Grid.Row="1" Width="200" Height="200" DataContext="{Binding Cells}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    
+    <Controls:MenuButton Grid.Row="2" Margin="0,0,0,10"
                          Text="Leave Queue" Image="../Images/Back.png"
                          Command="{Binding LeaveQueueCommand}"/>
   </Grid>
