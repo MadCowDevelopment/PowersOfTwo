@@ -18,5 +18,10 @@
         {
             Content = _mainMenuViewModel;
         }
+
+        public void ShowHighscore()
+        {
+            Content = new HighscoreViewModel(this);
+        }
     }
 }

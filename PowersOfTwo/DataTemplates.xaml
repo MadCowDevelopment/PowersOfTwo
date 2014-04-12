@@ -22,4 +22,8 @@
     <powersOfTwo:PlayerControl/>
   </DataTemplate>
   
+  <DataTemplate DataType="{x:Type powersOfTwo:HighscoreViewModel}">
+    <powersOfTwo:HighscoreView/>
+  </DataTemplate>
+  
 </ResourceDictionary>

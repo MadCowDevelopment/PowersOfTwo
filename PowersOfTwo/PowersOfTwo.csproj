@@ -83,6 +83,10 @@
     <Compile Include="DuelPlayViewModel.cs" />
     <Compile Include="GameProxy.cs" />
     <Compile Include="GlobalCommandBroker.cs" />
+    <Compile Include="HighscoreView.xaml.cs">
+      <DependentUpon>HighscoreView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HighscoreViewModel.cs" />
     <Compile Include="IMovementCommandProvider.cs" />
     <Compile Include="MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -109,6 +113,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DuelPlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HighscoreView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,6 +205,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Back.png" />
+    <Resource Include="Images\Highscore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Home.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

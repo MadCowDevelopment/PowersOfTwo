@@ -23,8 +23,7 @@ namespace PowersOfTwo
 
         private void GameLogicOutOfMoves()
         {
-            // TODO: Show result
-            _mainWindowViewModel.ShowMainMenu();
+            _mainWindowViewModel.ShowHighscore();
         }
 
         private void GameLogicCellsMatched(int points)
