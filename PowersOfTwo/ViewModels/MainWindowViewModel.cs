@@ -11,7 +11,7 @@ namespace PowersOfTwo.ViewModels
         {
             Overlay = new OverlayViewModel();
 
-            _mainMenuViewModel = new MainMenuViewModel(this);
+            _mainMenuViewModel = new MainMenuViewModel(this, Overlay);
             CommandBroker = new GlobalCommandBroker(this);
             ShowMainMenu();
         }
@@ -27,9 +27,9 @@ namespace PowersOfTwo.ViewModels
             Content = _mainMenuViewModel;
         }
 
-        public void ShowHighscore()
+        public void ShowHighscore(int score)
         {
-            Content = new HighscoreViewModel(this);
+            Content = new HighscoreViewModel(this, score);
         }
     }
 }

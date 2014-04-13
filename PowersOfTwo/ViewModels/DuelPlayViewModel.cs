@@ -10,14 +10,19 @@ namespace PowersOfTwo.ViewModels
     {
         #region Fields
 
+        private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly GameProxy _gameProxy;
 
         #endregion Fields
 
         #region Constructors
 
-        public DuelPlayViewModel(GameProxy gameProxy)
+        public DuelPlayViewModel(
+            OverlayViewModel overlayViewModel, 
+            MainWindowViewModel mainWindowViewModel,
+            GameProxy gameProxy) :base(overlayViewModel)
         {
+            _mainWindowViewModel = mainWindowViewModel;
             _gameProxy = gameProxy;
             _gameProxy.GameOver += GameOver;
             _gameProxy.GameStarted += GameStarted;
@@ -39,11 +44,8 @@ namespace PowersOfTwo.ViewModels
 
         private void GameOver(bool win)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                MessageBox.Show(win ? "You win." : "You lose.");
-                Application.Current.Shutdown();
-            });
+            var text = win ? "You win!" : "You lose!";
+            OverlayViewModel.ShowOverlay(new OverlayTextViewModel(text));
         }
 
         private void GameStarted(StartGameInformation startGameInformation)
@@ -70,6 +72,11 @@ namespace PowersOfTwo.ViewModels
         private void CellsChanged(List<NumberCell> cells)
         {
             Player.Cells = cells;
+        }
+
+        protected override void OnGameOver()
+        {
+            _mainWindowViewModel.ShowMainMenu();
         }
 
         protected override void MoveDown()

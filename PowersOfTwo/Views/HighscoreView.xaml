@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:PowersOfTwo.Controls" mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="490" d:DesignWidth="420">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
@@ -14,8 +14,22 @@
 
     <Controls:MenuHeader Text="Highscores" Image="../Images/Highscore.png"/>
     
-    <ItemsControl Grid.Row="1">
-    </ItemsControl>
+    <Grid Grid.Row="1" Margin="20,0,20,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Controls:ScoreControl Grid.Row="0" ShadowColor="Gold" Image="../Images/AwardGold.png" Points="{Binding Points1}"/>
+      <Controls:ScoreControl Grid.Row="1" ShadowColor="Silver" Image="../Images/AwardSilver.png" Points="{Binding Points2}"/>
+      <Controls:ScoreControl Grid.Row="2" ShadowColor="Brown" Image="../Images/AwardBronze.png" Points="{Binding Points3}"/>
+      <Border Grid.Row="3" CornerRadius="2" Height="3" Margin="-8,4,-8,2" Background="Black"/>
+      <Controls:ScoreControl Grid.Row="4" ShadowColor="LightGreen" Text="Your score:" Points="{Binding PointsCurrent}"/>
+
+    </Grid>
 
     <Controls:MenuButton Margin="0,0,0,10"
       Grid.Row="2" Text="Back to menu" Image="../Images/Back.png"

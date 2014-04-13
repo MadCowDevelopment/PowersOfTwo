@@ -32,4 +32,8 @@
     <Views:OverlayView/>
   </DataTemplate>
   
+  <DataTemplate DataType="{x:Type ViewModels:OverlayTextViewModel}">
+    <Views:OverlayTextView/>
+  </DataTemplate>
+  
 </ResourceDictionary>

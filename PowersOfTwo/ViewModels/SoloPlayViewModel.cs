@@ -8,7 +8,8 @@ namespace PowersOfTwo.ViewModels
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly GameLogic _gameLogic = new GameLogic(4, 4);
 
-        public SoloPlayViewModel(MainWindowViewModel mainWindowViewModel)
+        public SoloPlayViewModel(OverlayViewModel overlayViewModel, MainWindowViewModel mainWindowViewModel)
+            : base(overlayViewModel)
         {
             _mainWindowViewModel = mainWindowViewModel;
 
@@ -23,12 +24,17 @@ namespace PowersOfTwo.ViewModels
 
         private void GameLogicOutOfMoves()
         {
-            _mainWindowViewModel.ShowHighscore();
+            OverlayViewModel.ShowOverlay(new OverlayTextViewModel("Game over"));
         }
 
         private void GameLogicCellsMatched(int points)
         {
             Player.Points += points;
+        }
+
+        protected override void OnGameOver()
+        {
+            _mainWindowViewModel.ShowHighscore(Player.Points);
         }
 
         protected override void MoveDown()
