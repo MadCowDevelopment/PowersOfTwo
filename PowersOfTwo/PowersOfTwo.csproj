@@ -77,8 +77,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DuelPlayView.xaml.cs">
-      <DependentUpon>DuelPlayView.xaml</DependentUpon>
+    <Compile Include="DuelView.xaml.cs">
+      <DependentUpon>DuelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DuelViewModel.cs" />
     <Compile Include="GameProxy.cs" />
@@ -103,7 +103,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DuelPlayView.xaml">
+    <Page Include="DuelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -10,8 +10,8 @@
     <powersOfTwo:QueueView/>
   </DataTemplate>
 
-  <DataTemplate DataType="{x:Type powersOfTwo:DuelPlayViewModel}">
-    <powersOfTwo:DuelPlayView/>
+  <DataTemplate DataType="{x:Type powersOfTwo:DuelViewModel}">
+    <powersOfTwo:DuelView/>
   </DataTemplate>
 
   <DataTemplate DataType="{x:Type powersOfTwo:PlayerViewModel}">
