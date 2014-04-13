@@ -28,4 +28,8 @@
     <Views:HighscoreView/>
   </DataTemplate>
   
+  <DataTemplate DataType="{x:Type ViewModels:OverlayViewModel}">
+    <Views:OverlayView/>
+  </DataTemplate>
+  
 </ResourceDictionary>

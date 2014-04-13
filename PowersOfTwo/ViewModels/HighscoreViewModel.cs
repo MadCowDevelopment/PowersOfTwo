@@ -3,7 +3,7 @@ using PowersOfTwo.Framework;
 
 namespace PowersOfTwo.ViewModels
 {
-    public class HighscoreViewModel : ViewModel
+    public class HighscoreViewModel : ObservableObject
     {
         public HighscoreViewModel(MainWindowViewModel mainWindowViewModel)
         {

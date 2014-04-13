@@ -9,8 +9,12 @@
     <KeyBinding Key="Right" Command="{Binding CommandBroker.RightCommand}"/>
     <KeyBinding Key="Up" Command="{Binding CommandBroker.UpCommand}"/>
     <KeyBinding Key="Down" Command="{Binding CommandBroker.DownCommand}"/>
+    <KeyBinding Key="Enter" Command="{Binding Overlay.CloseCommand}"/>
   </Window.InputBindings>
-  
-  <ContentControl Content="{Binding Content}"/>
+
+  <Grid>
+    <ContentControl Content="{Binding Content}"/>
+    <ContentControl Content="{Binding Overlay}"/>
+  </Grid>
 
 </Window>

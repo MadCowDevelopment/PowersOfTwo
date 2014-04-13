@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PowersOfTwo.ViewModels
+namespace PowersOfTwo.Framework
 {
-    public abstract class ViewModel : INotifyPropertyChanged
+    public abstract class ObservableObject : INotifyPropertyChanged
     {
         #region Events
 

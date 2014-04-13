@@ -6,7 +6,7 @@ using PowersOfTwo.Services;
 
 namespace PowersOfTwo.ViewModels
 {
-    public class MainMenuViewModel : ViewModel
+    public class MainMenuViewModel : ObservableObject
     {
         private readonly MainWindowViewModel _mainWindowViewModel;
 

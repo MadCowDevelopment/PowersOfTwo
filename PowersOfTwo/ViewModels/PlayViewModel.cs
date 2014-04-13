@@ -4,7 +4,7 @@ using PowersOfTwo.Interfaces;
 
 namespace PowersOfTwo.ViewModels
 {
-    public abstract class PlayViewModel : ViewModel, IMovementCommandProvider
+    public abstract class PlayViewModel : ObservableObject, IMovementCommandProvider
     {
         protected PlayViewModel()
         {

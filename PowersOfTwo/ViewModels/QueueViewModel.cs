@@ -9,7 +9,7 @@ using PowersOfTwo.Services;
 
 namespace PowersOfTwo.ViewModels
 {
-    public class QueueViewModel : ViewModel
+    public class QueueViewModel : ObservableObject
     {
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly GameProxy _gameProxy;
