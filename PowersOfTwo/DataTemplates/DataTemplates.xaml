@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:powersOfTwo="clr-namespace:PowersOfTwo"
+                    xmlns:ViewModels="clr-namespace:PowersOfTwo.ViewModels"
+                    xmlns:Views="clr-namespace:PowersOfTwo.Views">
+  
+  <DataTemplate DataType="{x:Type ViewModels:MainMenuViewModel}">
+    <Views:MainMenuView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:QueueViewModel}">
+    <Views:QueueView/>
+  </DataTemplate>
+  
+  <DataTemplate DataType="{x:Type ViewModels:SoloPlayViewModel}">
+    <Views:SoloPlayView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:DuelPlayViewModel}">
+    <Views:DuelPlayView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:PlayerViewModel}">
+    <Views:PlayerView/>
+  </DataTemplate>
+  
+  <DataTemplate DataType="{x:Type ViewModels:HighscoreViewModel}">
+    <Views:HighscoreView/>
+  </DataTemplate>
+  
+  <DataTemplate DataType="{x:Type ViewModels:OverlayViewModel}">
+    <Views:OverlayView/>
+  </DataTemplate>
+  
+  <DataTemplate DataType="{x:Type ViewModels:OverlayTextViewModel}">
+    <Views:OverlayTextView/>
+  </DataTemplate>
+  
+</ResourceDictionary>

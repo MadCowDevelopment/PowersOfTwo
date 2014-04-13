@@ -262,7 +262,7 @@ namespace PowersOfTwo.Core
 
             for (int column = 0; column < Columns; column++)
             {
-                for (int row = 0; row < Rows-1; row+=Columns)
+                for (int row = 0; row < Rows-1; row++)
                 {
                     var cellIndex = row * Columns + column;
                     var cell = Cells[cellIndex];
