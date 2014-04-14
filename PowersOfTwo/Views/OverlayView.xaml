@@ -7,15 +7,81 @@
   mc:Ignorable="d" 
   d:DesignHeight="300" d:DesignWidth="300">
 
-  <Border RenderTransformOrigin="0.5, 0.5"
-          Visibility="{Binding Visible, Converter={StaticResource BooleanToVisibilityConverter}}">
+  <Border Visibility="{Binding Visible, Converter={StaticResource BooleanToVisibilityConverter}}">
     <Border.Background>
       <SolidColorBrush Color="Black" Opacity="0.5"/>
     </Border.Background>
-    <Border Margin="80" CornerRadius="20">
+    <Border.Style>
+      <Style TargetType="Border">
+        <Style.Triggers>
+          <DataTrigger Binding="{Binding Visible}" Value="True">
+            <DataTrigger.EnterActions>
+              <BeginStoryboard>
+                <Storyboard>
+                  <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      From="0" To="1" Duration="0:0:0.5"/>
+                  <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      From="0" To="1" Duration="0:0:0.5"/>
+                </Storyboard>
+              </BeginStoryboard>
+            </DataTrigger.EnterActions>
+            <DataTrigger.ExitActions>
+              <BeginStoryboard>
+                <Storyboard BeginTime="0:0:0.2">
+                  <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      To="0" Duration="0:0:0.1"/>
+                  <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      To="0" Duration="0:0:0.1"/>
+                </Storyboard>
+              </BeginStoryboard>
+            </DataTrigger.ExitActions>
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+    </Border.Style>
+    <Border Margin="80" CornerRadius="20" RenderTransformOrigin="0.5, 0.5">
       <Border.Background>
         <SolidColorBrush Color="WhiteSmoke" Opacity="0.75"/>
       </Border.Background>
+      <Border.RenderTransform>
+        <ScaleTransform ScaleX="0" ScaleY="0"/>
+      </Border.RenderTransform>
+      <Border.Style>
+        <Style TargetType="Border">
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding Visible}" Value="True">
+              <DataTrigger.EnterActions>
+                <BeginStoryboard>
+                  <Storyboard BeginTime="0:0:0.2">
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                      To="1.0" Duration="0:0:0.5"/>
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                      To="1.0" Duration="0:0:0.5"/>
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.EnterActions>
+              <DataTrigger.ExitActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                      To="0" Duration="0:0:0.2"/>
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                      To="0" Duration="0:0:0.2"/>
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.ExitActions>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </Border.Style>
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="*"/>
@@ -26,43 +92,6 @@
                    Margin="8" FontSize="16"/>
       </Grid>
     </Border>
-    <Border.RenderTransform>
-      <ScaleTransform />
-    </Border.RenderTransform>
-    <Border.Style>
-      <Style TargetType="Border">
-        <Style.Triggers>
-          <DataTrigger Binding="{Binding Visible}" Value="True">
-            <DataTrigger.EnterActions>
-              <BeginStoryboard>
-                <Storyboard>
-                  <DoubleAnimation
-                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                      To="1.0" Duration="0:0:1"/>
-                  <DoubleAnimation
-                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                      To="1.0" Duration="0:0:1"/>
-                </Storyboard>
-              </BeginStoryboard>
-            </DataTrigger.EnterActions>
-          </DataTrigger>
-          <DataTrigger Binding="{Binding Visible}" Value="False">
-            <DataTrigger.EnterActions>
-              <BeginStoryboard>
-                <Storyboard>
-                  <DoubleAnimation
-                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                      To="1.0" Duration="0:0:1"/>
-                  <DoubleAnimation
-                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                      To="1.0" Duration="0:0:1"/>
-                </Storyboard>
-              </BeginStoryboard>
-            </DataTrigger.EnterActions>
-          </DataTrigger>
-        </Style.Triggers>
-      </Style>
-    </Border.Style>
   </Border>
 
 </UserControl>

@@ -8,6 +8,7 @@ namespace PowersOfTwo.ViewModels
     {
         public OverlayViewModel()
         {
+            Visible = false;
             CloseCommand = new RelayCommand(p => HideOverlay());
         }
 

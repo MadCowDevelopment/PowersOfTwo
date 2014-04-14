@@ -165,7 +165,7 @@ namespace WebService
             var otherPlayer = game.OtherPlayer(player);
             if (otherPlayer == null) return;
 
-            player.RemainingPoints += (points / 2);
+            player.RemainingPoints += (points / 3 * 2);
             otherPlayer.RemainingPoints -= points;
 
             if (otherPlayer.RemainingPoints <= 0)
