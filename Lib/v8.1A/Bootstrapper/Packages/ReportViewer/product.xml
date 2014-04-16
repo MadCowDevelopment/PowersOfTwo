@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (c) Microsoft.  All rights reserved. -->
+<Product
+  xmlns="http://schemas.microsoft.com/developer/2004/01/bootstrapper"
+  ProductCode="Microsoft.ReportViewer.11.0"
+>
+  <RelatedProducts>
+    <EitherProducts>
+      <DependsOnProduct Code="Microsoft.Net.Framework.3.5.SP1" />
+      <DependsOnProduct Code=".NETFramework,Version=v4.0,Profile=Client" />
+      <DependsOnProduct Code=".NETFramework,Version=v4.0" />
+      <DependsOnProduct Code=".NETFramework,Version=v4.5" />
+    </EitherProducts>
+    <DependsOnProduct Code="Microsoft.SqlServer.SQLSysClrTypes.11.0" />
+  </RelatedProducts>
+
+  <PackageFiles CopyAllPackageFiles="false">
+    <PackageFile Name="ReportViewer.msi" HomeSite="ReportViewerMsi"
+  PublicKey="3082010a02820101009c5173b790a72f04ceb03d583f2ccbb95d3a3a48f70e6c547edcb82a0a1b6d3b598d8e192506d04e6074dbb49c8455814fd23f86803b05b2d4418bb07cd5478fc5124b6149da20618fbd443ce4fbd86f60074e00339ced10895182df50d6d9b29d3ef7bd088090024697768acdab7239a471270fe2fcb2f8c4f1b4d99f80f2e5438a54fd21636ef8487a1ecadc9df450e4b683228c47c11d2a443e38f1b62eb8b1adf915302b8441a373bb9a7095299c8f26cdce39bf4c192f039cb6ee2a5aac92f3363e11e2f229e950a240ce32182707e5a76381a9a3a5f300d9fb3ad39c01b372a335044578bcbebd80d1286b6489f3df749013c184d245d6406fdb5c102d0203010001" />
+  </PackageFiles>
+
+  <InstallChecks>
+    <RegistryCheck Property="IsViewerInstalled" Key="HKLM\Software\Microsoft\Microsoft SQL Server 2012 Redist\Microsoft Report Viewer 2012 Runtime" Value="Version" />
+  </InstallChecks>
+
+  <Commands Reboot="Defer">
+    <Command PackageFile="ReportViewer.msi"
+         Arguments="/q /norestart"
+         EstimatedInstalledBytes="13000000"
+         EstimatedInstallSeconds="150">
+
+      <!-- These checks determine whether the package is to be installed -->
+      <InstallConditions>
+        <BypassIf Property="IsViewerInstalled" Compare="VersionGreaterThanOrEqualTo" Value="11.0.3366.16"/>
+
+        <!-- Block install if user does not have admin privileges -->
+        <FailIf Property="AdminUser" Compare="ValueEqualTo" Value="false" String="AdminRequired"/>
+      </InstallConditions>
+
+      <ExitCodes>
+        <ExitCode Value="0" Result="Success"/>
+        <ExitCode Value="3010" Result="SuccessReboot"/>
+        <ExitCode Value="4097" Result="Fail" String="AdminRequired"/>
+        <ExitCode Value="4099" Result="Fail" String="WindowsInstallerImproperInstall"/>
+        <ExitCode Value="4101" Result="Fail" String="AnotherInstanceRunning"/>
+        <ExitCode Value="4113" Result="Fail" String="BetaProductFailure"/>
+        <DefaultExitCode Result="Fail" FormatMessageFromSystem="true" String="GeneralFailure" />
+      </ExitCodes>
+
+    </Command>
+  </Commands>
+</Product>
