@@ -39,12 +39,11 @@ namespace PowersOfTwo.Services
 
         public List<int> GetScores()
         {
-            if(!File.Exists(_fileName)) return new List<int>();
+            if (!File.Exists(_fileName)) return new List<int>();
 
             var doc = XDocument.Load(_fileName);
             var scores = (from score in doc.Descendants("Score")
-                          orderby score.Value descending 
-                          select Int32.Parse(score.Value)).ToList();
+                          select Int32.Parse(score.Value)).OrderByDescending(p => p).ToList();
             return scores;
         }
     }
