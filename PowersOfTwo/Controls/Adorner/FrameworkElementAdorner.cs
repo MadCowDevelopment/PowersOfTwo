@@ -3,6 +3,7 @@
 //
 //  http://www.codeproject.com/KB/WPF/WPFJoshSmith.aspx
 //
+
 using System;
 using System.Collections;
 using System.Windows;
@@ -15,8 +16,10 @@ namespace PowersOfTwo.Controls.Adorner
     //
     public class FrameworkElementAdorner : System.Windows.Documents.Adorner
     {
+        #region Fields
+
         //
-        // The framework element that is the adorner. 
+        // The framework element that is the adorner.
         //
         private FrameworkElement child;
 
@@ -24,7 +27,6 @@ namespace PowersOfTwo.Controls.Adorner
         // Placement of the child.
         //
         private AdornerPlacement horizontalAdornerPlacement = AdornerPlacement.Inside;
-        private AdornerPlacement verticalAdornerPlacement = AdornerPlacement.Inside;
 
         //
         // Offset of the child.
@@ -37,6 +39,11 @@ namespace PowersOfTwo.Controls.Adorner
         //
         private double positionX = Double.NaN;
         private double positionY = Double.NaN;
+        private AdornerPlacement verticalAdornerPlacement = AdornerPlacement.Inside;
+
+        #endregion Fields
+
+        #region Constructors
 
         public FrameworkElementAdorner(FrameworkElement adornerChildElement, FrameworkElement adornedElement)
             : base(adornedElement)
@@ -48,8 +55,8 @@ namespace PowersOfTwo.Controls.Adorner
         }
 
         public FrameworkElementAdorner(FrameworkElement adornerChildElement, FrameworkElement adornedElement,
-                                       AdornerPlacement horizontalAdornerPlacement, AdornerPlacement verticalAdornerPlacement,
-                                       double offsetX, double offsetY)
+            AdornerPlacement horizontalAdornerPlacement, AdornerPlacement verticalAdornerPlacement,
+            double offsetX, double offsetY)
             : base(adornedElement)
         {
             this.child = adornerChildElement;
@@ -64,12 +71,19 @@ namespace PowersOfTwo.Controls.Adorner
             base.AddVisualChild(adornerChildElement);
         }
 
+        #endregion Constructors
+
+        #region Public Properties
+
         /// <summary>
-        /// Event raised when the adorned control's size has changed.
+        /// Override AdornedElement from base class for less type-checking.
         /// </summary>
-        private void adornedElement_SizeChanged(object sender, SizeChangedEventArgs e)
+        public new FrameworkElement AdornedElement
         {
-            InvalidateMeasure();
+            get
+            {
+                return (FrameworkElement)base.AdornedElement;
+            }
         }
 
         //
@@ -99,10 +113,147 @@ namespace PowersOfTwo.Controls.Adorner
             }
         }
 
+        #endregion Public Properties
+
+        #region Protected Properties
+
+        protected override IEnumerator LogicalChildren
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
+                list.Add(this.child);
+                return (IEnumerator)list.GetEnumerator();
+            }
+        }
+
+        protected override Int32 VisualChildrenCount
+        {
+            get { return 1; }
+        }
+
+        #endregion Protected Properties
+
+        #region Public Methods
+
+        /// <summary>
+        /// Disconnect the child element from the visual tree so that it may be reused later.
+        /// </summary>
+        public void DisconnectChild()
+        {
+            base.RemoveLogicalChild(child);
+            base.RemoveVisualChild(child);
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            double x = PositionX;
+            if (Double.IsNaN(x))
+            {
+                x = DetermineX();
+            }
+            double y = PositionY;
+            if (Double.IsNaN(y))
+            {
+                y = DetermineY();
+            }
+            double adornerWidth = DetermineWidth();
+            double adornerHeight = DetermineHeight();
+            this.child.Arrange(new Rect(x, y, adornerWidth, adornerHeight));
+            return finalSize;
+        }
+
+        protected override Visual GetVisualChild(Int32 index)
+        {
+            return this.child;
+        }
+
         protected override Size MeasureOverride(Size constraint)
         {
             this.child.Measure(constraint);
             return this.child.DesiredSize;
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Event raised when the adorned control's size has changed.
+        /// </summary>
+        private void adornedElement_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            InvalidateMeasure();
+        }
+
+        /// <summary>
+        /// Determine the height of the child.
+        /// </summary>
+        private double DetermineHeight()
+        {
+            if (!Double.IsNaN(PositionY))
+            {
+                return this.child.DesiredSize.Height;
+            }
+
+            switch (child.VerticalAlignment)
+            {
+                case VerticalAlignment.Top:
+                {
+                    return this.child.DesiredSize.Height;
+                }
+                case VerticalAlignment.Bottom:
+                {
+                    return this.child.DesiredSize.Height;
+                }
+                case VerticalAlignment.Center:
+                {
+                    return this.child.DesiredSize.Height;
+                }
+                case VerticalAlignment.Stretch:
+                {
+                    return AdornedElement.ActualHeight;
+                }
+            }
+
+            return 0.0;
+        }
+
+        /// <summary>
+        /// Determine the width of the child.
+        /// </summary>
+        private double DetermineWidth()
+        {
+            if (!Double.IsNaN(PositionX))
+            {
+                return this.child.DesiredSize.Width;
+            }
+
+            switch (child.HorizontalAlignment)
+            {
+                case HorizontalAlignment.Left:
+                {
+                    return this.child.DesiredSize.Width;
+                }
+                case HorizontalAlignment.Right:
+                {
+                    return this.child.DesiredSize.Width;
+                }
+                case HorizontalAlignment.Center:
+                {
+                    return this.child.DesiredSize.Width;
+                }
+                case HorizontalAlignment.Stretch:
+                {
+                    return AdornedElement.ActualWidth;
+                }
+            }
+
+            return 0.0;
         }
 
         /// <summary>
@@ -203,128 +354,6 @@ namespace PowersOfTwo.Controls.Adorner
             return 0.0;
         }
 
-        /// <summary>
-        /// Determine the width of the child.
-        /// </summary>
-        private double DetermineWidth()
-        {
-            if (!Double.IsNaN(PositionX))
-            {
-                return this.child.DesiredSize.Width;
-            }
-
-            switch (child.HorizontalAlignment)
-            {
-                case HorizontalAlignment.Left:
-                {
-                    return this.child.DesiredSize.Width;
-                }
-                case HorizontalAlignment.Right:
-                {
-                    return this.child.DesiredSize.Width;
-                }
-                case HorizontalAlignment.Center:
-                {
-                    return this.child.DesiredSize.Width;
-                }
-                case HorizontalAlignment.Stretch:
-                {
-                    return AdornedElement.ActualWidth;
-                }
-            }
-
-            return 0.0;
-        }
-
-        /// <summary>
-        /// Determine the height of the child.
-        /// </summary>
-        private double DetermineHeight()
-        {
-            if (!Double.IsNaN(PositionY))
-            {
-                return this.child.DesiredSize.Height;
-            }
-
-            switch (child.VerticalAlignment)
-            {
-                case VerticalAlignment.Top:
-                {
-                    return this.child.DesiredSize.Height;
-                }
-                case VerticalAlignment.Bottom:
-                {
-                    return this.child.DesiredSize.Height;
-                }
-                case VerticalAlignment.Center:
-                {
-                    return this.child.DesiredSize.Height; 
-                }
-                case VerticalAlignment.Stretch:
-                {
-                    return AdornedElement.ActualHeight;
-                }
-            }
-
-            return 0.0;
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            double x = PositionX;
-            if (Double.IsNaN(x))
-            {
-                x = DetermineX();
-            }
-            double y = PositionY;
-            if (Double.IsNaN(y))
-            {
-                y = DetermineY();
-            }
-            double adornerWidth = DetermineWidth();
-            double adornerHeight = DetermineHeight();
-            this.child.Arrange(new Rect(x, y, adornerWidth, adornerHeight));
-            return finalSize;
-        }
-
-        protected override Int32 VisualChildrenCount
-        {
-            get { return 1; }
-        }
-
-        protected override Visual GetVisualChild(Int32 index)
-        {
-            return this.child;
-        }
-
-        protected override IEnumerator LogicalChildren
-        {
-            get
-            {
-                ArrayList list = new ArrayList();
-                list.Add(this.child);
-                return (IEnumerator)list.GetEnumerator();
-            }
-        }
-
-        /// <summary>
-        /// Disconnect the child element from the visual tree so that it may be reused later.
-        /// </summary>
-        public void DisconnectChild()
-        {
-            base.RemoveLogicalChild(child);
-            base.RemoveVisualChild(child);
-        }
-
-        /// <summary>
-        /// Override AdornedElement from base class for less type-checking.
-        /// </summary>
-        public new FrameworkElement AdornedElement
-        {
-            get
-            {
-                return (FrameworkElement)base.AdornedElement;
-            }
-        }
+        #endregion Private Methods
     }
 }

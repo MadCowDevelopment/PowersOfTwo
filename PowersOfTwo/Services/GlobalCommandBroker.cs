@@ -1,4 +1,5 @@
 using System.Windows.Input;
+
 using PowersOfTwo.Framework;
 using PowersOfTwo.Interfaces;
 using PowersOfTwo.ViewModels;
@@ -7,6 +8,8 @@ namespace PowersOfTwo.Services
 {
     public class GlobalCommandBroker
     {
+        #region Constructors
+
         public GlobalCommandBroker(MainWindowViewModel mainWindowViewModel)
         {
             DownCommand =
@@ -35,6 +38,10 @@ namespace PowersOfTwo.Services
                         (mainWindowViewModel.Content as IMovementCommandProvider).RightCommand.CanExecute(p));
         }
 
+        #endregion Constructors
+
+        #region Public Properties
+
         public ICommand DownCommand
         {
             get;
@@ -58,5 +65,7 @@ namespace PowersOfTwo.Services
             get;
             private set;
         }
+
+        #endregion Public Properties
     }
 }

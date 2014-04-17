@@ -20,9 +20,13 @@ namespace PowersOfTwo.Views
     /// </summary>
     public partial class OverlayTextView : UserControl
     {
+        #region Constructors
+
         public OverlayTextView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

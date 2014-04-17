@@ -245,6 +245,23 @@ namespace PowersOfTwo.Core
             CheckOutOfMoves();
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void AddRandomCell()
+        {
+            if (Cells.All(p => p.Number != null)) return;
+
+            NumberCell randomCell;
+            do
+            {
+                randomCell = Cells[RNG.Next(0, 16)];
+            } while (randomCell.Number != null);
+
+            randomCell.Number = 2;
+        }
+
         private void CheckOutOfMoves()
         {
             for (int row = 0; row < Rows; row++)
@@ -274,23 +291,6 @@ namespace PowersOfTwo.Core
             }
 
             RaiseOutOfMoves();
-        }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void AddRandomCell()
-        {
-            if (Cells.All(p => p.Number != null)) return;
-
-            NumberCell randomCell;
-            do
-            {
-                randomCell = Cells[RNG.Next(0, 16)];
-            } while (randomCell.Number != null);
-
-            randomCell.Number = 2;
         }
 
         private void RaiseCellsMatched(int points)

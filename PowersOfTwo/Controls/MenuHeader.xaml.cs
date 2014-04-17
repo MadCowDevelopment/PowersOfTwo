@@ -8,16 +8,25 @@ namespace PowersOfTwo.Controls
     /// </summary>
     public partial class MenuHeader : UserControl
     {
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(string), typeof(MenuHeader));
+        #region Fields
 
-        public static readonly DependencyProperty TextProperty =
+        public static readonly DependencyProperty ImageProperty = 
+            DependencyProperty.Register("Image", typeof(string), typeof(MenuHeader));
+        public static readonly DependencyProperty TextProperty = 
             DependencyProperty.Register("Text", typeof(string), typeof(MenuHeader));
+
+        #endregion Fields
+
+        #region Constructors
 
         public MenuHeader()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
+
+        #region Public Properties
 
         public string Image
         {
@@ -30,5 +39,7 @@ namespace PowersOfTwo.Controls
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
+
+        #endregion Public Properties
     }
 }

@@ -7,6 +7,8 @@ namespace PowersOfTwo.Converters
 {
     public class BooleanToVisibilityConverter : IValueConverter
     {
+        #region Public Methods
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var boolValue = (bool) value;
@@ -17,5 +19,7 @@ namespace PowersOfTwo.Converters
         {
             return null;
         }
+
+        #endregion Public Methods
     }
 }

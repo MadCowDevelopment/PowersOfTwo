@@ -1,15 +1,24 @@
 using System;
 using System.Collections.Generic;
+
 using Microsoft.AspNet.SignalR.Client;
+
 using PowersOfTwo.Core;
+
 using WebService;
 
 namespace PowersOfTwo.Services
 {
     public class GameProxy
     {
+        #region Fields
+
         private readonly IHubProxy _gameProxy;
         private readonly HubConnection _hubConnection;
+
+        #endregion Fields
+
+        #region Constructors
 
         public GameProxy()
         {
@@ -34,82 +43,54 @@ namespace PowersOfTwo.Services
             _hubConnection.Start();
         }
 
-        private void HubConnectionStateChanged(StateChange stateChange)
-        {
-            ConnectionState = stateChange.NewState;
-            RaiseConnectionStateChanged(stateChange);
-        }
+        #endregion Constructors
 
-        public ConnectionState ConnectionState { get; private set; }
-
-        public event Action<StateChange> ConnectionStateChanged;
-
-        private void RaiseConnectionStateChanged(StateChange stateChange)
-        {
-            Action<StateChange> handler = ConnectionStateChanged;
-            if (handler != null) handler(stateChange);
-        }
-
-        public void Queue()
-        {
-            _gameProxy.Invoke("Queue", "TEST");
-        }
-
-        private void OnGameStarted(StartGameInformation startGameInformation)
-        {
-            GroupName = startGameInformation.GroupName;
-            RaiseGameStarted(startGameInformation);
-        }
-
-        private string GroupName { get; set; }
-
-        public event Action<List<NumberCell>> OpponentCellsChanged;
-
-        public event Action<int> OpponentPointsUpdated;
-
-        private void RaiseOpponentPointsUpdated(int remainingPoints)
-        {
-            var handler = OpponentPointsUpdated;
-            if (handler != null) handler(remainingPoints);
-        }
-
-        private void RaiseOpponentCellsChanged(List<NumberCell> cells)
-        {
-            var handler = OpponentCellsChanged;
-            if (handler != null) handler(cells);
-        }
-
+        #region Events
 
         public event Action<List<NumberCell>> CellsChanged;
 
-        private void RaiseCellsChanged(List<NumberCell> cells)
-        {
-            var handler = CellsChanged;
-            if (handler != null) handler(cells);
-        }
-
-        public event Action<int> PointsUpdated;
-
-        private void RaisePointsUpdated(int remainingPoints)
-        {
-            var handler = PointsUpdated;
-            if (handler != null) handler(remainingPoints);
-        }
+        public event Action<StateChange> ConnectionStateChanged;
 
         public event Action<bool> GameOver;
 
         public event Action<StartGameInformation> GameStarted;
 
-        private void RaiseGameStarted(StartGameInformation startGameInformation)
+        public event Action<List<NumberCell>> OpponentCellsChanged;
+
+        public event Action<int> OpponentPointsUpdated;
+
+        public event Action<int> PointsUpdated;
+
+        #endregion Events
+
+        #region Public Properties
+
+        public ConnectionState ConnectionState
         {
-            var handler = GameStarted;
-            if (handler != null) handler(startGameInformation);
+            get; private set;
         }
 
-        private void RaiseGameOver(bool win)
+        #endregion Public Properties
+
+        #region Private Properties
+
+        private string GroupName
         {
-            var handler = GameOver;
-            if (handler != null) handler(win);
+            get; set;
+        }
+
+        #endregion Private Properties
+
+        #region Public Methods
+
+        public void LeaveQueue()
+        {
+            _gameProxy.Invoke("LeaveQueue");
+        }
+
+        public void MoveDown()
+        {
+            _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
         }
 
         public void MoveLeft()
@@ -127,14 +108,69 @@ namespace PowersOfTwo.Services
             _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName);
         }
 
-        public void MoveDown()
+        public void Queue()
         {
-            _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
+            _gameProxy.Invoke("Queue", "TEST");
         }
 
-        public void LeaveQueue()
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void HubConnectionStateChanged(StateChange stateChange)
         {
-            _gameProxy.Invoke("LeaveQueue");
+            ConnectionState = stateChange.NewState;
+            RaiseConnectionStateChanged(stateChange);
         }
+
+        private void OnGameStarted(StartGameInformation startGameInformation)
+        {
+            GroupName = startGameInformation.GroupName;
+            RaiseGameStarted(startGameInformation);
+        }
+
+        private void RaiseCellsChanged(List<NumberCell> cells)
+        {
+            var handler = CellsChanged;
+            if (handler != null) handler(cells);
+        }
+
+        private void RaiseConnectionStateChanged(StateChange stateChange)
+        {
+            Action<StateChange> handler = ConnectionStateChanged;
+            if (handler != null) handler(stateChange);
+        }
+
+        private void RaiseGameOver(bool win)
+        {
+            var handler = GameOver;
+            if (handler != null) handler(win);
+        }
+
+        private void RaiseGameStarted(StartGameInformation startGameInformation)
+        {
+            var handler = GameStarted;
+            if (handler != null) handler(startGameInformation);
+        }
+
+        private void RaiseOpponentCellsChanged(List<NumberCell> cells)
+        {
+            var handler = OpponentCellsChanged;
+            if (handler != null) handler(cells);
+        }
+
+        private void RaiseOpponentPointsUpdated(int remainingPoints)
+        {
+            var handler = OpponentPointsUpdated;
+            if (handler != null) handler(remainingPoints);
+        }
+
+        private void RaisePointsUpdated(int remainingPoints)
+        {
+            var handler = PointsUpdated;
+            if (handler != null) handler(remainingPoints);
+        }
+
+        #endregion Private Methods
     }
 }

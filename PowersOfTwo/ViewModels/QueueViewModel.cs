@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
+
 using PowersOfTwo.Core;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
@@ -11,12 +12,17 @@ namespace PowersOfTwo.ViewModels
 {
     public class QueueViewModel : ObservableObject
     {
-        private readonly MainWindowViewModel _mainWindowViewModel;
+        #region Fields
+
         private readonly GameProxy _gameProxy;
+        private readonly MainWindowViewModel _mainWindowViewModel;
+        private readonly DispatcherTimer _timer;
 
         private GameLogic _gameLogic;
 
-        private readonly DispatcherTimer _timer;
+        #endregion Fields
+
+        #region Constructors
 
         public QueueViewModel(MainWindowViewModel mainWindowViewModel, GameProxy gameProxy)
         {
@@ -33,11 +39,42 @@ namespace PowersOfTwo.ViewModels
             LeaveQueueCommand = new RelayCommand(p => LeaveQueue());
         }
 
+        #endregion Constructors
+
+        #region Public Properties
+
+        public List<NumberCell> Cells
+        {
+            get; private set;
+        }
+
+        public ICommand LeaveQueueCommand
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Private Methods
+
+        private void GameLogicOutOfMoves()
+        {
+            _timer.Stop();
+            InitializeGameLogic();
+            _timer.Start();
+        }
+
         private void InitializeGameLogic()
         {
             _gameLogic = new GameLogic(4, 4);
             _gameLogic.OutOfMoves += GameLogicOutOfMoves;
             Cells = _gameLogic.Cells;
+        }
+
+        private void LeaveQueue()
+        {
+            _gameProxy.LeaveQueue();
+            _mainWindowViewModel.ShowMainMenu();
         }
 
         private void TimerTick(object sender, EventArgs e)
@@ -62,21 +99,6 @@ namespace PowersOfTwo.ViewModels
             Cells = _gameLogic.Cells.ToList();
         }
 
-        private void GameLogicOutOfMoves()
-        {
-            _timer.Stop();
-            InitializeGameLogic();
-            _timer.Start();
-        }
-
-        public List<NumberCell> Cells { get; private set; }
-
-        private void LeaveQueue()
-        {
-            _gameProxy.LeaveQueue();
-            _mainWindowViewModel.ShowMainMenu();
-        }
-
-        public ICommand LeaveQueueCommand { get; private set; }
+        #endregion Private Methods
     }
 }

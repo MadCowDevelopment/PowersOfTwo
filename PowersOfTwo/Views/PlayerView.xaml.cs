@@ -5,9 +5,13 @@
     /// </summary>
     public partial class PlayerView
     {
+        #region Constructors
+
         public PlayerView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

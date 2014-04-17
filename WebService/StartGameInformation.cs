@@ -26,14 +26,17 @@ namespace WebService
             get; private set;
         }
 
-        public List<NumberCell> OpponentCells { get; private set; }
-
         public string GroupName
         {
             get; private set;
         }
 
         public string Name
+        {
+            get; private set;
+        }
+
+        public List<NumberCell> OpponentCells
         {
             get; private set;
         }

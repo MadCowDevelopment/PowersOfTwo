@@ -4,11 +4,22 @@ namespace PowersOfTwo.ViewModels
 {
     public class OverlayTextViewModel : ObservableObject
     {
-        public string Text { get; private set; }
+        #region Constructors
 
         public OverlayTextViewModel(string text)
         {
             Text = text;
         }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public string Text
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
     }
 }

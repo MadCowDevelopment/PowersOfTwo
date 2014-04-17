@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
 
@@ -6,11 +7,46 @@ namespace PowersOfTwo.ViewModels
 {
     public class HighscoreViewModel : ObservableObject
     {
+        #region Constructors
+
         public HighscoreViewModel(MainWindowViewModel mainWindowViewModel, int? currentScore)
         {
             InitializeHighscores(currentScore);
             BackToMainMenuCommand = new RelayCommand(p => mainWindowViewModel.ShowMainMenu());
         }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public ICommand BackToMainMenuCommand
+        {
+            get; private set;
+        }
+
+        public int? Points1
+        {
+            get; private set;
+        }
+
+        public int? Points2
+        {
+            get; private set;
+        }
+
+        public int? Points3
+        {
+            get; private set;
+        }
+
+        public int? PointsCurrent
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Private Methods
 
         private void InitializeHighscores(int? currentScore)
         {
@@ -23,11 +59,6 @@ namespace PowersOfTwo.ViewModels
             PointsCurrent = currentScore;
         }
 
-        public int? Points1 { get; private set; }
-        public int? Points2 { get; private set; }
-        public int? Points3 { get; private set; }
-        public int? PointsCurrent { get; private set; }
-
-        public ICommand BackToMainMenuCommand { get; private set; }
+        #endregion Private Methods
     }
 }

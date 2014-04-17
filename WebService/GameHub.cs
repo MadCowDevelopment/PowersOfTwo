@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.AspNet.SignalR;
 
 using PowersOfTwo.Core;
@@ -19,6 +20,18 @@ namespace WebService
         private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
 
         #endregion Fields
+
+        #region Enumerations
+
+        private enum Direction
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
+
+        #endregion Enumerations
 
         #region Public Methods
 
@@ -75,6 +88,10 @@ namespace WebService
             // TODO
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void Move(string groupName, Direction direction)
         {
             GameInformation game;
@@ -105,9 +122,32 @@ namespace WebService
             }
         }
 
-        #endregion Public Methods
+        private void SendCells(Player currentPlayer, Player otherPlayer)
+        {
+            Clients.Client(currentPlayer.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
+            Clients.Client(otherPlayer.ConnectionId).OpponentCellsChanged(currentPlayer.GameLogic.Cells);
+        }
 
-        #region Private Methods
+        private void SendGameOver(GameInformation gameInfo, Player winner, Player loser)
+        {
+            gameInfo.IsFinished = true;
+            lock (RunningGames)
+            {
+                if (RunningGames.ContainsKey(gameInfo.GroupName)) RunningGames.Remove(gameInfo.GroupName);
+            }
+
+            Clients.Client(winner.ConnectionId).GameOver(true);
+            Clients.Client(loser.ConnectionId).GameOver(false);
+        }
+
+        private void SendUpdatePoints(Player player, Player otherPlayer)
+        {
+            Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
+            Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
+
+            Clients.Client(player.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
+            Clients.Client(otherPlayer.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
+        }
 
         private void StartNewGame(Player player1, Player player2)
         {
@@ -141,24 +181,6 @@ namespace WebService
                     player1.GameLogic.Cells));
         }
 
-        private void SendGameOver(GameInformation gameInfo, Player winner, Player loser)
-        {
-            gameInfo.IsFinished = true;
-            lock (RunningGames)
-            {
-                if (RunningGames.ContainsKey(gameInfo.GroupName)) RunningGames.Remove(gameInfo.GroupName);
-            }
-
-            Clients.Client(winner.ConnectionId).GameOver(true);
-            Clients.Client(loser.ConnectionId).GameOver(false);
-        }
-
-        private void SendCells(Player currentPlayer, Player otherPlayer)
-        {
-            Clients.Client(currentPlayer.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
-            Clients.Client(otherPlayer.ConnectionId).OpponentCellsChanged(currentPlayer.GameLogic.Cells);
-        }
-
         private void UpdateGame(Player player, int points, GameInformation game)
         {
             if (game.IsFinished) return;
@@ -180,23 +202,6 @@ namespace WebService
             }
         }
 
-        private void SendUpdatePoints(Player player, Player otherPlayer)
-        {
-            Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
-            Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
-
-            Clients.Client(player.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
-            Clients.Client(otherPlayer.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
-        }
-
         #endregion Private Methods
-
-        private enum Direction
-        {
-            Up,
-            Down,
-            Left,
-            Right
-        }
     }
 }

@@ -5,9 +5,13 @@
     /// </summary>
     public partial class HighscoreView
     {
+        #region Constructors
+
         public HighscoreView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

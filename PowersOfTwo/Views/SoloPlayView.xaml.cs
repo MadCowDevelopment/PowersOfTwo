@@ -5,9 +5,13 @@
     /// </summary>
     public partial class SoloPlayView
     {
+        #region Constructors
+
         public SoloPlayView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

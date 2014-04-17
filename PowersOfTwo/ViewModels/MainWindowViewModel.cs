@@ -5,7 +5,13 @@ namespace PowersOfTwo.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
+        #region Fields
+
         private readonly MainMenuViewModel _mainMenuViewModel;
+
+        #endregion Fields
+
+        #region Constructors
 
         public MainWindowViewModel()
         {
@@ -16,20 +22,39 @@ namespace PowersOfTwo.ViewModels
             ShowMainMenu();
         }
 
-        public GlobalCommandBroker CommandBroker { get; private set; }
+        #endregion Constructors
 
-        public ObservableObject Content { get; set; }
+        #region Public Properties
 
-        public OverlayViewModel Overlay { get; private set; }
+        public GlobalCommandBroker CommandBroker
+        {
+            get; private set;
+        }
+
+        public ObservableObject Content
+        {
+            get; set;
+        }
+
+        public OverlayViewModel Overlay
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void ShowHighscore(int score)
+        {
+            Content = new HighscoreViewModel(this, score);
+        }
 
         public void ShowMainMenu()
         {
             Content = _mainMenuViewModel;
         }
 
-        public void ShowHighscore(int score)
-        {
-            Content = new HighscoreViewModel(this, score);
-        }
+        #endregion Public Methods
     }
 }

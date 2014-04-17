@@ -4,6 +4,8 @@ namespace PowersOfTwo.Interfaces
 {
     public interface IMovementCommandProvider
     {
+        #region Properties
+
         ICommand DownCommand
         {
             get;
@@ -23,5 +25,7 @@ namespace PowersOfTwo.Interfaces
         {
             get;
         }
+
+        #endregion Properties
     }
 }

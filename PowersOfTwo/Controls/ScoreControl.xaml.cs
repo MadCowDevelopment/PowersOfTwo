@@ -5,27 +5,34 @@ namespace PowersOfTwo.Controls
 {
     public partial class ScoreControl
     {
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(string), typeof(ScoreControl));
+        #region Fields
 
-        public static readonly DependencyProperty TextProperty =
+        public static readonly DependencyProperty ImageProperty = 
+            DependencyProperty.Register("Image", typeof(string), typeof(ScoreControl));
+        public static readonly DependencyProperty PointsProperty = 
+            DependencyProperty.Register("Points", typeof(int), typeof(ScoreControl));
+        public static readonly DependencyProperty ShadowColorProperty = 
+            DependencyProperty.Register("ShadowColor", typeof(Color), typeof(ScoreControl));
+        public static readonly DependencyProperty TextProperty = 
             DependencyProperty.Register("Text", typeof(string), typeof(ScoreControl));
 
-        public static readonly DependencyProperty PointsProperty =
-            DependencyProperty.Register("Points", typeof(int), typeof(ScoreControl));
+        #endregion Fields
 
-        public static readonly DependencyProperty ShadowColorProperty =
-            DependencyProperty.Register("ShadowColor", typeof(Color), typeof(ScoreControl));
+        #region Constructors
 
         public ScoreControl()
         {
             InitializeComponent();
         }
 
-        public Color ShadowColor
+        #endregion Constructors
+
+        #region Public Properties
+
+        public string Image
         {
-            get { return (Color) GetValue(ShadowColorProperty); }
-            set { SetValue(ShadowColorProperty, value); }
+            get { return (string)GetValue(ImageProperty); }
+            set { SetValue(ImageProperty, value); }
         }
 
         public int Points
@@ -34,10 +41,10 @@ namespace PowersOfTwo.Controls
             set { SetValue(PointsProperty, value); }
         }
 
-        public string Image
+        public Color ShadowColor
         {
-            get { return (string)GetValue(ImageProperty); }
-            set { SetValue(ImageProperty, value); }
+            get { return (Color) GetValue(ShadowColorProperty); }
+            set { SetValue(ShadowColorProperty, value); }
         }
 
         public string Text
@@ -45,5 +52,7 @@ namespace PowersOfTwo.Controls
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
+
+        #endregion Public Properties
     }
 }

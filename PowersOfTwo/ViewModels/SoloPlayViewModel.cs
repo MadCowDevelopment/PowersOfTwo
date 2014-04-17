@@ -1,12 +1,19 @@
 ﻿using System.Linq;
+
 using PowersOfTwo.Core;
 
 namespace PowersOfTwo.ViewModels
 {
     public class SoloPlayViewModel : PlayViewModel
     {
-        private readonly MainWindowViewModel _mainWindowViewModel;
+        #region Fields
+
         private readonly GameLogic _gameLogic = new GameLogic(4, 4);
+        private readonly MainWindowViewModel _mainWindowViewModel;
+
+        #endregion Fields
+
+        #region Constructors
 
         public SoloPlayViewModel(OverlayViewModel overlayViewModel, MainWindowViewModel mainWindowViewModel)
             : base(overlayViewModel)
@@ -22,20 +29,9 @@ namespace PowersOfTwo.ViewModels
             Player.Cells = _gameLogic.Cells;
         }
 
-        private void GameLogicOutOfMoves()
-        {
-            OverlayViewModel.Show(new OverlayTextViewModel("Game Over"));
-        }
+        #endregion Constructors
 
-        private void GameLogicCellsMatched(int points)
-        {
-            Player.Points += points;
-        }
-
-        protected override void OnGameOver()
-        {
-            _mainWindowViewModel.ShowHighscore(Player.Points);
-        }
+        #region Protected Methods
 
         protected override void MoveDown()
         {
@@ -43,9 +39,9 @@ namespace PowersOfTwo.ViewModels
             Player.Cells = _gameLogic.Cells.ToList();
         }
 
-        protected override void MoveUp()
+        protected override void MoveLeft()
         {
-            _gameLogic.MoveUp();
+            _gameLogic.MoveLeft();
             Player.Cells = _gameLogic.Cells.ToList();
         }
 
@@ -55,10 +51,31 @@ namespace PowersOfTwo.ViewModels
             Player.Cells = _gameLogic.Cells.ToList();
         }
 
-        protected override void MoveLeft()
+        protected override void MoveUp()
         {
-            _gameLogic.MoveLeft();
+            _gameLogic.MoveUp();
             Player.Cells = _gameLogic.Cells.ToList();
         }
+
+        protected override void OnGameOver()
+        {
+            _mainWindowViewModel.ShowHighscore(Player.Points);
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private void GameLogicCellsMatched(int points)
+        {
+            Player.Points += points;
+        }
+
+        private void GameLogicOutOfMoves()
+        {
+            OverlayViewModel.Show(new OverlayTextViewModel("Game Over"));
+        }
+
+        #endregion Private Methods
     }
 }

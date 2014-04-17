@@ -9,18 +9,32 @@ namespace PowersOfTwo.Controls
     /// </summary>
     public partial class MenuButton : UserControl
     {
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(string), typeof(MenuButton));
+        #region Fields
 
-        public static readonly DependencyProperty TextProperty =
+        public static readonly DependencyProperty CommandProperty = 
+            DependencyProperty.Register("Command", typeof(ICommand), typeof(MenuButton));
+        public static readonly DependencyProperty ImageProperty = 
+            DependencyProperty.Register("Image", typeof(string), typeof(MenuButton));
+        public static readonly DependencyProperty TextProperty = 
             DependencyProperty.Register("Text", typeof(string), typeof(MenuButton));
 
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.Register("Command", typeof(ICommand), typeof(MenuButton));
+        #endregion Fields
+
+        #region Constructors
 
         public MenuButton()
         {
             InitializeComponent();
+        }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
         }
 
         public string Image
@@ -35,10 +49,6 @@ namespace PowersOfTwo.Controls
             set { SetValue(TextProperty, value); }
         }
 
-        public ICommand Command
-        {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
-        }
+        #endregion Public Properties
     }
 }

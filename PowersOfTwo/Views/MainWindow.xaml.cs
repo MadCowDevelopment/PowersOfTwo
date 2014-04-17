@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+
 using PowersOfTwo.ViewModels;
 
 namespace PowersOfTwo.Views
@@ -19,6 +20,8 @@ namespace PowersOfTwo.Views
 
         #endregion Constructors
 
+        #region Private Methods
+
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
@@ -31,5 +34,7 @@ namespace PowersOfTwo.Views
                 e.Handled = true;
             }
         }
+
+        #endregion Private Methods
     }
 }

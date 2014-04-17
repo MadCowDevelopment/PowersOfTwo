@@ -5,9 +5,13 @@
     /// </summary>
     public partial class QueueView
     {
+        #region Constructors
+
         public QueueView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

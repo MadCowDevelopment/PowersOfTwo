@@ -20,9 +20,13 @@ namespace PowersOfTwo.Controls
     /// </summary>
     public partial class PlayFieldControl : UserControl
     {
+        #region Constructors
+
         public PlayFieldControl()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

@@ -7,91 +7,73 @@ namespace PowersOfTwo.Controls.Adorner
 {
     public class AdornedControl : ContentControl
     {
-        /// <summary>
-        /// Dependency properties.
-        /// </summary>
-        public static readonly DependencyProperty IsAdornerVisibleProperty =
-            DependencyProperty.Register("IsAdornerVisible", typeof(bool), typeof(AdornedControl),
-                new FrameworkPropertyMetadata(IsAdornerVisible_PropertyChanged));
+        #region Fields
 
-        public static readonly DependencyProperty AdornerContentProperty =
+        public static readonly DependencyProperty AdornerContentProperty = 
             DependencyProperty.Register("AdornerContent", typeof(FrameworkElement), typeof(AdornedControl),
                 new FrameworkPropertyMetadata(AdornerContent_PropertyChanged));
-
-        public static readonly DependencyProperty HorizontalAdornerPlacementProperty =
+        public static readonly DependencyProperty AdornerOffsetXProperty = 
+            DependencyProperty.Register("AdornerOffsetX", typeof(double), typeof(AdornedControl));
+        public static readonly DependencyProperty AdornerOffsetYProperty = 
+            DependencyProperty.Register("AdornerOffsetY", typeof(double), typeof(AdornedControl));
+        public static readonly RoutedCommand HideAdornerCommand = new RoutedCommand("HideAdorner", typeof(AdornedControl));
+        public static readonly DependencyProperty HorizontalAdornerPlacementProperty = 
             DependencyProperty.Register("HorizontalAdornerPlacement", typeof(AdornerPlacement), typeof(AdornedControl),
                 new FrameworkPropertyMetadata(AdornerPlacement.Inside));
 
-        public static readonly DependencyProperty VerticalAdornerPlacementProperty =
-            DependencyProperty.Register("VerticalAdornerPlacement", typeof(AdornerPlacement), typeof(AdornedControl),
-                new FrameworkPropertyMetadata(AdornerPlacement.Inside));
-
-        public static readonly DependencyProperty AdornerOffsetXProperty =
-            DependencyProperty.Register("AdornerOffsetX", typeof(double), typeof(AdornedControl));
-        public static readonly DependencyProperty AdornerOffsetYProperty =
-            DependencyProperty.Register("AdornerOffsetY", typeof(double), typeof(AdornedControl));
+        /// <summary>
+        /// Dependency properties.
+        /// </summary>
+        public static readonly DependencyProperty IsAdornerVisibleProperty = 
+            DependencyProperty.Register("IsAdornerVisible", typeof(bool), typeof(AdornedControl),
+                new FrameworkPropertyMetadata(IsAdornerVisible_PropertyChanged));
 
         /// <summary>
         /// Commands.
         /// </summary>
         public static readonly RoutedCommand ShowAdornerCommand = new RoutedCommand("ShowAdorner", typeof(AdornedControl));
-        public static readonly RoutedCommand HideAdornerCommand = new RoutedCommand("HideAdorner", typeof(AdornedControl));
+        public static readonly DependencyProperty VerticalAdornerPlacementProperty = 
+            DependencyProperty.Register("VerticalAdornerPlacement", typeof(AdornerPlacement), typeof(AdornedControl),
+                new FrameworkPropertyMetadata(AdornerPlacement.Inside));
+
+        private static readonly CommandBinding HideAdornerCommandBinding = new CommandBinding(HideAdornerCommand, HideAdornerCommand_Executed);
+
+        /// <summary>
+        /// Command bindings.
+        /// </summary>
+        private static readonly CommandBinding ShowAdornerCommandBinding = new CommandBinding(ShowAdornerCommand, ShowAdornerCommand_Executed);
+
+        /// <summary>
+        /// The actual adorner create to contain our 'adorner UI content'.
+        /// </summary>
+        private FrameworkElementAdorner adorner = null;
+
+        /// <summary>
+        /// Caches the adorner layer.
+        /// </summary>
+        private AdornerLayer adornerLayer = null;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Static constructor to register command bindings.
+        /// </summary>
+        static AdornedControl()
+        {
+            CommandManager.RegisterClassCommandBinding(typeof(AdornedControl), ShowAdornerCommandBinding);
+            CommandManager.RegisterClassCommandBinding(typeof(AdornedControl), HideAdornerCommandBinding);
+        }
 
         public AdornedControl()
         {
             this.DataContextChanged += new DependencyPropertyChangedEventHandler(AdornedControl_DataContextChanged);
         }
 
-        /// <summary>
-        /// Event raised when the DataContext of the adorned control changes.
-        /// </summary>
-        private void AdornedControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            UpdateAdornerDataContext();
-        }
+        #endregion Constructors
 
-        /// <summary>
-        /// Update the DataContext of the adorner from the adorned control.
-        /// </summary>
-        private void UpdateAdornerDataContext()
-        {
-            if (this.AdornerContent != null)
-            {
-                this.AdornerContent.DataContext = this.DataContext;
-            }
-        }
-
-        /// <summary>
-        /// Show the adorner.
-        /// </summary>
-        public void ShowAdorner()
-        {
-            IsAdornerVisible = true;
-        }
-
-        /// <summary>
-        /// Hide the adorner.
-        /// </summary>
-        public void HideAdorner()
-        {
-            IsAdornerVisible = false;
-        }
-
-        /// <summary>
-        /// Shows or hides the adorner.
-        /// Set to 'true' to show the adorner or 'false' to hide the adorner.
-        /// </summary>
-        public bool IsAdornerVisible
-        {
-            get
-            {
-                return (bool)GetValue(IsAdornerVisibleProperty);
-            }
-            set
-            {
-                SetValue(IsAdornerVisibleProperty, value);
-            }
-        }
+        #region Public Properties
 
         /// <summary>
         /// Used in XAML to define the UI content of the adorner.
@@ -105,36 +87,6 @@ namespace PowersOfTwo.Controls.Adorner
             set
             {
                 SetValue(AdornerContentProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Specifies the horizontal placement of the adorner relative to the adorned control.
-        /// </summary>
-        public AdornerPlacement HorizontalAdornerPlacement
-        {
-            get
-            {
-                return (AdornerPlacement)GetValue(HorizontalAdornerPlacementProperty);
-            }
-            set
-            {
-                SetValue(HorizontalAdornerPlacementProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Specifies the vertical placement of the adorner relative to the adorned control.
-        /// </summary>
-        public AdornerPlacement VerticalAdornerPlacement
-        {
-            get
-            {
-                return (AdornerPlacement)GetValue(VerticalAdornerPlacementProperty);
-            }
-            set
-            {
-                SetValue(VerticalAdornerPlacementProperty, value);
             }
         }
 
@@ -168,44 +120,90 @@ namespace PowersOfTwo.Controls.Adorner
             }
         }
 
-        #region Private Data Members
-
         /// <summary>
-        /// Command bindings.
+        /// Specifies the horizontal placement of the adorner relative to the adorned control.
         /// </summary>
-        private static readonly CommandBinding ShowAdornerCommandBinding = new CommandBinding(ShowAdornerCommand, ShowAdornerCommand_Executed);
-        private static readonly CommandBinding HideAdornerCommandBinding = new CommandBinding(HideAdornerCommand, HideAdornerCommand_Executed);
-
-        /// <summary>
-        /// Caches the adorner layer.
-        /// </summary>
-        private AdornerLayer adornerLayer = null;
-
-        /// <summary>
-        /// The actual adorner create to contain our 'adorner UI content'.
-        /// </summary>
-        private FrameworkElementAdorner adorner = null;
-
-        #endregion
-
-        #region Private/Internal Functions
-
-        /// <summary>
-        /// Static constructor to register command bindings.
-        /// </summary>
-        static AdornedControl()
+        public AdornerPlacement HorizontalAdornerPlacement
         {
-            CommandManager.RegisterClassCommandBinding(typeof(AdornedControl), ShowAdornerCommandBinding);
-            CommandManager.RegisterClassCommandBinding(typeof(AdornedControl), HideAdornerCommandBinding);
+            get
+            {
+                return (AdornerPlacement)GetValue(HorizontalAdornerPlacementProperty);
+            }
+            set
+            {
+                SetValue(HorizontalAdornerPlacementProperty, value);
+            }
         }
 
         /// <summary>
-        /// Event raised when the Show command is executed.
+        /// Shows or hides the adorner.
+        /// Set to 'true' to show the adorner or 'false' to hide the adorner.
         /// </summary>
-        private static void ShowAdornerCommand_Executed(object target, ExecutedRoutedEventArgs e)
+        public bool IsAdornerVisible
         {
-            AdornedControl c = (AdornedControl)target;
-            c.ShowAdorner();
+            get
+            {
+                return (bool)GetValue(IsAdornerVisibleProperty);
+            }
+            set
+            {
+                SetValue(IsAdornerVisibleProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Specifies the vertical placement of the adorner relative to the adorned control.
+        /// </summary>
+        public AdornerPlacement VerticalAdornerPlacement
+        {
+            get
+            {
+                return (AdornerPlacement)GetValue(VerticalAdornerPlacementProperty);
+            }
+            set
+            {
+                SetValue(VerticalAdornerPlacementProperty, value);
+            }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        /// <summary>
+        /// Hide the adorner.
+        /// </summary>
+        public void HideAdorner()
+        {
+            IsAdornerVisible = false;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            ShowOrHideAdornerInternal();
+        }
+
+        /// <summary>
+        /// Show the adorner.
+        /// </summary>
+        public void ShowAdorner()
+        {
+            IsAdornerVisible = true;
+        }
+
+        #endregion Public Methods
+
+        #region Private Static Methods
+
+        /// <summary>
+        /// Event raised when the value of AdornerContent has changed.
+        /// </summary>
+        private static void AdornerContent_PropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            AdornedControl c = (AdornedControl)o;
+            c.ShowOrHideAdornerInternal();
         }
 
         /// <summary>
@@ -227,27 +225,42 @@ namespace PowersOfTwo.Controls.Adorner
         }
 
         /// <summary>
-        /// Event raised when the value of AdornerContent has changed.
+        /// Event raised when the Show command is executed.
         /// </summary>
-        private static void AdornerContent_PropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        private static void ShowAdornerCommand_Executed(object target, ExecutedRoutedEventArgs e)
         {
-            AdornedControl c = (AdornedControl)o;
-            c.ShowOrHideAdornerInternal();
+            AdornedControl c = (AdornedControl)target;
+            c.ShowAdorner();
+        }
+
+        #endregion Private Static Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Event raised when the DataContext of the adorned control changes.
+        /// </summary>
+        private void AdornedControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateAdornerDataContext();
         }
 
         /// <summary>
-        /// Internal method to show or hide the adorner based on the value of IsAdornerVisible.
+        /// Internal method to hide the adorner.
         /// </summary>
-        private void ShowOrHideAdornerInternal()
+        private void HideAdornerInternal()
         {
-            if (IsAdornerVisible)
+            if (this.adornerLayer == null || this.adorner == null)
             {
-                ShowAdornerInternal();
+                // Not already adorned.
+                return;
             }
-            else
-            {
-                HideAdornerInternal();
-            }
+
+            this.adornerLayer.Remove(this.adorner);
+            this.adorner.DisconnectChild();
+
+            this.adorner = null;
+            this.adornerLayer = null;
         }
 
         /// <summary>
@@ -280,30 +293,31 @@ namespace PowersOfTwo.Controls.Adorner
         }
 
         /// <summary>
-        /// Internal method to hide the adorner.
+        /// Internal method to show or hide the adorner based on the value of IsAdornerVisible.
         /// </summary>
-        private void HideAdornerInternal()
+        private void ShowOrHideAdornerInternal()
         {
-            if (this.adornerLayer == null || this.adorner == null)
+            if (IsAdornerVisible)
             {
-                // Not already adorned.
-                return;
+                ShowAdornerInternal();
             }
-
-            this.adornerLayer.Remove(this.adorner);
-            this.adorner.DisconnectChild();
-
-            this.adorner = null;
-            this.adornerLayer = null;
+            else
+            {
+                HideAdornerInternal();
+            }
         }
 
-        public override void OnApplyTemplate()
+        /// <summary>
+        /// Update the DataContext of the adorner from the adorned control.
+        /// </summary>
+        private void UpdateAdornerDataContext()
         {
-            base.OnApplyTemplate();
-
-            ShowOrHideAdornerInternal();
+            if (this.AdornerContent != null)
+            {
+                this.AdornerContent.DataContext = this.DataContext;
+            }
         }
 
-        #endregion
+        #endregion Private Methods
     }
 }

@@ -8,18 +8,27 @@ namespace PowersOfTwo.Services
 {
     public class HighscoreService
     {
+        #region Fields
+
+        private readonly string _fileName;
         private readonly string _filePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "MadCowDevelopment",
             "PowersOfTwo");
 
-        private readonly string _fileName;
+        #endregion Fields
+
+        #region Constructors
 
         public HighscoreService()
         {
             Directory.CreateDirectory(_filePath);
             _fileName = Path.Combine(_filePath, "PowersOfTwoScore.xml");
         }
+
+        #endregion Constructors
+
+        #region Public Methods
 
         public void AddScore(int scoreToAdd)
         {
@@ -46,5 +55,7 @@ namespace PowersOfTwo.Services
                           select Int32.Parse(score.Value)).OrderByDescending(p => p).ToList();
             return scores;
         }
+
+        #endregion Public Methods
     }
 }

@@ -5,9 +5,13 @@
     /// </summary>
     public partial class MainMenuView
     {
+        #region Constructors
+
         public MainMenuView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }
