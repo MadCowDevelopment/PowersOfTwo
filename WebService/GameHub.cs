@@ -13,7 +13,7 @@ namespace WebService
 
         private const int Columns = 4;
         private const int Rows = 4;
-        private const int StartPoints = 1024;
+        private const int StartPoints = 2048;
 
         private static readonly List<Player> QueuedPlayers = new List<Player>();
         private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
@@ -60,6 +60,7 @@ namespace WebService
                 if (QueuedPlayers.Count >= 1)
                 {
                     var player2 = QueuedPlayers.First();
+                    QueuedPlayers.Remove(player2);
                     StartNewGame(player1, player2);
                 }
                 else
