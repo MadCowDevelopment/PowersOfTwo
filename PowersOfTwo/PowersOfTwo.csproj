@@ -19,7 +19,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <GenerateBootstrapperSdkPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bootstrapper</GenerateBootstrapperSdkPath>
     <SdkToolsPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bin</SdkToolsPath>
-    <PublishUrl>\_PublishedWebsites\WebService\</PublishUrl>
+    <PublishDir Condition="'$(OutDir)' != ''">$(OutDir)\_PublishedWebsites\WebService</PublishDir>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
