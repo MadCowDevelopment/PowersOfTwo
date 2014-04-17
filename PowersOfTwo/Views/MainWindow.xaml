@@ -1,7 +1,9 @@
 ﻿<Window x:Class="PowersOfTwo.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        ResizeMode="NoResize"
+        xmlns:adorner="clr-namespace:PowersOfTwo.Controls.Adorner"
+        ResizeMode="NoResize" IsTabStop="False"
+        PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         Title="MainWindow" Height="430" Width="490">
 
   <Window.InputBindings>
@@ -9,12 +11,16 @@
     <KeyBinding Key="Right" Command="{Binding CommandBroker.RightCommand}"/>
     <KeyBinding Key="Up" Command="{Binding CommandBroker.UpCommand}"/>
     <KeyBinding Key="Down" Command="{Binding CommandBroker.DownCommand}"/>
-    <KeyBinding Key="Enter" Command="{Binding Overlay.CloseCommand}"/>
+
   </Window.InputBindings>
 
   <Grid>
-    <ContentControl Content="{Binding Content}"/>
-    <ContentControl Content="{Binding Overlay}"/>
+    <adorner:AdornedControl IsAdornerVisible="{Binding Overlay.Visible}">
+      <adorner:AdornedControl.AdornerContent>
+        <ContentControl Content="{Binding Overlay}"/>
+      </adorner:AdornedControl.AdornerContent>
+      <ContentControl Content="{Binding Content}"/>
+    </adorner:AdornedControl>
   </Grid>
 
 </Window>

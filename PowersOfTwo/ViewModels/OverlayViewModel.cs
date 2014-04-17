@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 using PowersOfTwo.Framework;
 
 namespace PowersOfTwo.ViewModels
@@ -9,7 +8,7 @@ namespace PowersOfTwo.ViewModels
         public OverlayViewModel()
         {
             Visible = false;
-            CloseCommand = new RelayCommand(p => HideOverlay());
+            
         }
 
         public event Action Closed;
@@ -24,15 +23,14 @@ namespace PowersOfTwo.ViewModels
 
         public bool Visible { get; private set; }
 
-        public ICommand CloseCommand { get; private set; }
-
-        public void ShowOverlay(ObservableObject content)
+        public void Show(ObservableObject content)
         {
+            
             Content = content;
             Visible = true;
         }
 
-        private void HideOverlay()
+        public void Hide()
         {
             Visible = false;
             RaiseClosed();

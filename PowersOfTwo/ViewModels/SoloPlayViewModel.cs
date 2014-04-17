@@ -24,7 +24,7 @@ namespace PowersOfTwo.ViewModels
 
         private void GameLogicOutOfMoves()
         {
-            OverlayViewModel.ShowOverlay(new OverlayTextViewModel("Game Over"));
+            OverlayViewModel.Show(new OverlayTextViewModel("Game Over"));
         }
 
         private void GameLogicCellsMatched(int points)

@@ -45,7 +45,7 @@ namespace PowersOfTwo.ViewModels
         private void GameOver(bool win)
         {
             var text = win ? "You win!" : "You lose!";
-            OverlayViewModel.ShowOverlay(new OverlayTextViewModel(text));
+            OverlayViewModel.Show(new OverlayTextViewModel(text));
         }
 
         private void GameStarted(StartGameInformation startGameInformation)
