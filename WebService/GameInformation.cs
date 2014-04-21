@@ -54,6 +54,11 @@
             return null;
         }
 
+        public bool HasAnyPlayerConnectionId(string connectionId)
+        {
+            return Player1.ConnectionId == connectionId || Player2.ConnectionId == connectionId;
+        }
+
         public Player OtherPlayer(Player player)
         {
             if (player == Player1) return Player2;

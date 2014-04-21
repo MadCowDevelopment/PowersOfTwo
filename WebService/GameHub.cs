@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNet.SignalR;
 
@@ -93,6 +94,42 @@ namespace WebService
             Move(groupName, Direction.Up);
         }
 
+        public override Task OnDisconnected()
+        {
+            lock (QueuedPlayers)
+            {
+                var players = QueuedPlayers.Where(p => p.ConnectionId == Context.ConnectionId).ToList();
+                foreach (var player in players)
+                {
+                    QueuedPlayers.Remove(player);
+                }
+            }
+
+            lock (ReadyGames)
+            {
+                var games =
+                    ReadyGames.Where(p => p.Value.GameInformation.HasAnyPlayerConnectionId(Context.ConnectionId))
+                        .ToList();
+                foreach (var keyValuePair in games)
+                {
+                    RejectGame(keyValuePair.Key);
+                }
+            }
+
+            lock (RunningGames)
+            {
+                var games = RunningGames.Where(p => p.Value.HasAnyPlayerConnectionId(Context.ConnectionId)).ToList();
+                foreach (var keyValuePair in games)
+                {
+                    var loser = keyValuePair.Value.GetPlayer(Context.ConnectionId);
+                    var winner = keyValuePair.Value.OtherPlayer(loser);
+                    EndGame(keyValuePair.Value, winner, loser);
+                }
+            }
+
+            return base.OnDisconnected();
+        }
+
         public void Queue(string userName)
         {
             lock (QueuedPlayers)
@@ -140,6 +177,13 @@ namespace WebService
             readyGameInfo.Dispose();
         }
 
+        private void EndGame(GameInformation gameInfo, Player winner, Player loser)
+        {
+            gameInfo.IsFinished = true;
+            SendCells(loser, winner);
+            SendGameOver(gameInfo, winner, loser);
+        }
+
         private void Move(string groupName, Direction direction)
         {
             GameInformation game;
@@ -177,20 +221,11 @@ namespace WebService
 
             player1.GameLogic = new GameLogic(Rows, Columns);
             player1.GameLogic.CellsMatched += points => UpdateGame(player1, points, gameInfo);
-            player1.GameLogic.OutOfMoves += () =>
-            {
-                gameInfo.IsFinished = true;
-                SendCells(player1, player2);
-                SendGameOver(gameInfo, player2, player1);
-            };
+            player1.GameLogic.OutOfMoves += () => EndGame(gameInfo, player2, player1);
 
             player2.GameLogic = new GameLogic(Rows, Columns);
             player2.GameLogic.CellsMatched += points => UpdateGame(player2, points, gameInfo);
-            player2.GameLogic.OutOfMoves += () =>
-            {
-                SendCells(player2, player1);
-                SendGameOver(gameInfo, player1, player2);
-            };
+            player2.GameLogic.OutOfMoves += () => EndGame(gameInfo, player1, player2);
 
             var readyGameInformation = new ReadyGameInformation(gameInfo);
             readyGameInformation.RemainingTimeChanged += ReadyGameInformationRemainingTimeChanged;

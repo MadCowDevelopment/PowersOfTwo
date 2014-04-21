@@ -57,11 +57,6 @@ namespace PowersOfTwo.ViewModels
             Player.Cells = _gameLogic.Cells.ToList();
         }
 
-        protected override void OnGameOver()
-        {
-            _mainWindowViewModel.ShowHighscore(Player.Points);
-        }
-
         #endregion Protected Methods
 
         #region Private Methods
@@ -73,7 +68,14 @@ namespace PowersOfTwo.ViewModels
 
         private void GameLogicOutOfMoves()
         {
+            OverlayViewModel.Closed += OverlayViewModelClosed;
             OverlayViewModel.Show(new OverlayTextViewModel("Game Over", 72), true, false);
+        }
+
+        private void OverlayViewModelClosed(bool? obj)
+        {
+            OverlayViewModel.Closed -= OverlayViewModelClosed;
+            _mainWindowViewModel.ShowHighscore(Player.Points);
         }
 
         #endregion Private Methods

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 using Microsoft.AspNet.SignalR.Client;
@@ -10,7 +11,7 @@ using WebService;
 
 namespace PowersOfTwo.ViewModels
 {
-    public class MainMenuViewModel : ObservableObject
+    public class MainMenuViewModel : ObservableObject, IDisposable
     {
         #region Fields
 
@@ -71,6 +72,15 @@ namespace PowersOfTwo.ViewModels
         }
 
         #endregion Public Properties
+
+        #region Public Methods
+
+        public void Dispose()
+        {
+            _gameProxy.Dispose();
+        }
+
+        #endregion Public Methods
 
         #region Private Methods
 

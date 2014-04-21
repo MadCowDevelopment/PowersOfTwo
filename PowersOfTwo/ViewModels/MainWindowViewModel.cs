@@ -1,9 +1,11 @@
-﻿using PowersOfTwo.Framework;
+﻿using System;
+
+using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
 
 namespace PowersOfTwo.ViewModels
 {
-    public class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : ObservableObject, IDisposable
     {
         #region Fields
 
@@ -44,6 +46,11 @@ namespace PowersOfTwo.ViewModels
         #endregion Public Properties
 
         #region Public Methods
+
+        public void Dispose()
+        {
+            _mainMenuViewModel.Dispose();
+        }
 
         public void ShowHighscore(int score)
         {

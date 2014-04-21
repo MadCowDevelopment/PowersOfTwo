@@ -103,6 +103,11 @@ namespace PowersOfTwo.Services
             _gameProxy.Invoke("AcceptGame", GroupName);
         }
 
+        public void Dispose()
+        {
+            _hubConnection.Dispose();
+        }
+
         public void LeaveQueue()
         {
             _gameProxy.Invoke("LeaveQueue");
@@ -136,6 +141,11 @@ namespace PowersOfTwo.Services
         public void RejectGame()
         {
             _gameProxy.Invoke("RejectGame", GroupName);
+        }
+
+        public void Stop()
+        {
+            _hubConnection.Stop();
         }
 
         #endregion Public Methods

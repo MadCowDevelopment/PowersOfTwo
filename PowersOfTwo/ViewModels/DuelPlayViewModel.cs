@@ -76,11 +76,6 @@ namespace PowersOfTwo.ViewModels
             _gameProxy.MoveUp();
         }
 
-        protected override void OnGameOver()
-        {
-            _mainWindowViewModel.ShowMainMenu();
-        }
-
         #endregion Protected Methods
 
         #region Private Methods
@@ -93,6 +88,7 @@ namespace PowersOfTwo.ViewModels
         private void GameOver(bool win)
         {
             var text = win ? "You win!" : "You lose!";
+            OverlayViewModel.Closed += OverlayViewModelClosed;
             OverlayViewModel.Show(new OverlayTextViewModel(text, 72), true, false);
         }
 
@@ -115,6 +111,12 @@ namespace PowersOfTwo.ViewModels
         private void OpponentPointsUpdated(int remainingPoints)
         {
             Opponent.Points = remainingPoints;
+        }
+
+        private void OverlayViewModelClosed(bool? obj)
+        {
+            OverlayViewModel.Closed -= OverlayViewModelClosed;
+            _mainWindowViewModel.ShowMainMenu();
         }
 
         private void PointsUpdated(int remainingPoints)

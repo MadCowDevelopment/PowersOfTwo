@@ -12,7 +12,6 @@ namespace PowersOfTwo.ViewModels
         protected PlayViewModel(OverlayViewModel overlayViewModel)
         {
             OverlayViewModel = overlayViewModel;
-            OverlayViewModel.Closed += OverlayViewModelClosed;
 
             LeftCommand = new RelayCommand(p => MoveLeft());
             RightCommand = new RelayCommand(p => MoveRight());
@@ -74,18 +73,6 @@ namespace PowersOfTwo.ViewModels
 
         protected abstract void MoveUp();
 
-        protected abstract void OnGameOver();
-
         #endregion Protected Methods
-
-        #region Private Methods
-
-        private void OverlayViewModelClosed(bool? result)
-        {
-            OverlayViewModel.Closed -= OverlayViewModelClosed;
-            OnGameOver();
-        }
-
-        #endregion Private Methods
     }
 }

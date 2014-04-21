@@ -115,10 +115,10 @@
         </Grid.RowDefinitions>
         <ContentControl Grid.Row="0" Content="{Binding Content}"/>
         <TextBlock Grid.Row="1" Text="Press Enter to continue..." HorizontalAlignment="Center" 
-                   Margin="8,8,8,2" FontSize="16" 
+                   Margin="8,8,8,0" FontSize="16" 
                    Visibility="{Binding AllowCancel, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Grid.Row="2" Text="Press Escape to cancel..." HorizontalAlignment="Center" 
-                   Margin="8,2,8,8" FontSize="16" 
+                   Margin="8,0,8,8" FontSize="16" 
                    Visibility="{Binding AllowCancel, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       </Grid>
     </Border>
