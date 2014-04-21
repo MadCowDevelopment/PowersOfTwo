@@ -20,7 +20,7 @@
     <GenerateBootstrapperSdkPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bootstrapper</GenerateBootstrapperSdkPath>
     <SdkToolsPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bin</SdkToolsPath>
     <PublishDir Condition="'$(OutDir)' != ''">$(OutDir)\_PublishedWebsites\WebService</PublishDir>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>http://powersoftwo.apphb.com/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -28,15 +28,14 @@
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
+    <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://powersoftwo.apphb.com/</InstallUrl>
     <UpdateUrl>http://powersoftwo.apphb.com/</UpdateUrl>
     <ProductName>PowersOfTwo</ProductName>
     <PublisherName>MadCowDevelopment</PublisherName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-    <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
