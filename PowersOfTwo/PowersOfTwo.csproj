@@ -16,7 +16,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <GenerateBootstrapperSdkPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bootstrapper</GenerateBootstrapperSdkPath>
     <SdkToolsPath>$(MSBuildProjectDirectory)\..\Lib\v8.1A\Bin</SdkToolsPath>
     <PublishDir Condition="'$(OutDir)' != ''">$(OutDir)\_PublishedWebsites\WebService</PublishDir>
@@ -28,14 +28,14 @@
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>true</UpdateRequired>
+    <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://powersoftwo.apphb.com/</InstallUrl>
     <UpdateUrl>http://powersoftwo.apphb.com/</UpdateUrl>
     <ProductName>PowersOfTwo</ProductName>
     <PublisherName>MadCowDevelopment</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.2.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
