@@ -103,6 +103,8 @@
     <Compile Include="GameInformation.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadyGameInformation.cs" />
+    <Compile Include="RemainingTimeChangedEventArgs.cs" />
     <Compile Include="StartGameInformation.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

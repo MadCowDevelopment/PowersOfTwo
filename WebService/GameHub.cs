@@ -17,7 +17,10 @@ namespace WebService
         private const int StartPoints = 2048;
 
         private static readonly List<Player> QueuedPlayers = new List<Player>();
-        private static readonly Dictionary<string, GameInformation> RunningGames = new Dictionary<string, GameInformation>();
+        private static readonly Dictionary<string, ReadyGameInformation> ReadyGames = 
+            new Dictionary<string, ReadyGameInformation>();
+        private static readonly Dictionary<string, GameInformation> RunningGames = 
+            new Dictionary<string, GameInformation>();
 
         #endregion Fields
 
@@ -34,6 +37,32 @@ namespace WebService
         #endregion Enumerations
 
         #region Public Methods
+
+        public void AcceptGame(string groupName)
+        {
+            ReadyGameInformation readyGameInfo;
+            if (!ReadyGames.TryGetValue(groupName, out readyGameInfo)) return;
+            var gameInfo = readyGameInfo.GameInformation;
+
+            var player1 = gameInfo.GetPlayer(Context.ConnectionId);
+            var player2 = gameInfo.OtherPlayer(player1);
+
+            player1.IsReady = true;
+            Clients.Client(player2.ConnectionId).OpponentReady();
+
+            if (!player1.IsReady || !player2.IsReady) return;
+
+            RunningGames.Add(groupName, gameInfo);
+
+            DisposeReadyGame(readyGameInfo);
+
+            Clients.Client(player1.ConnectionId)
+                .StartGame(new StartGameInformation(player2.Name, StartPoints, player1.GameLogic.Cells,
+                    player2.GameLogic.Cells));
+            Clients.Client(player2.ConnectionId)
+                .StartGame(new StartGameInformation(player1.Name, StartPoints, player2.GameLogic.Cells,
+                    player1.GameLogic.Cells));
+        }
 
         public void LeaveQueue()
         {
@@ -74,7 +103,7 @@ namespace WebService
                 {
                     var player2 = QueuedPlayers.First();
                     QueuedPlayers.Remove(player2);
-                    StartNewGame(player1, player2);
+                    PrepareNewGame(player1, player2);
                 }
                 else
                 {
@@ -88,9 +117,28 @@ namespace WebService
             // TODO
         }
 
+        public void RejectGame(string groupName)
+        {
+            ReadyGameInformation readyGameInfo;
+            if (!ReadyGames.TryGetValue(groupName, out readyGameInfo)) return;
+
+            var gameInfo = readyGameInfo.GameInformation;
+            DisposeReadyGame(readyGameInfo);
+
+            var otherPlayer = gameInfo.OtherPlayer(gameInfo.GetPlayer(Context.ConnectionId));
+            Clients.Client(otherPlayer.ConnectionId).OpponentLeft();
+        }
+
         #endregion Public Methods
 
         #region Private Methods
+
+        private void DisposeReadyGame(ReadyGameInformation readyGameInfo)
+        {
+            ReadyGames.Remove(readyGameInfo.GameInformation.GroupName);
+            readyGameInfo.RemainingTimeChanged -= ReadyGameInformationRemainingTimeChanged;
+            readyGameInfo.Dispose();
+        }
 
         private void Move(string groupName, Direction direction)
         {
@@ -122,6 +170,52 @@ namespace WebService
             }
         }
 
+        private void PrepareNewGame(Player player1, Player player2)
+        {
+            var groupName = Guid.NewGuid().ToString();
+            var gameInfo = new GameInformation(groupName, player1, player2);
+
+            player1.GameLogic = new GameLogic(Rows, Columns);
+            player1.GameLogic.CellsMatched += points => UpdateGame(player1, points, gameInfo);
+            player1.GameLogic.OutOfMoves += () =>
+            {
+                gameInfo.IsFinished = true;
+                SendCells(player1, player2);
+                SendGameOver(gameInfo, player2, player1);
+            };
+
+            player2.GameLogic = new GameLogic(Rows, Columns);
+            player2.GameLogic.CellsMatched += points => UpdateGame(player2, points, gameInfo);
+            player2.GameLogic.OutOfMoves += () =>
+            {
+                SendCells(player2, player1);
+                SendGameOver(gameInfo, player1, player2);
+            };
+
+            var readyGameInformation = new ReadyGameInformation(gameInfo);
+            readyGameInformation.RemainingTimeChanged += ReadyGameInformationRemainingTimeChanged;
+            ReadyGames.Add(groupName, readyGameInformation);
+
+            Clients.Client(player1.ConnectionId).OpponentFound(new OpponentFoundInformation(groupName, player2.Name));
+            Clients.Client(player2.ConnectionId).OpponentFound(new OpponentFoundInformation(groupName, player1.Name));
+        }
+
+        private void ReadyGameInformationRemainingTimeChanged(object sender, RemainingTimeChangedEventArgs args)
+        {
+            if (args.RemainingTime > 0)
+            {
+                Clients.Client(args.GameInformation.Player1.ConnectionId).QueueRemainingTimeChanged(args.RemainingTime);
+                Clients.Client(args.GameInformation.Player2.ConnectionId).QueueRemainingTimeChanged(args.RemainingTime);
+            }
+            else
+            {
+                var readyGameInfo = sender as ReadyGameInformation;
+                DisposeReadyGame(readyGameInfo);
+                Clients.Client(args.GameInformation.Player1.ConnectionId).GameCanceled();
+                Clients.Client(args.GameInformation.Player2.ConnectionId).GameCanceled();
+            }
+        }
+
         private void SendCells(Player currentPlayer, Player otherPlayer)
         {
             Clients.Client(currentPlayer.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
@@ -147,38 +241,6 @@ namespace WebService
 
             Clients.Client(player.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
             Clients.Client(otherPlayer.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
-        }
-
-        private void StartNewGame(Player player1, Player player2)
-        {
-            var groupName = Guid.NewGuid().ToString();
-            var gameInfo = new GameInformation(groupName, player1, player2);
-
-            player1.GameLogic = new GameLogic(Rows, Columns);
-            player1.GameLogic.CellsMatched += points => UpdateGame(player1, points, gameInfo);
-            player1.GameLogic.OutOfMoves += () =>
-            {
-                gameInfo.IsFinished = true;
-                SendCells(player1, player2);
-                SendGameOver(gameInfo, player2, player1);
-            };
-
-            player2.GameLogic = new GameLogic(Rows, Columns);
-            player2.GameLogic.CellsMatched += points => UpdateGame(player2, points, gameInfo);
-            player2.GameLogic.OutOfMoves += () =>
-            {
-                SendCells(player2, player1);
-                SendGameOver(gameInfo, player1, player2);
-            };
-
-            RunningGames.Add(groupName, gameInfo);
-
-            Clients.Client(player1.ConnectionId)
-                .StartGame(new StartGameInformation(groupName, player2.Name, StartPoints, player1.GameLogic.Cells,
-                    player2.GameLogic.Cells));
-            Clients.Client(player2.ConnectionId)
-                .StartGame(new StartGameInformation(groupName, player1.Name, StartPoints, player2.GameLogic.Cells,
-                    player1.GameLogic.Cells));
         }
 
         private void UpdateGame(Player player, int points, GameInformation game)

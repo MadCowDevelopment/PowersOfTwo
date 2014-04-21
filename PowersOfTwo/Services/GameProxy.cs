@@ -39,6 +39,11 @@ namespace PowersOfTwo.Services
             _gameProxy.On<List<NumberCell>>("CellsChanged", RaiseCellsChanged);
             _gameProxy.On<List<NumberCell>>("OpponentCellsChanged", RaiseOpponentCellsChanged);
             _gameProxy.On<int>("UpdateOpponentPoints", RaiseOpponentPointsUpdated);
+            _gameProxy.On("OpponentLeft", RaiseOpponentLeft);
+            _gameProxy.On("GameCanceled", RaiseGameCanceled);
+            _gameProxy.On<OpponentFoundInformation>("OpponentFound", OnOpponentFound);
+            _gameProxy.On("OpponentReady", RaiseOpponentReady);
+            _gameProxy.On<int>("QueueRemainingTimeChanged", RaiseQueueRemainingTimeChanged);
 
             _hubConnection.Start();
         }
@@ -51,15 +56,25 @@ namespace PowersOfTwo.Services
 
         public event Action<StateChange> ConnectionStateChanged;
 
+        public event Action GameCanceled;
+
         public event Action<bool> GameOver;
 
         public event Action<StartGameInformation> GameStarted;
 
         public event Action<List<NumberCell>> OpponentCellsChanged;
 
+        public event Action<string> OpponentFound;
+
+        public event Action OpponentLeft;
+
         public event Action<int> OpponentPointsUpdated;
 
+        public event Action OpponentReady;
+
         public event Action<int> PointsUpdated;
+
+        public event Action<int> QueueRemainingTimeChanged;
 
         #endregion Events
 
@@ -82,6 +97,11 @@ namespace PowersOfTwo.Services
         #endregion Private Properties
 
         #region Public Methods
+
+        public void AcceptGame()
+        {
+            _gameProxy.Invoke("AcceptGame", GroupName);
+        }
 
         public void LeaveQueue()
         {
@@ -110,7 +130,12 @@ namespace PowersOfTwo.Services
 
         public void Queue()
         {
-            _gameProxy.Invoke("Queue", "TEST");
+            _gameProxy.Invoke("Queue", Environment.MachineName);
+        }
+
+        public void RejectGame()
+        {
+            _gameProxy.Invoke("RejectGame", GroupName);
         }
 
         #endregion Public Methods
@@ -125,8 +150,13 @@ namespace PowersOfTwo.Services
 
         private void OnGameStarted(StartGameInformation startGameInformation)
         {
-            GroupName = startGameInformation.GroupName;
             RaiseGameStarted(startGameInformation);
+        }
+
+        private void OnOpponentFound(OpponentFoundInformation opponentFoundInformation)
+        {
+            GroupName = opponentFoundInformation.GroupName;
+            RaiseOpponentFound(opponentFoundInformation.OpponentName);
         }
 
         private void RaiseCellsChanged(List<NumberCell> cells)
@@ -139,6 +169,12 @@ namespace PowersOfTwo.Services
         {
             Action<StateChange> handler = ConnectionStateChanged;
             if (handler != null) handler(stateChange);
+        }
+
+        private void RaiseGameCanceled()
+        {
+            var handler = GameCanceled;
+            if (handler != null) handler();
         }
 
         private void RaiseGameOver(bool win)
@@ -159,16 +195,40 @@ namespace PowersOfTwo.Services
             if (handler != null) handler(cells);
         }
 
+        private void RaiseOpponentFound(string opponentName)
+        {
+            Action<string> handler = OpponentFound;
+            if (handler != null) handler(opponentName);
+        }
+
+        private void RaiseOpponentLeft()
+        {
+            var handler = OpponentLeft;
+            if (handler != null) handler();
+        }
+
         private void RaiseOpponentPointsUpdated(int remainingPoints)
         {
             var handler = OpponentPointsUpdated;
             if (handler != null) handler(remainingPoints);
         }
 
+        private void RaiseOpponentReady()
+        {
+            Action handler = OpponentReady;
+            if (handler != null) handler();
+        }
+
         private void RaisePointsUpdated(int remainingPoints)
         {
             var handler = PointsUpdated;
             if (handler != null) handler(remainingPoints);
+        }
+
+        private void RaiseQueueRemainingTimeChanged(int remainingTime)
+        {
+            Action<int> handler = QueueRemainingTimeChanged;
+            if (handler != null) handler(remainingTime);
         }
 
         #endregion Private Methods

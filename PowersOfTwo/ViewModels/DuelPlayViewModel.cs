@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 
 using PowersOfTwo.Core;
 using PowersOfTwo.Services;
@@ -46,6 +45,15 @@ namespace PowersOfTwo.ViewModels
 
         #endregion Public Properties
 
+        #region Public Methods
+
+        public void Start()
+        {
+            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel), false, false);
+        }
+
+        #endregion Public Methods
+
         #region Protected Methods
 
         protected override void MoveDown()
@@ -85,7 +93,7 @@ namespace PowersOfTwo.ViewModels
         private void GameOver(bool win)
         {
             var text = win ? "You win!" : "You lose!";
-            OverlayViewModel.Show(new OverlayTextViewModel(text));
+            OverlayViewModel.Show(new OverlayTextViewModel(text, 72), true, false);
         }
 
         private void GameStarted(StartGameInformation startGameInformation)

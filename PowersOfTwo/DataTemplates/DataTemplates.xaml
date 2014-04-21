@@ -35,5 +35,17 @@
   <DataTemplate DataType="{x:Type ViewModels:OverlayTextViewModel}">
     <Views:OverlayTextView/>
   </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:AcceptOpponentViewModel}">
+    <Views:AcceptOpponentView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:WaitingForOpponentViewModel}">
+    <Views:WaitingForOpponentView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:StartGameCountdownViewModel}">
+    <Views:StartGameCountdownViewModel/>
+  </DataTemplate>
   
 </ResourceDictionary>

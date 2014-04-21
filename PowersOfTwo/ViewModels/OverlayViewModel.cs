@@ -17,11 +17,21 @@ namespace PowersOfTwo.ViewModels
 
         #region Events
 
-        public event Action Closed;
+        public event Action<bool?> Closed;
 
         #endregion Events
 
         #region Public Properties
+
+        public bool AllowAccept
+        {
+            get; private set;
+        }
+
+        public bool AllowCancel
+        {
+            get; private set;
+        }
 
         public ObservableObject Content
         {
@@ -37,14 +47,23 @@ namespace PowersOfTwo.ViewModels
 
         #region Public Methods
 
-        public void Hide()
+        public void Hide(bool? result)
         {
+            if (result.HasValue)
+            {
+                if (result.Value && !AllowAccept) return;
+                if (!result.Value && !AllowCancel) return;
+            }
+
             Visible = false;
-            RaiseClosed();
+            RaiseClosed(result);
         }
 
-        public void Show(ObservableObject content)
+        public void Show(ObservableObject content, bool allowAccept, bool allowCancel)
         {
+            AllowAccept = allowAccept;
+            AllowCancel = allowCancel;
+
             Content = content;
             Visible = true;
         }
@@ -53,10 +72,10 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void RaiseClosed()
+        private void RaiseClosed(bool? result)
         {
             var handler = Closed;
-            if (handler != null) handler();
+            if (handler != null) handler(result);
         }
 
         #endregion Private Methods

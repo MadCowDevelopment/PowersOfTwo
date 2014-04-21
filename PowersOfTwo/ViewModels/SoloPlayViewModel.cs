@@ -73,7 +73,7 @@ namespace PowersOfTwo.ViewModels
 
         private void GameLogicOutOfMoves()
         {
-            OverlayViewModel.Show(new OverlayTextViewModel("Game Over"));
+            OverlayViewModel.Show(new OverlayTextViewModel("Game Over", 72), true, false);
         }
 
         #endregion Private Methods

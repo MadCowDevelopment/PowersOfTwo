@@ -80,7 +80,7 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void OverlayViewModelClosed()
+        private void OverlayViewModelClosed(bool? result)
         {
             OverlayViewModel.Closed -= OverlayViewModelClosed;
             OnGameOver();

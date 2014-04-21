@@ -6,14 +6,20 @@ namespace PowersOfTwo.ViewModels
     {
         #region Constructors
 
-        public OverlayTextViewModel(string text)
+        public OverlayTextViewModel(string text, int fontSize)
         {
             Text = text;
+            FontSize = fontSize;
         }
 
         #endregion Constructors
 
         #region Public Properties
+
+        public int FontSize
+        {
+            get; private set;
+        }
 
         public string Text
         {

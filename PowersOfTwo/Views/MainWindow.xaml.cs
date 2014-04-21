@@ -24,13 +24,25 @@ namespace PowersOfTwo.Views
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+            var mainWindowViewModel = (DataContext as MainWindowViewModel);
+            if (mainWindowViewModel == null) return;
+
             if (e.Key == Key.Tab)
             {
                 e.Handled = true;
             }
-            else if (e.Key == Key.Enter)
+
+            if (mainWindowViewModel.Overlay.Visible)
             {
-                (DataContext as MainWindowViewModel).Overlay.Hide();
+                if (e.Key == Key.Enter)
+                {
+                    mainWindowViewModel.Overlay.Hide(true);
+                }
+                else if (e.Key == Key.Escape)
+                {
+                    mainWindowViewModel.Overlay.Hide(false);
+                }
+
                 e.Handled = true;
             }
         }

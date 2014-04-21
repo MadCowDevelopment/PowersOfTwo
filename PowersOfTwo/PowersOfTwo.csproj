@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{26F4D156-BBDF-46AD-BD8C-55D9282E550D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PowersOfTwo</RootNamespace>
     <AssemblyName>PowersOfTwo</AssemblyName>
@@ -36,7 +36,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -117,8 +117,15 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Services\HighscoreService.cs" />
+    <Compile Include="ViewModels\AcceptOpponentViewModel.cs" />
     <Compile Include="ViewModels\OverlayTextViewModel.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
+    <Compile Include="ViewModels\QueueTimerViewModel.cs" />
+    <Compile Include="ViewModels\StartGameCountdownViewModel.cs" />
+    <Compile Include="ViewModels\WaitingForOpponentViewModel.cs" />
+    <Compile Include="Views\AcceptOpponentView.xaml.cs">
+      <DependentUpon>AcceptOpponentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DuelPlayView.xaml.cs">
       <DependentUpon>DuelPlayView.xaml</DependentUpon>
     </Compile>
@@ -156,6 +163,12 @@
     </Compile>
     <Compile Include="ViewModels\SoloPlayViewModel.cs" />
     <Compile Include="Framework\ObservableObject.cs" />
+    <Compile Include="Views\StartGameCountdownViewModel.xaml.cs">
+      <DependentUpon>StartGameCountdownViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WaitingForOpponentView.xaml.cs">
+      <DependentUpon>WaitingForOpponentView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\MenuButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataTemplates\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AcceptOpponentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -221,6 +238,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataTemplates\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartGameCountdownViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WaitingForOpponentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

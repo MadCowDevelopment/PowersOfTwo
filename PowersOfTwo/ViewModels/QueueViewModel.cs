@@ -16,18 +16,26 @@ namespace PowersOfTwo.ViewModels
 
         private readonly GameProxy _gameProxy;
         private readonly MainWindowViewModel _mainWindowViewModel;
+        private readonly OverlayViewModel _overlayViewModel;
         private readonly DispatcherTimer _timer;
 
         private GameLogic _gameLogic;
+        private bool _opponentReady;
 
         #endregion Fields
 
         #region Constructors
 
-        public QueueViewModel(MainWindowViewModel mainWindowViewModel, GameProxy gameProxy)
+        public QueueViewModel(MainWindowViewModel mainWindowViewModel, OverlayViewModel overlayViewModel, GameProxy gameProxy)
         {
             _mainWindowViewModel = mainWindowViewModel;
+            _overlayViewModel = overlayViewModel;
             _gameProxy = gameProxy;
+            _gameProxy.OpponentFound += GameProxyOpponentFound;
+            _gameProxy.OpponentReady += GameProxyOpponentReady;
+            _gameProxy.OpponentLeft += GameProxyOpponentLeft;
+            _gameProxy.GameStarted += GameProxyGameStarted;
+            _gameProxy.GameCanceled += GameProxyGameCanceled;
 
             InitializeGameLogic();
 
@@ -45,23 +53,78 @@ namespace PowersOfTwo.ViewModels
 
         public List<NumberCell> Cells
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public ICommand LeaveQueueCommand
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties
 
         #region Private Methods
 
+        private void AcceptOpponentOverlayClosed(bool? result)
+        {
+            _overlayViewModel.Closed -= AcceptOpponentOverlayClosed;
+            if (!result.HasValue) return;
+
+            if (result.Value)
+            {
+                _gameProxy.AcceptGame();
+                if (!_opponentReady) _overlayViewModel.Show(new WaitingForOpponentViewModel(_gameProxy), false, false);
+            }
+            else
+            {
+                _gameProxy.RejectGame();
+                _mainWindowViewModel.ShowMainMenu();
+            }
+        }
+
+        private void GameCanceledOverlayClosed(bool? result)
+        {
+            _overlayViewModel.Closed -= GameCanceledOverlayClosed;
+            _mainWindowViewModel.ShowMainMenu();
+        }
+
         private void GameLogicOutOfMoves()
         {
             _timer.Stop();
             InitializeGameLogic();
             _timer.Start();
+        }
+
+        private void GameProxyGameCanceled()
+        {
+            _overlayViewModel.Hide(null);
+            _overlayViewModel.Closed += GameCanceledOverlayClosed;
+            _overlayViewModel.Show(new OverlayTextViewModel("Time's up!", 72), true, false);
+        }
+
+        private void GameProxyGameStarted(WebService.StartGameInformation obj)
+        {
+            _overlayViewModel.Hide(null);
+        }
+
+        private void GameProxyOpponentFound(string opponentName)
+        {
+            _overlayViewModel.Closed += AcceptOpponentOverlayClosed;
+            _overlayViewModel.Show(new AcceptOpponentViewModel(_gameProxy, opponentName), true, true);
+        }
+
+        private void GameProxyOpponentLeft()
+        {
+            _overlayViewModel.Hide(null);
+            _overlayViewModel.Closed += GameCanceledOverlayClosed;
+            _overlayViewModel.Show(new OverlayTextViewModel("Opponent left!", 42), true, false);
+        }
+
+        private void GameProxyOpponentReady()
+        {
+            _opponentReady = true;
         }
 
         private void InitializeGameLogic()

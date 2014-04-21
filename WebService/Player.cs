@@ -27,6 +27,11 @@ namespace WebService
             get; set;
         }
 
+        public bool IsReady
+        {
+            get; set;
+        }
+
         public string Name
         {
             get; private set;

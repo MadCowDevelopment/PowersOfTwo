@@ -8,11 +8,10 @@ namespace WebService
     {
         #region Constructors
 
-        public StartGameInformation(string groupName, string name, int startPoints, List<NumberCell> cells, List<NumberCell> opponentCells)
+        public StartGameInformation(string name, int startPoints, List<NumberCell> cells, List<NumberCell> opponentCells)
         {
             Cells = cells;
             OpponentCells = opponentCells;
-            GroupName = groupName;
             Name = name;
             StartPoints = startPoints;
         }
@@ -22,11 +21,6 @@ namespace WebService
         #region Public Properties
 
         public List<NumberCell> Cells
-        {
-            get; private set;
-        }
-
-        public string GroupName
         {
             get; private set;
         }
@@ -42,6 +36,33 @@ namespace WebService
         }
 
         public int StartPoints
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+    }
+
+    public class OpponentFoundInformation
+    {
+        #region Constructors
+
+        public OpponentFoundInformation(string groupName, string opponentName)
+        {
+            GroupName = groupName;
+            OpponentName = opponentName;
+        }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public string GroupName
+        {
+            get; private set;
+        }
+
+        public string OpponentName
         {
             get; private set;
         }

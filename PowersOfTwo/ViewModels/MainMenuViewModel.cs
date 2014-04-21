@@ -6,6 +6,8 @@ using Microsoft.AspNet.SignalR.Client;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
 
+using WebService;
+
 namespace PowersOfTwo.ViewModels
 {
     public class MainMenuViewModel : ObservableObject
@@ -75,14 +77,20 @@ namespace PowersOfTwo.ViewModels
         private void QueueForDuelGame()
         {
             var duelViewModel = new DuelPlayViewModel(_overlayViewModel, _mainWindowViewModel, _gameProxy);
-            _mainWindowViewModel.Content = new QueueViewModel(_mainWindowViewModel, _gameProxy);
-            _gameProxy.GameStarted += p => _mainWindowViewModel.Content = duelViewModel;
+            _mainWindowViewModel.Content = new QueueViewModel(_mainWindowViewModel, _overlayViewModel, _gameProxy);
+            _gameProxy.GameStarted += p => StartGame(p, duelViewModel);
             _gameProxy.Queue();
         }
 
         private void QueueForRankedGame()
         {
             // TODO
+        }
+
+        private void StartGame(StartGameInformation startGameInformation, DuelPlayViewModel duelPlayViewModel)
+        {
+            duelPlayViewModel.Start();
+            _mainWindowViewModel.Content = duelPlayViewModel;
         }
 
         private void StartSoloGame()
