@@ -1,4 +1,6 @@
-﻿namespace WebService
+﻿using System.Collections.Generic;
+
+namespace WebService
 {
     public class GameInformation
     {
@@ -9,6 +11,7 @@
             GroupName = groupName;
             Player1 = player1;
             Player2 = player2;
+            Spectators = new List<Spectator>();
         }
 
         #endregion Constructors
@@ -17,23 +20,29 @@
 
         public string GroupName
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public bool IsFinished
         {
-            get; set;
+            get;
+            set;
         }
 
         public Player Player1
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public Player Player2
         {
-            get; private set;
+            get;
+            private set;
         }
+
+        public List<Spectator> Spectators { get; private set; }
 
         #endregion Public Properties
 
@@ -68,4 +77,5 @@
 
         #endregion Public Methods
     }
+
 }

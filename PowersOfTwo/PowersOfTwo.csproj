@@ -117,9 +117,11 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Services\HighscoreService.cs" />
     <Compile Include="ViewModels\AcceptOpponentViewModel.cs" />
+    <Compile Include="ViewModels\ObserveGameViewModel.cs" />
     <Compile Include="ViewModels\OverlayTextViewModel.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
     <Compile Include="ViewModels\QueueTimerViewModel.cs" />
+    <Compile Include="ViewModels\RunningGamesViewModel.cs" />
     <Compile Include="ViewModels\StartGameCountdownViewModel.cs" />
     <Compile Include="ViewModels\WaitingForOpponentViewModel.cs" />
     <Compile Include="Views\AcceptOpponentView.xaml.cs">
@@ -141,6 +143,9 @@
     </Compile>
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\ObserveGameView.xaml.cs">
+      <DependentUpon>ObserveGameView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OverlayTextView.xaml.cs">
       <DependentUpon>OverlayTextView.xaml</DependentUpon>
     </Compile>
@@ -157,6 +162,9 @@
     </Compile>
     <Compile Include="ViewModels\QueueViewModel.cs" />
     <Compile Include="Framework\RelayCommand.cs" />
+    <Compile Include="Views\RunningGamesView.xaml.cs">
+      <DependentUpon>RunningGamesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SoloPlayView.xaml.cs">
       <DependentUpon>SoloPlayView.xaml</DependentUpon>
     </Compile>
@@ -216,6 +224,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ObserveGameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OverlayTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -229,6 +241,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RunningGamesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -284,9 +300,9 @@
       <Project>{D12668C9-0BA4-4B76-8E33-16AC92ED6050}</Project>
       <Name>PowersOfTwo.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebService\WebService.csproj">
-      <Project>{964EB502-08E6-4219-BB97-890D27A5C4AA}</Project>
-      <Name>WebService</Name>
+    <ProjectReference Include="..\PowersOfTwo.Dto\PowersOfTwo.Dto.csproj">
+      <Project>{5799091D-29CC-4FC5-BB4B-F637E7E61C02}</Project>
+      <Name>PowersOfTwo.Dto</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -345,6 +361,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Spectate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

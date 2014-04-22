@@ -21,8 +21,8 @@
       Command="{Binding PlaySoloCommand}" Text="Singleplayer" Image="../Images/Singleplayer.png"/>
     <Controls:MenuButton Grid.Row="2" IsEnabled="{Binding CanStartDuel}"
       Command="{Binding PlayDuelCommand}" Text="Multiplayer" Image="../Images/Multiplayer.png"/>
-    <Controls:MenuButton Grid.Row="3" IsEnabled="{Binding CanStartRanked}"
-      Command="{Binding PlayRankedCommand}" Text="Ranked Match" Image="../Images/Star.png"/>
+    <Controls:MenuButton Grid.Row="3" IsEnabled="{Binding CanObserveGame}"
+      Command="{Binding ObserveGameCommand}" Text="Observe Match" Image="../Images/Spectate.png"/>
     <Controls:MenuButton Grid.Row="5" Margin="0,0,0,10"
       Command="{Binding QuitCommand}" Text="Quit" Image="../Images/Exit.png"/>
     

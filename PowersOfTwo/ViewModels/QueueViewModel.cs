@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 
 using PowersOfTwo.Core;
+using PowersOfTwo.Dto;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
 
@@ -104,7 +105,7 @@ namespace PowersOfTwo.ViewModels
             _overlayViewModel.Show(new OverlayTextViewModel("Time's up!", 72), true, false);
         }
 
-        private void GameProxyGameStarted(WebService.StartGameInformation obj)
+        private void GameProxyGameStarted(StartGameDto obj)
         {
             _overlayViewModel.Hide(null);
         }

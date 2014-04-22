@@ -3,11 +3,9 @@ using System.Windows;
 using System.Windows.Input;
 
 using Microsoft.AspNet.SignalR.Client;
-
+using PowersOfTwo.Dto;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
-
-using WebService;
 
 namespace PowersOfTwo.ViewModels
 {
@@ -29,11 +27,15 @@ namespace PowersOfTwo.ViewModels
             _overlayViewModel = overlayViewModel;
 
             _gameProxy = new GameProxy();
-            _gameProxy.ConnectionStateChanged += change => CanStartDuel = change.NewState == ConnectionState.Connected;
+            _gameProxy.ConnectionStateChanged += change =>
+            {
+                CanStartDuel = change.NewState == ConnectionState.Connected;
+                CanObserveGame = change.NewState == ConnectionState.Connected;
+            };
 
             PlayDuelCommand = new RelayCommand(p => QueueForDuelGame());
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
-            PlayRankedCommand = new RelayCommand(p => QueueForRankedGame());
+            ObserveGameCommand = new RelayCommand(p => ObserveGame());
             QuitCommand = new RelayCommand(p => Application.Current.Shutdown());
         }
 
@@ -43,33 +45,31 @@ namespace PowersOfTwo.ViewModels
 
         public bool CanStartDuel
         {
-            get; private set;
+            get;
+            private set;
         }
 
-        public bool CanStartRanked
-        {
-            get; private set;
-        }
+        public bool CanObserveGame { get; private set; }
 
         public ICommand PlayDuelCommand
         {
-            get; private set;
-        }
-
-        public ICommand PlayRankedCommand
-        {
-            get; private set;
+            get;
+            private set;
         }
 
         public ICommand PlaySoloCommand
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public ICommand QuitCommand
         {
-            get; private set;
+            get;
+            private set;
         }
+
+        public ICommand ObserveGameCommand { get; private set; }
 
         #endregion Public Properties
 
@@ -92,12 +92,7 @@ namespace PowersOfTwo.ViewModels
             _gameProxy.Queue();
         }
 
-        private void QueueForRankedGame()
-        {
-            // TODO
-        }
-
-        private void StartGame(StartGameInformation startGameInformation, DuelPlayViewModel duelPlayViewModel)
+        private void StartGame(StartGameDto startGameInformation, DuelPlayViewModel duelPlayViewModel)
         {
             duelPlayViewModel.Start();
             _mainWindowViewModel.Content = duelPlayViewModel;
@@ -107,6 +102,15 @@ namespace PowersOfTwo.ViewModels
         {
             _mainWindowViewModel.Content = new SoloPlayViewModel(_overlayViewModel, _mainWindowViewModel);
         }
+
+
+        private void ObserveGame()
+        {
+            var runningGamesViewModel = new RunningGamesViewModel(_mainWindowViewModel, _overlayViewModel, _gameProxy);
+            _mainWindowViewModel.Content = runningGamesViewModel;
+            runningGamesViewModel.Initialize();
+        }
+
 
         #endregion Private Methods
     }

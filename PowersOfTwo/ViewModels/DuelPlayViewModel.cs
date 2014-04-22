@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
 using PowersOfTwo.Core;
+using PowersOfTwo.Dto;
 using PowersOfTwo.Services;
-
-using WebService;
 
 namespace PowersOfTwo.ViewModels
 {
@@ -40,7 +39,8 @@ namespace PowersOfTwo.ViewModels
 
         public PlayerViewModel Opponent
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties
@@ -92,13 +92,13 @@ namespace PowersOfTwo.ViewModels
             OverlayViewModel.Show(new OverlayTextViewModel(text, 72), true, false);
         }
 
-        private void GameStarted(StartGameInformation startGameInformation)
+        private void GameStarted(StartGameDto startGameInformation)
         {
-            Player = new PlayerViewModel();
+            Player = new PlayerViewModel(startGameInformation.Name);
             Player.Cells = startGameInformation.Cells;
             Player.Points = startGameInformation.StartPoints;
 
-            Opponent = new PlayerViewModel();
+            Opponent = new PlayerViewModel(startGameInformation.OpponentName);
             Opponent.Cells = startGameInformation.OpponentCells;
             Opponent.Points = startGameInformation.StartPoints;
         }

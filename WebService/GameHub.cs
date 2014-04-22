@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 
 using PowersOfTwo.Core;
+using PowersOfTwo.Dto;
 
 namespace WebService
 {
@@ -18,9 +19,9 @@ namespace WebService
         private const int StartPoints = 2048;
 
         private static readonly List<Player> QueuedPlayers = new List<Player>();
-        private static readonly Dictionary<string, ReadyGameInformation> ReadyGames = 
+        private static readonly Dictionary<string, ReadyGameInformation> ReadyGames =
             new Dictionary<string, ReadyGameInformation>();
-        private static readonly Dictionary<string, GameInformation> RunningGames = 
+        private static readonly Dictionary<string, GameInformation> RunningGames =
             new Dictionary<string, GameInformation>();
 
         #endregion Fields
@@ -58,10 +59,10 @@ namespace WebService
             DisposeReadyGame(readyGameInfo);
 
             Clients.Client(player1.ConnectionId)
-                .StartGame(new StartGameInformation(player2.Name, StartPoints, player1.GameLogic.Cells,
+                .StartGame(new StartGameDto(player1.Name, player2.Name, StartPoints, player1.GameLogic.Cells,
                     player2.GameLogic.Cells));
             Clients.Client(player2.ConnectionId)
-                .StartGame(new StartGameInformation(player1.Name, StartPoints, player2.GameLogic.Cells,
+                .StartGame(new StartGameDto(player2.Name, player1.Name, StartPoints, player2.GameLogic.Cells,
                     player1.GameLogic.Cells));
         }
 
@@ -72,6 +73,54 @@ namespace WebService
                 var player = QueuedPlayers.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
                 QueuedPlayers.Remove(player);
             }
+        }
+
+        public Task<List<RunningGameDto>> GetRunningGames()
+        {
+            var getGamesTask = new TaskFactory<List<RunningGameDto>>().StartNew(() =>
+                RunningGames.Values.Select(ConvertGameInfoToRunningGameDto).ToList());
+
+            return getGamesTask;
+        }
+
+        public Task<RunningGameDto> GetRunningGame(string groupName)
+        {
+            var getGameTask = new TaskFactory<RunningGameDto>().StartNew(() =>
+            {
+                GameInformation game;
+                if (!RunningGames.TryGetValue(groupName, out game)) return null;
+                if (game.IsFinished) return null;
+                return ConvertGameInfoToRunningGameDto(game);
+            });
+
+            return getGameTask;
+        }
+
+        private RunningGameDto ConvertGameInfoToRunningGameDto(GameInformation p)
+        {
+            return new RunningGameDto(p.GroupName,
+                new PlayerDto(p.Player1.Name, p.Player1.GameLogic.Cells, p.Player1.RemainingPoints),
+                new PlayerDto(p.Player2.Name, p.Player2.GameLogic.Cells, p.Player2.RemainingPoints));
+        }
+
+        public void JoinAsSpectator(string groupName, string name)
+        {
+            GameInformation game;
+            if (!RunningGames.TryGetValue(groupName, out game)) return;
+            if (game.IsFinished) return;
+
+            game.Spectators.Add(new Spectator(Context.ConnectionId, name));
+        }
+
+        public void StopSpectating(string groupName)
+        {
+            GameInformation game;
+            if (!RunningGames.TryGetValue(groupName, out game)) return;
+            if (game.IsFinished) return;
+
+            var spectator = game.Spectators.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
+            if (spectator == null) return;
+            game.Spectators.Remove(spectator);
         }
 
         public void MoveDown(string groupName)
@@ -180,7 +229,7 @@ namespace WebService
         private void EndGame(GameInformation gameInfo, Player winner, Player loser)
         {
             gameInfo.IsFinished = true;
-            SendCells(loser, winner);
+            SendCells(gameInfo, loser, winner);
             SendGameOver(gameInfo, winner, loser);
         }
 
@@ -210,7 +259,7 @@ namespace WebService
                         break;
                 }
 
-                SendCells(player, game.OtherPlayer(player));
+                SendCells(game, player, game.OtherPlayer(player));
             }
         }
 
@@ -231,8 +280,8 @@ namespace WebService
             readyGameInformation.RemainingTimeChanged += ReadyGameInformationRemainingTimeChanged;
             ReadyGames.Add(groupName, readyGameInformation);
 
-            Clients.Client(player1.ConnectionId).OpponentFound(new OpponentFoundInformation(groupName, player2.Name));
-            Clients.Client(player2.ConnectionId).OpponentFound(new OpponentFoundInformation(groupName, player1.Name));
+            Clients.Client(player1.ConnectionId).OpponentFound(new OpponentFoundDto(groupName, player2.Name));
+            Clients.Client(player2.ConnectionId).OpponentFound(new OpponentFoundDto(groupName, player1.Name));
         }
 
         private void ReadyGameInformationRemainingTimeChanged(object sender, RemainingTimeChangedEventArgs args)
@@ -251,10 +300,23 @@ namespace WebService
             }
         }
 
-        private void SendCells(Player currentPlayer, Player otherPlayer)
+        private void SendCells(GameInformation gameInfo, Player currentPlayer, Player otherPlayer)
         {
             Clients.Client(currentPlayer.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
             Clients.Client(otherPlayer.ConnectionId).OpponentCellsChanged(currentPlayer.GameLogic.Cells);
+
+            foreach (var spectator in gameInfo.Spectators)
+            {
+                var playerNumber = currentPlayer == gameInfo.Player1 ? 1 : 2;
+                if (playerNumber == 1)
+                {
+                    Clients.Client(spectator.ConnectionId).CellsChanged(currentPlayer.GameLogic.Cells);
+                }
+                else
+                {
+                    Clients.Client(spectator.ConnectionId).OpponentCellsChanged(currentPlayer.GameLogic.Cells);
+                }
+            }
         }
 
         private void SendGameOver(GameInformation gameInfo, Player winner, Player loser)
@@ -267,15 +329,43 @@ namespace WebService
 
             Clients.Client(winner.ConnectionId).GameOver(true);
             Clients.Client(loser.ConnectionId).GameOver(false);
+
+            foreach (var spectator in gameInfo.Spectators)
+            {
+                var playerNumber = winner == gameInfo.Player1 ? 1 : 2;
+                if (playerNumber == 1)
+                {
+                    Clients.Client(spectator.ConnectionId).GameOver(true);
+                }
+                else
+                {
+                    Clients.Client(spectator.ConnectionId).GameOver(false);
+                }
+            }
         }
 
-        private void SendUpdatePoints(Player player, Player otherPlayer)
+        private void SendUpdatePoints(GameInformation gameInfo, Player player, Player otherPlayer)
         {
             Clients.Client(player.ConnectionId).UpdatePoints(player.RemainingPoints);
             Clients.Client(otherPlayer.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
 
             Clients.Client(player.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
             Clients.Client(otherPlayer.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
+
+            foreach (var spectator in gameInfo.Spectators)
+            {
+                var playerNumber = player == gameInfo.Player1 ? 1 : 2;
+                if (playerNumber == 1)
+                {
+                    Clients.Client(spectator.ConnectionId).UpdatePoints(player.RemainingPoints);
+                    Clients.Client(spectator.ConnectionId).UpdateOpponentPoints(otherPlayer.RemainingPoints);
+                }
+                else
+                {
+                    Clients.Client(spectator.ConnectionId).UpdatePoints(otherPlayer.RemainingPoints);
+                    Clients.Client(spectator.ConnectionId).UpdateOpponentPoints(player.RemainingPoints);
+                }
+            }
         }
 
         private void UpdateGame(Player player, int points, GameInformation game)
@@ -295,7 +385,7 @@ namespace WebService
             }
             else
             {
-                SendUpdatePoints(player, otherPlayer);
+                SendUpdatePoints(game, player, otherPlayer);
             }
         }
 

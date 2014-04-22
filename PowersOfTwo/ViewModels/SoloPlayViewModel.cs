@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using PowersOfTwo.Core;
 
@@ -24,7 +25,7 @@ namespace PowersOfTwo.ViewModels
             _gameLogic.CellsMatched += GameLogicCellsMatched;
             _gameLogic.OutOfMoves += GameLogicOutOfMoves;
 
-            Player = new PlayerViewModel();
+            Player = new PlayerViewModel(Environment.MachineName);
             Player.Points = 0;
             Player.Cells = _gameLogic.Cells;
         }

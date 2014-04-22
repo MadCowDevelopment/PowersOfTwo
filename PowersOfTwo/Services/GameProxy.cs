@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 
 using PowersOfTwo.Core;
-
-using WebService;
+using PowersOfTwo.Dto;
 
 namespace PowersOfTwo.Services
 {
@@ -33,7 +32,7 @@ namespace PowersOfTwo.Services
             _hubConnection.StateChanged += HubConnectionStateChanged;
 
             _gameProxy = _hubConnection.CreateHubProxy("GameHub");
-            _gameProxy.On<StartGameInformation>("StartGame", OnGameStarted);
+            _gameProxy.On<StartGameDto>("StartGame", OnGameStarted);
             _gameProxy.On<bool>("GameOver", RaiseGameOver);
             _gameProxy.On<int>("UpdatePoints", RaisePointsUpdated);
             _gameProxy.On<List<NumberCell>>("CellsChanged", RaiseCellsChanged);
@@ -41,7 +40,7 @@ namespace PowersOfTwo.Services
             _gameProxy.On<int>("UpdateOpponentPoints", RaiseOpponentPointsUpdated);
             _gameProxy.On("OpponentLeft", RaiseOpponentLeft);
             _gameProxy.On("GameCanceled", RaiseGameCanceled);
-            _gameProxy.On<OpponentFoundInformation>("OpponentFound", OnOpponentFound);
+            _gameProxy.On<OpponentFoundDto>("OpponentFound", OnOpponentFound);
             _gameProxy.On("OpponentReady", RaiseOpponentReady);
             _gameProxy.On<int>("QueueRemainingTimeChanged", RaiseQueueRemainingTimeChanged);
 
@@ -60,7 +59,7 @@ namespace PowersOfTwo.Services
 
         public event Action<bool> GameOver;
 
-        public event Action<StartGameInformation> GameStarted;
+        public event Action<StartGameDto> GameStarted;
 
         public event Action<List<NumberCell>> OpponentCellsChanged;
 
@@ -82,7 +81,8 @@ namespace PowersOfTwo.Services
 
         public ConnectionState ConnectionState
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties
@@ -91,7 +91,8 @@ namespace PowersOfTwo.Services
 
         private string GroupName
         {
-            get; set;
+            get;
+            set;
         }
 
         #endregion Private Properties
@@ -113,24 +114,34 @@ namespace PowersOfTwo.Services
             _gameProxy.Invoke("LeaveQueue");
         }
 
+        public async Task<List<RunningGameDto>> GetRunningGames()
+        {
+            return await _gameProxy.Invoke<List<RunningGameDto>>("GetRunningGames");
+        }
+
+        public void JoinAsSpectator(string groupName, string name)
+        {
+            _gameProxy.Invoke("JoinAsSpectator", groupName, name);
+        }
+
         public void MoveDown()
         {
-            _gameProxy.Invoke<List<NumberCell>>("MoveDown", GroupName);
+            _gameProxy.Invoke("MoveDown", GroupName);
         }
 
         public void MoveLeft()
         {
-            _gameProxy.Invoke<List<NumberCell>>("MoveLeft", GroupName);
+            _gameProxy.Invoke("MoveLeft", GroupName);
         }
 
         public void MoveRight()
         {
-            _gameProxy.Invoke<List<NumberCell>>("MoveRight", GroupName);
+            _gameProxy.Invoke("MoveRight", GroupName);
         }
 
         public void MoveUp()
         {
-            _gameProxy.Invoke<List<NumberCell>>("MoveUp", GroupName);
+            _gameProxy.Invoke("MoveUp", GroupName);
         }
 
         public void Queue()
@@ -143,11 +154,6 @@ namespace PowersOfTwo.Services
             _gameProxy.Invoke("RejectGame", GroupName);
         }
 
-        public void Stop()
-        {
-            _hubConnection.Stop();
-        }
-
         #endregion Public Methods
 
         #region Private Methods
@@ -158,12 +164,12 @@ namespace PowersOfTwo.Services
             RaiseConnectionStateChanged(stateChange);
         }
 
-        private void OnGameStarted(StartGameInformation startGameInformation)
+        private void OnGameStarted(StartGameDto startGameInformation)
         {
             RaiseGameStarted(startGameInformation);
         }
 
-        private void OnOpponentFound(OpponentFoundInformation opponentFoundInformation)
+        private void OnOpponentFound(OpponentFoundDto opponentFoundInformation)
         {
             GroupName = opponentFoundInformation.GroupName;
             RaiseOpponentFound(opponentFoundInformation.OpponentName);
@@ -193,7 +199,7 @@ namespace PowersOfTwo.Services
             if (handler != null) handler(win);
         }
 
-        private void RaiseGameStarted(StartGameInformation startGameInformation)
+        private void RaiseGameStarted(StartGameDto startGameInformation)
         {
             var handler = GameStarted;
             if (handler != null) handler(startGameInformation);
@@ -242,5 +248,15 @@ namespace PowersOfTwo.Services
         }
 
         #endregion Private Methods
+
+        public void StopSpectating(string groupName)
+        {
+            _gameProxy.Invoke("StopSpectating", groupName);
+        }
+
+        public async Task<RunningGameDto> GetRunningGame(string groupName)
+        {
+            return await _gameProxy.Invoke<RunningGameDto>("GetRunningGame", groupName);
+        }
     }
 }

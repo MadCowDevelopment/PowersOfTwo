@@ -47,5 +47,13 @@
   <DataTemplate DataType="{x:Type ViewModels:StartGameCountdownViewModel}">
     <Views:StartGameCountdownViewModel/>
   </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:RunningGamesViewModel}">
+    <Views:RunningGamesView/>
+  </DataTemplate>
+
+  <DataTemplate DataType="{x:Type ViewModels:ObserveGameViewModel}">
+    <Views:ObserveGameView/>
+  </DataTemplate>
   
 </ResourceDictionary>
