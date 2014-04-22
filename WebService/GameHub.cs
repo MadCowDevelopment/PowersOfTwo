@@ -99,8 +99,8 @@ namespace WebService
         private RunningGameDto ConvertGameInfoToRunningGameDto(GameInformation p)
         {
             return new RunningGameDto(p.GroupName,
-                new PlayerDto(p.Player1.Name, p.Player1.GameLogic.Cells, p.Player1.RemainingPoints),
-                new PlayerDto(p.Player2.Name, p.Player2.GameLogic.Cells, p.Player2.RemainingPoints));
+                new PlayerDto(p.Player1.Name, p.Player1.GameLogic.Cells, (int)p.Player1.RemainingPoints),
+                new PlayerDto(p.Player2.Name, p.Player2.GameLogic.Cells, (int)p.Player2.RemainingPoints));
         }
 
         public void JoinAsSpectator(string groupName, string name)
@@ -375,7 +375,7 @@ namespace WebService
             var otherPlayer = game.OtherPlayer(player);
             if (otherPlayer == null) return;
 
-            player.RemainingPoints += (points / 3 * 2);
+            player.RemainingPoints += points * 3 / 4.0;
             otherPlayer.RemainingPoints -= points;
 
             if (otherPlayer.RemainingPoints <= 0)

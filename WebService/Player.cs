@@ -6,7 +6,7 @@ namespace WebService
     {
         #region Constructors
 
-        public Player(string connectionId, string name, int remainingPoints)
+        public Player(string connectionId, string name, double remainingPoints)
             : base(connectionId, name)
         {
             RemainingPoints = remainingPoints;
@@ -28,7 +28,7 @@ namespace WebService
             set;
         }
 
-        public int RemainingPoints
+        public double RemainingPoints
         {
             get;
             set;
