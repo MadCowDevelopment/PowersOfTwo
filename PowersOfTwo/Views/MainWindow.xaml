@@ -4,14 +4,13 @@
         xmlns:adorner="clr-namespace:PowersOfTwo.Controls.Adorner"
         ResizeMode="NoResize" IsTabStop="False"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
-        Title="MainWindow" Height="430" Width="490">
+        Title="PowersOfTwo" Height="430" Width="490">
 
   <Window.InputBindings>
     <KeyBinding Key="Left" Command="{Binding CommandBroker.LeftCommand}"/>
     <KeyBinding Key="Right" Command="{Binding CommandBroker.RightCommand}"/>
     <KeyBinding Key="Up" Command="{Binding CommandBroker.UpCommand}"/>
     <KeyBinding Key="Down" Command="{Binding CommandBroker.DownCommand}"/>
-
   </Window.InputBindings>
 
   <Grid>
