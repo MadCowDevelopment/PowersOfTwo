@@ -2,6 +2,8 @@
 using System.Linq;
 
 using PowersOfTwo.Core;
+using PowersOfTwo.Services;
+using PowersOfTwo.Services.Replay;
 
 namespace PowersOfTwo.ViewModels
 {
@@ -9,8 +11,10 @@ namespace PowersOfTwo.ViewModels
     {
         #region Fields
 
-        private readonly GameLogic _gameLogic = new GameLogic(4, 4);
+        private readonly GameLogic _gameLogic;
         private readonly MainWindowViewModel _mainWindowViewModel;
+
+        private readonly ReplayRecorder _replayService;
 
         #endregion Fields
 
@@ -27,7 +31,11 @@ namespace PowersOfTwo.ViewModels
 
             Player = new PlayerViewModel(Environment.MachineName);
             Player.Points = 0;
-            Player.Cells = _gameLogic.Cells;
+
+            _replayService = new ReplayRecorder();
+            _replayService.Record(new GameStartedEvent(Player.Name, Player.Points));
+            
+            UpdateCells();
         }
 
         #endregion Constructors
@@ -37,34 +45,41 @@ namespace PowersOfTwo.ViewModels
         protected override void MoveDown()
         {
             _gameLogic.MoveDown();
-            Player.Cells = _gameLogic.Cells.ToList();
+            UpdateCells();
         }
 
         protected override void MoveLeft()
         {
             _gameLogic.MoveLeft();
-            Player.Cells = _gameLogic.Cells.ToList();
+            UpdateCells();
         }
 
         protected override void MoveRight()
         {
             _gameLogic.MoveRight();
-            Player.Cells = _gameLogic.Cells.ToList();
+            UpdateCells();
         }
 
         protected override void MoveUp()
         {
             _gameLogic.MoveUp();
-            Player.Cells = _gameLogic.Cells.ToList();
+            UpdateCells();
         }
 
         #endregion Protected Methods
 
         #region Private Methods
 
+        private void UpdateCells()
+        {
+            Player.Cells = _gameLogic.Cells.ToList();
+            _replayService.Record(new CellsChangedEvent(1, Player.Cells.ToList()));
+        }
+
         private void GameLogicCellsMatched(int points)
         {
             Player.Points += points;
+            _replayService.Record(new PointsChangedEvent(1, Player.Points));
         }
 
         private void GameLogicOutOfMoves()

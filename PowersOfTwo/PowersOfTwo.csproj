@@ -65,6 +65,9 @@
     <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.0.3\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
@@ -119,6 +122,14 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Services\HighscoreService.cs" />
+    <Compile Include="Services\Replay\CellsChangedEvent.cs" />
+    <Compile Include="Services\Replay\GameStartedEvent.cs" />
+    <Compile Include="Services\Replay\IReplayTarget.cs" />
+    <Compile Include="Services\Replay\PointsChangedEvent.cs" />
+    <Compile Include="Services\Replay\ReplayEvent.cs" />
+    <Compile Include="Services\Replay\ReplayLoader.cs" />
+    <Compile Include="Services\Replay\ReplayPlayer.cs" />
+    <Compile Include="Services\Replay\ReplayRecorder.cs" />
     <Compile Include="ViewModels\AcceptOpponentViewModel.cs" />
     <Compile Include="ViewModels\GameModeSelectionViewModel.cs" />
     <Compile Include="ViewModels\ObserveGameViewModel.cs" />
@@ -385,6 +396,7 @@
   <ItemGroup>
     <Resource Include="App.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

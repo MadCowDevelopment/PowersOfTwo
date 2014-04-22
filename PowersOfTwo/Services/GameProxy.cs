@@ -21,10 +21,10 @@ namespace PowersOfTwo.Services
 
         public GameProxy()
         {
-            //_hubConnection = new HubConnection("http://localhost:8369");
+            _hubConnection = new HubConnection("http://localhost:8369");
             //_hubConnection = new HubConnection("http://4096.azurewebsites.net/");
             //_hubConnection = new HubConnection("http://powersoftwo.apphb.com");
-            _hubConnection = new HubConnection("http://pc-mgr-2:8369");
+            //_hubConnection = new HubConnection("http://pc-mgr-2:8369");
 
             _hubConnection.TraceLevel = TraceLevels.All;
             _hubConnection.TraceWriter = Console.Out;
