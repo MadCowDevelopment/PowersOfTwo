@@ -37,6 +37,12 @@ namespace PowersOfTwo.ViewModels
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
             ObserveGameCommand = new RelayCommand(p => ObserveGame());
             QuitCommand = new RelayCommand(p => Application.Current.Shutdown());
+            ReplayCommand = new RelayCommand(p => Replay(), p => false);
+        }
+
+        private void Replay()
+        {
+            
         }
 
         #endregion Constructors
@@ -68,6 +74,8 @@ namespace PowersOfTwo.ViewModels
             get;
             private set;
         }
+
+        public ICommand ReplayCommand { get; private set; }
 
         public ICommand ObserveGameCommand { get; private set; }
 

@@ -12,6 +12,7 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
@@ -23,7 +24,9 @@
       Command="{Binding PlayDuelCommand}" Text="Multiplayer" Image="../Images/Multiplayer.png"/>
     <Controls:MenuButton Grid.Row="3" IsEnabled="{Binding CanObserveGame}"
       Command="{Binding ObserveGameCommand}" Text="Observe Match" Image="../Images/Spectate.png"/>
-    <Controls:MenuButton Grid.Row="5" Margin="0,0,0,10"
+    <Controls:MenuButton Grid.Row="4"
+      Command="{Binding ReplayCommand}" Text="Replays" Image="../Images/Replay.png"/>
+        <Controls:MenuButton Grid.Row="6" Margin="0,0,0,10"
       Command="{Binding QuitCommand}" Text="Quit" Image="../Images/Exit.png"/>
     
   </Grid>
