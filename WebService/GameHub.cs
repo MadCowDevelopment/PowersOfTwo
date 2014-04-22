@@ -16,9 +16,9 @@ namespace WebService
 
         private const int Columns = 4;
         private const int Rows = 4;
-        private const int StartPoints = 2048;
 
-        private static readonly List<Player> QueuedPlayers = new List<Player>();
+        private static readonly Dictionary<int, List<Player>> PlayerQueues =
+            new Dictionary<int, List<Player>>();
         private static readonly Dictionary<string, ReadyGameInformation> ReadyGames =
             new Dictionary<string, ReadyGameInformation>();
         private static readonly Dictionary<string, GameInformation> RunningGames =
@@ -58,20 +58,28 @@ namespace WebService
 
             DisposeReadyGame(readyGameInfo);
 
+            var startPoints = readyGameInfo.GameInformation.GameMode.StartingPoints;
+
             Clients.Client(player1.ConnectionId)
-                .StartGame(new StartGameDto(player1.Name, player2.Name, StartPoints, player1.GameLogic.Cells,
+                .StartGame(new StartGameDto(player1.Name, player2.Name, startPoints, player1.GameLogic.Cells,
                     player2.GameLogic.Cells));
             Clients.Client(player2.ConnectionId)
-                .StartGame(new StartGameDto(player2.Name, player1.Name, StartPoints, player2.GameLogic.Cells,
+                .StartGame(new StartGameDto(player2.Name, player1.Name, startPoints, player2.GameLogic.Cells,
                     player1.GameLogic.Cells));
         }
 
         public void LeaveQueue()
         {
-            lock (QueuedPlayers)
+            lock (PlayerQueues)
             {
-                var player = QueuedPlayers.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
-                QueuedPlayers.Remove(player);
+                var queueWithPlayer =
+                    PlayerQueues.Values.FirstOrDefault(
+                        queues => queues.Any(p => p.ConnectionId == Context.ConnectionId));
+
+                if (queueWithPlayer == null) return;
+
+                var player = queueWithPlayer.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
+                queueWithPlayer.Remove(player);
             }
         }
 
@@ -145,14 +153,7 @@ namespace WebService
 
         public override Task OnDisconnected()
         {
-            lock (QueuedPlayers)
-            {
-                var players = QueuedPlayers.Where(p => p.ConnectionId == Context.ConnectionId).ToList();
-                foreach (var player in players)
-                {
-                    QueuedPlayers.Remove(player);
-                }
-            }
+            LeaveQueue();
 
             lock (ReadyGames)
             {
@@ -179,21 +180,29 @@ namespace WebService
             return base.OnDisconnected();
         }
 
-        public void Queue(string userName)
+        public void Queue(QueueRequest queueRequest)
         {
-            lock (QueuedPlayers)
+            lock (PlayerQueues)
             {
-                var player1 = new Player(Context.ConnectionId, userName, StartPoints);
+                var gameMode = GameMode.FromId(queueRequest.GameModeId);
+                var player1 = new Player(Context.ConnectionId, queueRequest.UserName, gameMode.StartingPoints);
 
-                if (QueuedPlayers.Count >= 1)
+                List<Player> queueForGameMode;
+                if (!PlayerQueues.TryGetValue(queueRequest.GameModeId, out queueForGameMode))
                 {
-                    var player2 = QueuedPlayers.First();
-                    QueuedPlayers.Remove(player2);
-                    PrepareNewGame(player1, player2);
+                    queueForGameMode = new List<Player>();
+                    PlayerQueues.Add(queueRequest.GameModeId, queueForGameMode);
+                }
+
+                if (queueForGameMode.Count >= 1)
+                {
+                    var player2 = queueForGameMode.First();
+                    queueForGameMode.Remove(player2);
+                    PrepareNewGame(gameMode, player1, player2);
                 }
                 else
                 {
-                    QueuedPlayers.Add(player1);
+                    queueForGameMode.Add(player1);
                 }
             }
         }
@@ -263,10 +272,10 @@ namespace WebService
             }
         }
 
-        private void PrepareNewGame(Player player1, Player player2)
+        private void PrepareNewGame(GameMode gameMode, Player player1, Player player2)
         {
             var groupName = Guid.NewGuid().ToString();
-            var gameInfo = new GameInformation(groupName, player1, player2);
+            var gameInfo = new GameInformation(groupName, gameMode, player1, player2);
 
             player1.GameLogic = new GameLogic(Rows, Columns);
             player1.GameLogic.CellsMatched += points => UpdateGame(player1, points, gameInfo);

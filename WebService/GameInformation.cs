@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PowersOfTwo.Core;
 
 namespace WebService
 {
@@ -6,9 +7,10 @@ namespace WebService
     {
         #region Constructors
 
-        public GameInformation(string groupName, Player player1, Player player2)
+        public GameInformation(string groupName, GameMode gameMode, Player player1, Player player2)
         {
             GroupName = groupName;
+            GameMode = gameMode;
             Player1 = player1;
             Player2 = player2;
             Spectators = new List<Spectator>();
@@ -23,6 +25,8 @@ namespace WebService
             get;
             private set;
         }
+
+        public GameMode GameMode { get; private set; }
 
         public bool IsFinished
         {

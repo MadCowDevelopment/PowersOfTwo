@@ -33,7 +33,7 @@ namespace PowersOfTwo.ViewModels
                 CanObserveGame = change.NewState == ConnectionState.Connected;
             };
 
-            PlayDuelCommand = new RelayCommand(p => QueueForDuelGame());
+            PlayDuelCommand = new RelayCommand(p => SelectDuelGameMode());
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
             ObserveGameCommand = new RelayCommand(p => ObserveGame());
             QuitCommand = new RelayCommand(p => Application.Current.Shutdown());
@@ -84,25 +84,16 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void QueueForDuelGame()
-        {
-            var duelViewModel = new DuelPlayViewModel(_overlayViewModel, _mainWindowViewModel, _gameProxy);
-            _mainWindowViewModel.Content = new QueueViewModel(_mainWindowViewModel, _overlayViewModel, _gameProxy);
-            _gameProxy.GameStarted += p => StartGame(p, duelViewModel);
-            _gameProxy.Queue();
-        }
-
-        private void StartGame(StartGameDto startGameInformation, DuelPlayViewModel duelPlayViewModel)
-        {
-            duelPlayViewModel.Start();
-            _mainWindowViewModel.Content = duelPlayViewModel;
-        }
-
         private void StartSoloGame()
         {
             _mainWindowViewModel.Content = new SoloPlayViewModel(_overlayViewModel, _mainWindowViewModel);
         }
 
+        private void SelectDuelGameMode()
+        {
+            _mainWindowViewModel.Content = new GameModeSelectionViewModel(_mainWindowViewModel, _overlayViewModel,
+                _gameProxy);
+        }
 
         private void ObserveGame()
         {

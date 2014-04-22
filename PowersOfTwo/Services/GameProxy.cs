@@ -144,9 +144,9 @@ namespace PowersOfTwo.Services
             _gameProxy.Invoke("MoveUp", GroupName);
         }
 
-        public void Queue()
+        public void Queue(GameMode gameMode)
         {
-            _gameProxy.Invoke("Queue", Environment.MachineName);
+            _gameProxy.Invoke("Queue", new QueueRequest(Environment.MachineName, gameMode.Id));
         }
 
         public void RejectGame()

@@ -20,7 +20,7 @@
     <ContentControl Grid.Column="1" Grid.Row="0" Content="{Binding Player2}"/>
     
     <controls:MenuButton Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10"
-                         Text="Leave Queue" Image="../Images/Back.png"
+                         Text="Back to menu" Image="../Images/Back.png"
                          Command="{Binding LeaveCommand}"/>
   </Grid>
 </UserControl>

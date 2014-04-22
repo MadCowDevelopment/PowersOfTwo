@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="PowersOfTwo.Views.GameModeSelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:PowersOfTwo.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <controls:MenuHeader Grid.Row="0" Text="Select mode" Image="../Images/Check.png"/>
+    <controls:MenuButton Grid.Row="1"
+      Command="{Binding PlayShortCommand}" Text="Short" Image="../Images/Rabbit.png"/>
+    <controls:MenuButton Grid.Row="2"
+      Command="{Binding PlayLongCommand}" Text="Long" Image="../Images/Turtle.png"/>
+    <controls:MenuButton Grid.Row="3"
+      Command="{Binding PlayRankedCommand}" Text="Ranked" Image="../Images/Lion.png"/>
+    <controls:MenuButton Grid.Row="5" Margin="0,0,0,10"
+      Command="{Binding LeaveCommand}" Text="Back to menu" Image="../Images/Back.png"/>
+
+  </Grid>
+</UserControl>
