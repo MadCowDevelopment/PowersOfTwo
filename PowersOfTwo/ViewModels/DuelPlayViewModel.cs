@@ -3,6 +3,7 @@
 using PowersOfTwo.Core;
 using PowersOfTwo.Dto;
 using PowersOfTwo.Services;
+using PowersOfTwo.Services.Replay;
 
 namespace PowersOfTwo.ViewModels
 {
@@ -12,6 +13,8 @@ namespace PowersOfTwo.ViewModels
 
         private readonly GameProxy _gameProxy;
         private readonly MainWindowViewModel _mainWindowViewModel;
+
+        private readonly ReplayRecorder _replayRecorder;
 
         #endregion Fields
 
@@ -31,6 +34,8 @@ namespace PowersOfTwo.ViewModels
             _gameProxy.CellsChanged += CellsChanged;
             _gameProxy.OpponentCellsChanged += OpponentCellsChanged;
             _gameProxy.OpponentPointsUpdated += OpponentPointsUpdated;
+
+            _replayRecorder = new ReplayRecorder();
         }
 
         #endregion Constructors
@@ -83,6 +88,7 @@ namespace PowersOfTwo.ViewModels
         private void CellsChanged(List<NumberCell> cells)
         {
             Player.Cells = cells;
+            _replayRecorder.Record(new CellsChangedEvent(1, cells));
         }
 
         private void GameOver(bool win)
@@ -100,21 +106,26 @@ namespace PowersOfTwo.ViewModels
             Opponent = new PlayerViewModel(startGameInformation.OpponentName);
             Opponent.Cells = startGameInformation.OpponentCells;
             Opponent.Points = startGameInformation.StartPoints;
+
+            _replayRecorder.Record(new GameStartedEvent(Player.Name, Opponent.Name, startGameInformation.StartPoints));
         }
 
         private void OpponentCellsChanged(List<NumberCell> cells)
         {
             Opponent.Cells = cells;
+            _replayRecorder.Record(new CellsChangedEvent(2, cells));
         }
 
         private void OpponentPointsUpdated(int remainingPoints)
         {
             Opponent.Points = remainingPoints;
+            _replayRecorder.Record(new PointsChangedEvent(2, remainingPoints));
         }
 
         private void PointsUpdated(int remainingPoints)
         {
             Player.Points = remainingPoints;
+            _replayRecorder.Record(new PointsChangedEvent(1, remainingPoints));
         }
 
         #endregion Private Methods
