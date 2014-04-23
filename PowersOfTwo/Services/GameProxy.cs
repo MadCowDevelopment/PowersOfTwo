@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 
@@ -43,6 +44,7 @@ namespace PowersOfTwo.Services
             _gameProxy.On<OpponentFoundDto>("OpponentFound", OnOpponentFound);
             _gameProxy.On("OpponentReady", RaiseOpponentReady);
             _gameProxy.On<int>("QueueRemainingTimeChanged", RaiseQueueRemainingTimeChanged);
+            _gameProxy.On<RunningGameChangedDto>("RunningGameChanged", RaiseRunningGameChanged);
 
             _hubConnection.Start();
         }
@@ -74,6 +76,31 @@ namespace PowersOfTwo.Services
         public event Action<int> PointsUpdated;
 
         public event Action<int> QueueRemainingTimeChanged;
+
+        private Action<RunningGameChangedDto> _runningGameChanged;
+
+        public event Action<RunningGameChangedDto> RunningGameChanged
+        {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            add
+            {
+                _gameProxy.Invoke("SubscribeRunningGames");
+                _runningGameChanged = (Action<RunningGameChangedDto>)Delegate.Combine(_runningGameChanged, value);
+            }
+
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            remove
+            {
+                _gameProxy.Invoke("UnsubscribeRunningGames");
+                _runningGameChanged = (Action<RunningGameChangedDto>)Delegate.Remove(_runningGameChanged, value);
+            }
+        }
+
+        private void RaiseRunningGameChanged(RunningGameChangedDto runningGame)
+        {
+            var handler = _runningGameChanged;
+            if (handler != null) handler(runningGame);
+        }
 
         #endregion Events
 

@@ -43,6 +43,7 @@
     <Compile Include="PlayerDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueRequest.cs" />
+    <Compile Include="RunningGameChangedDto.cs" />
     <Compile Include="RunningGameDto.cs" />
     <Compile Include="StartGameDto.cs" />
   </ItemGroup>

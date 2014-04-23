@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,10 +23,45 @@ namespace WebService
             new Dictionary<int, List<Player>>();
         private static readonly Dictionary<string, ReadyGameInformation> ReadyGames =
             new Dictionary<string, ReadyGameInformation>();
-        private static readonly Dictionary<string, GameInformation> RunningGames =
-            new Dictionary<string, GameInformation>();
+
+        private static readonly ObservableCollection<GameInformation> RunningGames =
+            new ObservableCollection<GameInformation>();
+
+        private bool _isSubscribedForRunningGameChanges;
 
         #endregion Fields
+
+        public GameHub()
+        {
+            RunningGames.CollectionChanged += RunningGames_CollectionChanged;
+        }
+
+        private void RunningGames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!_isSubscribedForRunningGameChanges) return;
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var gameInfo in e.NewItems.OfType<GameInformation>())
+                {
+                    Clients.Client(Context.ConnectionId)
+                        .RunningGameChanged(
+                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
+                                RunningGameChange.Added));
+
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var gameInfo in e.OldItems.OfType<GameInformation>())
+                {
+                    Clients.Client(Context.ConnectionId)
+                        .RunningGameChanged(
+                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
+                                RunningGameChange.Removed));
+                }
+            }
+        }
 
         #region Enumerations
 
@@ -54,7 +91,7 @@ namespace WebService
 
             if (!player1.IsReady || !player2.IsReady) return;
 
-            RunningGames.Add(groupName, gameInfo);
+            RunningGames.Add(gameInfo);
 
             DisposeReadyGame(readyGameInfo);
 
@@ -83,10 +120,20 @@ namespace WebService
             }
         }
 
+        public void SubscribeRunningGames()
+        {
+            _isSubscribedForRunningGameChanges = true;
+        }
+
+        public void UnsubscribeRunningGames()
+        {
+            _isSubscribedForRunningGameChanges = false;
+        }
+
         public Task<List<RunningGameDto>> GetRunningGames()
         {
             var getGamesTask = new TaskFactory<List<RunningGameDto>>().StartNew(() =>
-                RunningGames.Values.Select(ConvertGameInfoToRunningGameDto).ToList());
+                RunningGames.Select(ConvertGameInfoToRunningGameDto).ToList());
 
             return getGamesTask;
         }
@@ -95,8 +142,8 @@ namespace WebService
         {
             var getGameTask = new TaskFactory<RunningGameDto>().StartNew(() =>
             {
-                GameInformation game;
-                if (!RunningGames.TryGetValue(groupName, out game)) return null;
+                GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
+                if (game == null) return null;
                 if (game.IsFinished) return null;
                 return ConvertGameInfoToRunningGameDto(game);
             });
@@ -113,8 +160,8 @@ namespace WebService
 
         public void JoinAsSpectator(string groupName, string name)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return;
+            GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
+            if (game == null) return;
             if (game.IsFinished) return;
 
             game.Spectators.Add(new Spectator(Context.ConnectionId, name));
@@ -122,8 +169,8 @@ namespace WebService
 
         public void StopSpectating(string groupName)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return;
+            GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
+            if (game == null) return;
             if (game.IsFinished) return;
 
             var spectator = game.Spectators.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
@@ -154,6 +201,7 @@ namespace WebService
         public override Task OnDisconnected()
         {
             LeaveQueue();
+            UnsubscribeRunningGames();
 
             lock (ReadyGames)
             {
@@ -168,12 +216,12 @@ namespace WebService
 
             lock (RunningGames)
             {
-                var games = RunningGames.Where(p => p.Value.HasAnyPlayerConnectionId(Context.ConnectionId)).ToList();
-                foreach (var keyValuePair in games)
+                var games = RunningGames.Where(p => p.HasAnyPlayerConnectionId(Context.ConnectionId)).ToList();
+                foreach (var gameInfo in games)
                 {
-                    var loser = keyValuePair.Value.GetPlayer(Context.ConnectionId);
-                    var winner = keyValuePair.Value.OtherPlayer(loser);
-                    EndGame(keyValuePair.Value, winner, loser);
+                    var loser = gameInfo.GetPlayer(Context.ConnectionId);
+                    var winner = gameInfo.OtherPlayer(loser);
+                    EndGame(gameInfo, winner, loser);
                 }
             }
 
@@ -244,8 +292,8 @@ namespace WebService
 
         private void Move(string groupName, Direction direction)
         {
-            GameInformation game;
-            if (!RunningGames.TryGetValue(groupName, out game)) return;
+            GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
+            if (game == null) return;
             if (game.IsFinished) return;
             var player = game.GetPlayer(Context.ConnectionId);
             if (player == null) return;
@@ -333,7 +381,7 @@ namespace WebService
             gameInfo.IsFinished = true;
             lock (RunningGames)
             {
-                if (RunningGames.ContainsKey(gameInfo.GroupName)) RunningGames.Remove(gameInfo.GroupName);
+                if (RunningGames.Any(p => p.GroupName == gameInfo.GroupName)) RunningGames.Remove(gameInfo);
             }
 
             Clients.Client(winner.ConnectionId).GameOver(true);

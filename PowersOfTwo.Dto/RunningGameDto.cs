@@ -12,5 +12,17 @@
             Player1 = player1;
             Player2 = player2;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as RunningGameDto;
+            if (other == null) return false;
+            return GroupName == other.GroupName;
+        }
+
+        public override int GetHashCode()
+        {
+            return GroupName.GetHashCode();
+        }
     }
 }
