@@ -56,7 +56,12 @@ namespace PowersOfTwo.ViewModels
             }
 
             Visible = false;
-            if (_callback != null) _callback(result);
+
+            if (_callback != null)
+            {
+                _callback(result);
+                _callback = null;
+            }
         }
 
         public void Show(
