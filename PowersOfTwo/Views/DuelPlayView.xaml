@@ -15,8 +15,8 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <ContentControl Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Content="{Binding Player}"/>
-    <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding Opponent}" Margin="0, -20, 0,0"/>
+    <ContentControl Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Content="{Binding Player}" Margin="10"/>
+    <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding Opponent}" Margin="10"/>
   </Grid>
   
 </UserControl>
