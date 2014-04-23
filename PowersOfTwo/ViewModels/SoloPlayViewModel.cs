@@ -2,7 +2,6 @@
 using System.Linq;
 
 using PowersOfTwo.Core;
-using PowersOfTwo.Services;
 using PowersOfTwo.Services.Replay;
 
 namespace PowersOfTwo.ViewModels
@@ -14,7 +13,7 @@ namespace PowersOfTwo.ViewModels
         private readonly GameLogic _gameLogic;
         private readonly MainWindowViewModel _mainWindowViewModel;
 
-        private readonly ReplayRecorder _replayService;
+        private readonly ReplayRecorder _replayRecorder;
 
         #endregion Fields
 
@@ -32,9 +31,9 @@ namespace PowersOfTwo.ViewModels
             Player = new PlayerViewModel(Environment.MachineName);
             Player.Points = 0;
 
-            _replayService = new ReplayRecorder();
-            _replayService.Record(new GameStartedEvent(Player.Name, Player.Points));
-            
+            _replayRecorder = new ReplayRecorder();
+            _replayRecorder.Record(new GameStartedEvent(Player.Name, Player.Points));
+
             UpdateCells();
         }
 
@@ -73,25 +72,19 @@ namespace PowersOfTwo.ViewModels
         private void UpdateCells()
         {
             Player.Cells = _gameLogic.Cells.ToList();
-            _replayService.Record(new CellsChangedEvent(1, Player.Cells.ToList()));
+            _replayRecorder.Record(new CellsChangedEvent(1, Player.Cells.ToList()));
         }
 
         private void GameLogicCellsMatched(int points)
         {
             Player.Points += points;
-            _replayService.Record(new PointsChangedEvent(1, Player.Points));
+            _replayRecorder.Record(new PointsChangedEvent(1, Player.Points));
         }
 
         private void GameLogicOutOfMoves()
         {
-            OverlayViewModel.Closed += OverlayViewModelClosed;
-            OverlayViewModel.Show(new OverlayTextViewModel("Game Over", 72), true, false);
-        }
-
-        private void OverlayViewModelClosed(bool? obj)
-        {
-            OverlayViewModel.Closed -= OverlayViewModelClosed;
-            _mainWindowViewModel.ShowHighscore(Player.Points);
+            OverlayViewModel.Show(new OverlayTextViewModel("Game Over", 72),
+                p => _mainWindowViewModel.ShowHighscore(Player.Points));
         }
 
         #endregion Private Methods

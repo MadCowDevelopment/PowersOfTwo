@@ -121,6 +121,7 @@
       <DependentUpon>ScoreControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Services\Folders.cs" />
     <Compile Include="Services\HighscoreService.cs" />
     <Compile Include="Services\Replay\CellsChangedEvent.cs" />
     <Compile Include="Services\Replay\GameStartedEvent.cs" />

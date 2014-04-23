@@ -32,7 +32,7 @@ namespace PowersOfTwo.ViewModels
         {
             _gameProxy.JoinAsSpectator(SelectedGame.GroupName, Environment.MachineName);
             var observeGameViewModel = new ObserveGameViewModel(_mainWindowViewModel, _gameProxy, _overlayViewModel);
-            _overlayViewModel.Show(new OverlayTextViewModel("Joining game...", 36), false, false);
+            _overlayViewModel.Show(new OverlayTextViewModel("Joining game...", 36), allowAccept: false);
             await observeGameViewModel.Initialize(SelectedGame.GroupName);
             _overlayViewModel.Hide(null);
             _mainWindowViewModel.Content = observeGameViewModel;
@@ -40,7 +40,7 @@ namespace PowersOfTwo.ViewModels
 
         public async void Initialize()
         {
-            _overlayViewModel.Show(new OverlayTextViewModel("Getting games...", 36), false, false);
+            _overlayViewModel.Show(new OverlayTextViewModel("Getting games...", 36), allowAccept: false);
             var runningGames = await _gameProxy.GetRunningGames();
             RunningGames = new ObservableCollection<RunningGameDto>(runningGames);
             _overlayViewModel.Hide(null);
@@ -50,6 +50,6 @@ namespace PowersOfTwo.ViewModels
         public ICommand LeaveCommand { get; private set; }
         public RunningGameDto SelectedGame { get; set; }
 
-        public ObservableCollection<RunningGameDto> RunningGames { get; private set; } 
+        public ObservableCollection<RunningGameDto> RunningGames { get; private set; }
     }
 }

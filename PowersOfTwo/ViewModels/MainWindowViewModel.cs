@@ -10,6 +10,7 @@ namespace PowersOfTwo.ViewModels
         #region Fields
 
         private readonly MainMenuViewModel _mainMenuViewModel;
+        private ObservableObject _content;
 
         #endregion Fields
 
@@ -30,17 +31,23 @@ namespace PowersOfTwo.ViewModels
 
         public GlobalCommandBroker CommandBroker
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public ObservableObject Content
         {
-            get; set;
+            get { return _content; }
+            set
+            {
+                _content = value;
+            }
         }
 
         public OverlayViewModel Overlay
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties

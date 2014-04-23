@@ -6,6 +6,8 @@ namespace PowersOfTwo.ViewModels
 {
     public class OverlayViewModel : ObservableObject
     {
+        private Action<bool?> _callback;
+
         #region Constructors
 
         public OverlayViewModel()
@@ -15,32 +17,30 @@ namespace PowersOfTwo.ViewModels
 
         #endregion Constructors
 
-        #region Events
-
-        public event Action<bool?> Closed;
-
-        #endregion Events
-
         #region Public Properties
 
         public bool AllowAccept
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public bool AllowCancel
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public ObservableObject Content
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public bool Visible
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties
@@ -56,11 +56,17 @@ namespace PowersOfTwo.ViewModels
             }
 
             Visible = false;
-            RaiseClosed(result);
+            if (_callback != null) _callback(result);
         }
 
-        public void Show(ObservableObject content, bool allowAccept, bool allowCancel)
+        public void Show(
+            ObservableObject content,
+            Action<bool?> callback = null,
+            bool allowAccept = true,
+            bool allowCancel = false)
         {
+            _callback = callback;
+
             AllowAccept = allowAccept;
             AllowCancel = allowCancel;
 
@@ -69,15 +75,5 @@ namespace PowersOfTwo.ViewModels
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private void RaiseClosed(bool? result)
-        {
-            var handler = Closed;
-            if (handler != null) handler(result);
-        }
-
-        #endregion Private Methods
     }
 }

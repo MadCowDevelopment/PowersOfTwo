@@ -70,13 +70,13 @@ namespace PowersOfTwo.ViewModels
 
         private void AcceptOpponentOverlayClosed(bool? result)
         {
-            _overlayViewModel.Closed -= AcceptOpponentOverlayClosed;
             if (!result.HasValue) return;
 
             if (result.Value)
             {
                 _gameProxy.AcceptGame();
-                if (!_opponentReady) _overlayViewModel.Show(new WaitingForOpponentViewModel(_gameProxy), false, false);
+                if (!_opponentReady)
+                    _overlayViewModel.Show(new WaitingForOpponentViewModel(_gameProxy), AcceptOpponentOverlayClosed);
             }
             else
             {
@@ -87,7 +87,6 @@ namespace PowersOfTwo.ViewModels
 
         private void GameCanceledOverlayClosed(bool? result)
         {
-            _overlayViewModel.Closed -= GameCanceledOverlayClosed;
             _mainWindowViewModel.ShowMainMenu();
         }
 
@@ -101,8 +100,7 @@ namespace PowersOfTwo.ViewModels
         private void GameProxyGameCanceled()
         {
             _overlayViewModel.Hide(null);
-            _overlayViewModel.Closed += GameCanceledOverlayClosed;
-            _overlayViewModel.Show(new OverlayTextViewModel("Time's up!", 72), true, false);
+            _overlayViewModel.Show(new OverlayTextViewModel("Time's up!", 72), GameCanceledOverlayClosed);
         }
 
         private void GameProxyGameStarted(StartGameDto obj)
@@ -112,15 +110,13 @@ namespace PowersOfTwo.ViewModels
 
         private void GameProxyOpponentFound(string opponentName)
         {
-            _overlayViewModel.Closed += AcceptOpponentOverlayClosed;
-            _overlayViewModel.Show(new AcceptOpponentViewModel(_gameProxy, opponentName), true, true);
+            _overlayViewModel.Show(new AcceptOpponentViewModel(_gameProxy, opponentName), AcceptOpponentOverlayClosed);
         }
 
         private void GameProxyOpponentLeft()
         {
             _overlayViewModel.Hide(null);
-            _overlayViewModel.Closed += GameCanceledOverlayClosed;
-            _overlayViewModel.Show(new OverlayTextViewModel("Opponent left!", 42), true, false);
+            _overlayViewModel.Show(new OverlayTextViewModel("Opponent left!", 42), GameCanceledOverlayClosed);
         }
 
         private void GameProxyOpponentReady()

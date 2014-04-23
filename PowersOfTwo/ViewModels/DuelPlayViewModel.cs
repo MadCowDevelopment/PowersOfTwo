@@ -49,7 +49,7 @@ namespace PowersOfTwo.ViewModels
 
         public void Start()
         {
-            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel), false, false);
+            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel), allowAccept: false);
         }
 
         #endregion Public Methods
@@ -88,8 +88,7 @@ namespace PowersOfTwo.ViewModels
         private void GameOver(bool win)
         {
             var text = win ? "You win!" : "You lose!";
-            OverlayViewModel.Closed += OverlayViewModelClosed;
-            OverlayViewModel.Show(new OverlayTextViewModel(text, 72), true, false);
+            OverlayViewModel.Show(new OverlayTextViewModel(text, 72), p => _mainWindowViewModel.ShowMainMenu());
         }
 
         private void GameStarted(StartGameDto startGameInformation)
@@ -111,12 +110,6 @@ namespace PowersOfTwo.ViewModels
         private void OpponentPointsUpdated(int remainingPoints)
         {
             Opponent.Points = remainingPoints;
-        }
-
-        private void OverlayViewModelClosed(bool? obj)
-        {
-            OverlayViewModel.Closed -= OverlayViewModelClosed;
-            _mainWindowViewModel.ShowMainMenu();
         }
 
         private void PointsUpdated(int remainingPoints)

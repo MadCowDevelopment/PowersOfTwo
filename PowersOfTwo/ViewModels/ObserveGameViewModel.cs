@@ -14,8 +14,8 @@ namespace PowersOfTwo.ViewModels
         private RunningGameDto _runningGame;
 
         public ObserveGameViewModel(
-            MainWindowViewModel mainWindowViewModel, 
-            GameProxy gameProxy, 
+            MainWindowViewModel mainWindowViewModel,
+            GameProxy gameProxy,
             OverlayViewModel overlayViewModel)
         {
             _mainWindowViewModel = mainWindowViewModel;
@@ -45,14 +45,9 @@ namespace PowersOfTwo.ViewModels
 
         private void GameProxyGameOver(bool player1Win)
         {
-            _overlayViewModel.Closed += GameOverOverlayClosed;
             var winnerName = player1Win ? Player1.Name : Player2.Name;
-            _overlayViewModel.Show(new OverlayTextViewModel(string.Format("{0} wins", winnerName), 24), true, false);
-        }
-
-        private void GameOverOverlayClosed(bool? obj)
-        {
-            _mainWindowViewModel.ShowMainMenu();
+            _overlayViewModel.Show(new OverlayTextViewModel(string.Format("{0} wins", winnerName), 24),
+                p => _mainWindowViewModel.ShowMainMenu());
         }
 
         public PlayerViewModel Player1 { get; private set; }
@@ -60,13 +55,11 @@ namespace PowersOfTwo.ViewModels
 
         private void Leave()
         {
-            _overlayViewModel.Closed += OverlayViewModelClosed;
-            _overlayViewModel.Show(new OverlayTextViewModel("Leave?", 72), true, true);
+            _overlayViewModel.Show(new OverlayTextViewModel("Leave?", 72), LeaveOverlayClosed);
         }
 
-        private void OverlayViewModelClosed(bool? result)
+        private void LeaveOverlayClosed(bool? result)
         {
-            _overlayViewModel.Closed -= OverlayViewModelClosed;
             if (result.HasValue && result.Value)
             {
                 _gameProxy.StopSpectating(_runningGame.GroupName);

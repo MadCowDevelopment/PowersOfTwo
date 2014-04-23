@@ -11,10 +11,7 @@ namespace PowersOfTwo.Services
         #region Fields
 
         private readonly string _fileName;
-        private readonly string _filePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "MadCowDevelopment",
-            "PowersOfTwo");
+
 
         #endregion Fields
 
@@ -22,8 +19,7 @@ namespace PowersOfTwo.Services
 
         public HighscoreService()
         {
-            Directory.CreateDirectory(_filePath);
-            _fileName = Path.Combine(_filePath, "PowersOfTwoScore.xml");
+            _fileName = Path.Combine(Folders.AppData, "PowersOfTwoScore.xml");
         }
 
         #endregion Constructors
