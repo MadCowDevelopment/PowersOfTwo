@@ -17,7 +17,7 @@ namespace PowersOfTwo.ViewModels
             PlayCommand = new RelayCommand(p => Play());
             PauseCommand = new RelayCommand(p => Pause());
             StopCommand = new RelayCommand(p => Stop());
-            IncreasSpeedCommand = new RelayCommand(p => IncreaseSpeed());
+            IncreaseSpeedCommand = new RelayCommand(p => IncreaseSpeed());
             DecreaseSpeedCommand = new RelayCommand(p => DecreaseSpeed());
             LeaveCommand = new RelayCommand(p => Leave());
         }
@@ -74,7 +74,7 @@ namespace PowersOfTwo.ViewModels
 
         public ICommand LeaveCommand { get; private set; }
 
-        public ICommand IncreasSpeedCommand { get; private set; }
+        public ICommand IncreaseSpeedCommand { get; private set; }
 
         public ICommand DecreaseSpeedCommand { get; private set; }
         public PlayerViewModel Player1 { get; set; }
