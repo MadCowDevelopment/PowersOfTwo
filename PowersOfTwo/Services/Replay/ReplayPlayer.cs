@@ -10,7 +10,7 @@ namespace PowersOfTwo.Services.Replay
     {
         #region Fields
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _cancellationTokenSource;
         private readonly ManualResetEvent _pauseResetEvent = new ManualResetEvent(true);
         private readonly ReplayData _replayData;
 
@@ -68,8 +68,8 @@ namespace PowersOfTwo.Services.Replay
             }
 
             _playing = true;
-            CurrentFrame = 0;
 
+            _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
             var task = new Task(
                 () =>
@@ -85,7 +85,7 @@ namespace PowersOfTwo.Services.Replay
                         {
                             var currentEventTime = _replayData.Events[CurrentFrame].RecordTime;
                             var nextEventTime = _replayData.Events[CurrentFrame + 1].RecordTime;
-                            var sleepTime = (int) ((nextEventTime - currentEventTime).TotalMilliseconds*_speedFactor);
+                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds / _speedFactor);
                             Thread.Sleep(sleepTime);
                         }
                     }
