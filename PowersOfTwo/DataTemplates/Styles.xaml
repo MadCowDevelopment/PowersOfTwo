@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:PowersOfTwo.Converters">
     
   <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+  <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   
   <Style TargetType="TextBlock">
     <Setter Property="FontFamily" Value="Gill Sans Ultra Bold Condensed"/>

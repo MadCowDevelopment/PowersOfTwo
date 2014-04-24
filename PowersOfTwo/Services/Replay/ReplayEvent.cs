@@ -17,7 +17,7 @@ namespace PowersOfTwo.Services.Replay
 
         public DateTime RecordTime
         {
-            get; private set;
+            get; set;
         }
 
         #endregion Public Properties

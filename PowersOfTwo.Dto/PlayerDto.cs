@@ -8,7 +8,7 @@ namespace PowersOfTwo.Dto
     {
         #region Constructors
 
-        public PlayerDto(string name, List<NumberCell> cells, int points)
+        public PlayerDto(string name, List<int?> cells, int points)
         {
             Name = name;
             Cells = cells;
@@ -19,7 +19,7 @@ namespace PowersOfTwo.Dto
 
         #region Public Properties
 
-        public List<NumberCell> Cells
+        public List<int?> Cells
         {
             get; private set;
         }

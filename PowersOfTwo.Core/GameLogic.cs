@@ -13,10 +13,10 @@ namespace PowersOfTwo.Core
             Rows = rows;
             Columns = columns;
 
-            Cells = new List<NumberCell>();
+            InternalCells = new List<NumberCell>();
             for (int i = 0; i < 16; i++)
             {
-                Cells.Add(new NumberCell());
+                InternalCells.Add(new NumberCell());
             }
 
             AddRandomCell();
@@ -35,11 +35,13 @@ namespace PowersOfTwo.Core
 
         #region Public Properties
 
-        public List<NumberCell> Cells
+        private List<NumberCell> InternalCells
         {
             get;
-            private set;
+            set;
         }
+
+        public List<int?> Cells { get { return InternalCells.Select(p => p.Number).ToList(); } }
 
         public int Columns
         {
@@ -67,8 +69,8 @@ namespace PowersOfTwo.Core
                 for (int row = Rows - 1; row >= 0; row--)
                 {
                     var currentCellIndex = row * Columns + column;
-                    var currentCell = Cells[currentCellIndex];
-                    var emptyCell = Cells[emptyCellIndex];
+                    var currentCell = InternalCells[currentCellIndex];
+                    var emptyCell = InternalCells[emptyCellIndex];
 
                     if (currentCell.Number == null)
                     {
@@ -114,8 +116,8 @@ namespace PowersOfTwo.Core
                 for (int column = 0; column < Columns; column++)
                 {
                     var currentCellIndex = row * Columns + column;
-                    var currentCell = Cells[currentCellIndex];
-                    var emptyCell = Cells[emptyCellIndex];
+                    var currentCell = InternalCells[currentCellIndex];
+                    var emptyCell = InternalCells[emptyCellIndex];
 
                     if (currentCell.Number == null)
                     {
@@ -161,8 +163,8 @@ namespace PowersOfTwo.Core
                 for (int column = Columns - 1; column >= 0; column--)
                 {
                     var currentCellIndex = row * Columns + column;
-                    var currentCell = Cells[currentCellIndex];
-                    var emptyCell = Cells[emptyCellIndex];
+                    var currentCell = InternalCells[currentCellIndex];
+                    var emptyCell = InternalCells[emptyCellIndex];
 
                     if (currentCell.Number == null)
                     {
@@ -208,8 +210,8 @@ namespace PowersOfTwo.Core
                 for (int row = 0; row < Rows; row++)
                 {
                     var currentCellIndex = row * Columns + column;
-                    var currentCell = Cells[currentCellIndex];
-                    var emptyCell = Cells[emptyCellIndex];
+                    var currentCell = InternalCells[currentCellIndex];
+                    var emptyCell = InternalCells[emptyCellIndex];
 
                     if (currentCell.Number == null)
                     {
@@ -251,12 +253,12 @@ namespace PowersOfTwo.Core
 
         private void AddRandomCell()
         {
-            if (Cells.All(p => p.Number != null)) return;
+            if (InternalCells.All(p => p.Number != null)) return;
 
             NumberCell randomCell;
             do
             {
-                randomCell = Cells[RNG.Next(0, 16)];
+                randomCell = InternalCells[RNG.Next(0, 16)];
             } while (randomCell.Number != null);
 
             randomCell.Number = 2;
@@ -268,9 +270,9 @@ namespace PowersOfTwo.Core
             {
                 for (int column = 0; column < Columns - 1; column++)
                 {
-                    var cellIndex = row*Columns + column;
-                    var cell = Cells[cellIndex];
-                    var nextCell = Cells[cellIndex + 1];
+                    var cellIndex = row * Columns + column;
+                    var cell = InternalCells[cellIndex];
+                    var nextCell = InternalCells[cellIndex + 1];
 
                     if (cell.Number == null || nextCell.Number == null) return;
                     if (cell.Number == nextCell.Number) return;
@@ -279,11 +281,11 @@ namespace PowersOfTwo.Core
 
             for (int column = 0; column < Columns; column++)
             {
-                for (int row = 0; row < Rows-1; row++)
+                for (int row = 0; row < Rows - 1; row++)
                 {
                     var cellIndex = row * Columns + column;
-                    var cell = Cells[cellIndex];
-                    var nextCell = Cells[cellIndex + Columns];
+                    var cell = InternalCells[cellIndex];
+                    var nextCell = InternalCells[cellIndex + Columns];
 
                     if (cell.Number == null || nextCell.Number == null) return;
                     if (cell.Number == nextCell.Number) return;
@@ -305,6 +307,31 @@ namespace PowersOfTwo.Core
             if (handler != null) handler();
         }
 
+        private class NumberCell
+        {
+            #region Fields
+
+            private int? _number;
+
+            #endregion Fields
+
+            #region Public Properties
+
+            public int? Number
+            {
+                get
+                {
+                    return _number;
+                }
+
+                set
+                {
+                    _number = value;
+                }
+            }
+
+            #endregion Public Properties
+        }
         #endregion Private Methods
     }
 }

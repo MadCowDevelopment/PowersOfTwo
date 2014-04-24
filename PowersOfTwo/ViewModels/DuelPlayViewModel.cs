@@ -84,7 +84,7 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void CellsChanged(List<NumberCell> cells)
+        private void CellsChanged(List<int?> cells)
         {
             Player.Cells = cells;
             _replayRecorder.Record(new CellsChangedEvent(1, cells));
@@ -109,7 +109,7 @@ namespace PowersOfTwo.ViewModels
             _replayRecorder.Record(new GameStartedEvent(Player.Name, Opponent.Name, startGameInformation.StartPoints));
         }
 
-        private void OpponentCellsChanged(List<NumberCell> cells)
+        private void OpponentCellsChanged(List<int?> cells)
         {
             Opponent.Cells = cells;
             _replayRecorder.Record(new CellsChangedEvent(2, cells));

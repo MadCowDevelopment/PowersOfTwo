@@ -52,7 +52,7 @@ namespace PowersOfTwo.ViewModels
 
         #region Public Properties
 
-        public List<NumberCell> Cells
+        public List<int?> Cells
         {
             get;
             private set;

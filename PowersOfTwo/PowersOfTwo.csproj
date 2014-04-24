@@ -121,6 +121,7 @@
       <DependentUpon>ScoreControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Framework\DispatcherObservableCollection.cs" />
     <Compile Include="Services\Folders.cs" />
     <Compile Include="Services\HighscoreService.cs" />

@@ -11,36 +11,36 @@
         <DropShadowEffect BlurRadius="5"/>
       </Border.Effect>
     </Border>
-    <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding}">
+    <ItemsControl Margin="10" ItemsSource="{Binding}">
       <ItemsControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type Core:NumberCell}">
+        <DataTemplate>
           <Grid Margin="5">
             <Border CornerRadius="2">
               <Border.Style>
                 <Style TargetType="Border">
                   <Style.Triggers>
-                    <DataTrigger Binding="{Binding Number}" Value="{x:Null}">
+                    <DataTrigger Binding="{Binding}" Value="{x:Null}">
                       <Setter Property="Background" Value="#CCC0B3"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="2">
+                    <DataTrigger Binding="{Binding}" Value="2">
                       <Setter Property="Background" Value="#EEE4DA"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="4">
+                    <DataTrigger Binding="{Binding}" Value="4">
                       <Setter Property="Background" Value="#EDE0C8"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="8">
+                    <DataTrigger Binding="{Binding}" Value="8">
                       <Setter Property="Background" Value="#F2B179"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="16">
+                    <DataTrigger Binding="{Binding}" Value="16">
                       <Setter Property="Background" Value="#F59563"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="32">
+                    <DataTrigger Binding="{Binding}" Value="32">
                       <Setter Property="Background" Value="#F67C5F"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="64">
+                    <DataTrigger Binding="{Binding}" Value="64">
                       <Setter Property="Background" Value="#F65E3B"/>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="128">
+                    <DataTrigger Binding="{Binding}" Value="128">
                       <Setter Property="Background" Value="#EDCF72"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -48,7 +48,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="256">
+                    <DataTrigger Binding="{Binding}" Value="256">
                       <Setter Property="Background" Value="#EDCC61"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -56,7 +56,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="512">
+                    <DataTrigger Binding="{Binding}" Value="512">
                       <Setter Property="Background" Value="#EDC850"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -64,7 +64,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="1024">
+                    <DataTrigger Binding="{Binding}" Value="1024">
                       <Setter Property="Background" Value="#EDC53F"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -72,7 +72,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="2048">
+                    <DataTrigger Binding="{Binding}" Value="2048">
                       <Setter Property="Background" Value="#EDC22E"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -80,7 +80,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="4096">
+                    <DataTrigger Binding="{Binding}" Value="4096">
                       <Setter Property="Background" Value="#EDC11A"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -88,7 +88,7 @@
                         </Setter.Value>
                       </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Number}" Value="8192">
+                    <DataTrigger Binding="{Binding}" Value="8192">
                       <Setter Property="Background" Value="#EDC000"/>
                       <Setter Property="Effect">
                         <Setter.Value>
@@ -101,47 +101,47 @@
               </Border.Style>
             </Border>
             <Viewbox Stretch="Fill">
-              <TextBlock Text="{Binding Number}" FontWeight="Bold" Margin="5">
+              <TextBlock Text="{Binding}" FontWeight="Bold" Margin="5">
                 <TextBlock.Style>
                   <Style TargetType="TextBlock">
                     <Style.Triggers>
-                      <DataTrigger Binding="{Binding Number}" Value="2">
+                      <DataTrigger Binding="{Binding}" Value="2">
                         <Setter Property="Foreground" Value="#776E65"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="4">
+                      <DataTrigger Binding="{Binding}" Value="4">
                         <Setter Property="Foreground" Value="#776E65"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="8">
+                      <DataTrigger Binding="{Binding}" Value="8">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="16">
+                      <DataTrigger Binding="{Binding}" Value="16">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="32">
+                      <DataTrigger Binding="{Binding}" Value="32">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="64">
+                      <DataTrigger Binding="{Binding}" Value="64">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="128">
+                      <DataTrigger Binding="{Binding}" Value="128">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="256">
+                      <DataTrigger Binding="{Binding}" Value="256">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="512">
+                      <DataTrigger Binding="{Binding}" Value="512">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="1024">
+                      <DataTrigger Binding="{Binding}" Value="1024">
                         <Setter Property="Foreground" Value="#F9F6F2"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="2048">
+                      <DataTrigger Binding="{Binding}" Value="2048">
                         <Setter Property="Foreground" Value="#FFFFFF"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="4096">
+                      <DataTrigger Binding="{Binding}" Value="4096">
                         <Setter Property="Foreground" Value="#FFFFFF"/>
                       </DataTrigger>
-                      <DataTrigger Binding="{Binding Number}" Value="8192">
+                      <DataTrigger Binding="{Binding}" Value="8192">
                         <Setter Property="Foreground" Value="#FFFFFF"/>
                       </DataTrigger>
                     </Style.Triggers>

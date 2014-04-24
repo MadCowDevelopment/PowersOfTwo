@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using PowersOfTwo.Framework;
 
 namespace PowersOfTwo.Services.Replay
@@ -14,6 +13,8 @@ namespace PowersOfTwo.Services.Replay
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent _pauseResetEvent = new ManualResetEvent(true);
         private readonly ReplayData _replayData;
+
+        private double _speedFactor = 1;
 
         private bool _playing;
 
@@ -34,12 +35,14 @@ namespace PowersOfTwo.Services.Replay
 
         public int CurrentFrame
         {
-            get; set;
+            get;
+            set;
         }
 
         public TimeSpan TotalDuration
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public int TotalFrames
@@ -82,14 +85,17 @@ namespace PowersOfTwo.Services.Replay
                         {
                             var currentEventTime = _replayData.Events[CurrentFrame].RecordTime;
                             var nextEventTime = _replayData.Events[CurrentFrame + 1].RecordTime;
-                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds);
+                            var sleepTime = (int) ((nextEventTime - currentEventTime).TotalMilliseconds*_speedFactor);
                             Thread.Sleep(sleepTime);
                         }
                     }
-                }, cancellationToken).ContinueWith(p =>
-                {
-                    _playing = false;
-                });
+                }, cancellationToken);
+
+            task.ContinueWith(p =>
+            {
+                _playing = false;
+            });
+
             task.Start();
         }
 
@@ -110,5 +116,18 @@ namespace PowersOfTwo.Services.Replay
         }
 
         #endregion Private Methods
+
+
+        public void IncreaseSpeed()
+        {
+            if (_speedFactor >= 16) return;
+            _speedFactor *= 2;
+        }
+
+        public void DecreaseSpeed()
+        {
+            if (_speedFactor <= 0.0625) return;
+            _speedFactor /= 2;
+        }
     }
 }

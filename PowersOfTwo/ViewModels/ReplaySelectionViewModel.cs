@@ -20,7 +20,9 @@ namespace PowersOfTwo.ViewModels
 
         private void WatchReplay()
         {
-            
+            var replayPlayerViewModel = new ReplayPlayerViewModel(_mainWindowViewModel, _overlayViewModel);
+            _mainWindowViewModel.Content = replayPlayerViewModel;
+            replayPlayerViewModel.Initialize(SelectedReplay);
         }
 
         public async void Initialize()

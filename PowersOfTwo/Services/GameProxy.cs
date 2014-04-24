@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.AspNet.SignalR.Client;
 
 using PowersOfTwo.Core;
@@ -36,8 +37,8 @@ namespace PowersOfTwo.Services
             _gameProxy.On<StartGameDto>("StartGame", OnGameStarted);
             _gameProxy.On<bool>("GameOver", RaiseGameOver);
             _gameProxy.On<int>("UpdatePoints", RaisePointsUpdated);
-            _gameProxy.On<List<NumberCell>>("CellsChanged", RaiseCellsChanged);
-            _gameProxy.On<List<NumberCell>>("OpponentCellsChanged", RaiseOpponentCellsChanged);
+            _gameProxy.On<List<int?>>("CellsChanged", RaiseCellsChanged);
+            _gameProxy.On<List<int?>>("OpponentCellsChanged", RaiseOpponentCellsChanged);
             _gameProxy.On<int>("UpdateOpponentPoints", RaiseOpponentPointsUpdated);
             _gameProxy.On("OpponentLeft", RaiseOpponentLeft);
             _gameProxy.On("GameCanceled", RaiseGameCanceled);
@@ -53,7 +54,7 @@ namespace PowersOfTwo.Services
 
         #region Events
 
-        public event Action<List<NumberCell>> CellsChanged;
+        public event Action<List<int?>> CellsChanged;
 
         public event Action<StateChange> ConnectionStateChanged;
 
@@ -63,7 +64,7 @@ namespace PowersOfTwo.Services
 
         public event Action<StartGameDto> GameStarted;
 
-        public event Action<List<NumberCell>> OpponentCellsChanged;
+        public event Action<List<int?>> OpponentCellsChanged;
 
         public event Action<string> OpponentFound;
 
@@ -202,7 +203,7 @@ namespace PowersOfTwo.Services
             RaiseOpponentFound(opponentFoundInformation.OpponentName);
         }
 
-        private void RaiseCellsChanged(List<NumberCell> cells)
+        private void RaiseCellsChanged(List<int?> cells)
         {
             var handler = CellsChanged;
             if (handler != null) handler(cells);
@@ -232,7 +233,7 @@ namespace PowersOfTwo.Services
             if (handler != null) handler(startGameInformation);
         }
 
-        private void RaiseOpponentCellsChanged(List<NumberCell> cells)
+        private void RaiseOpponentCellsChanged(List<int?> cells)
         {
             var handler = OpponentCellsChanged;
             if (handler != null) handler(cells);

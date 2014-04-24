@@ -8,7 +8,7 @@ namespace PowersOfTwo.Services.Replay
     {
         #region Constructors
 
-        public CellsChangedEvent(int playerNumber, List<NumberCell> cells)
+        public CellsChangedEvent(int playerNumber, List<int?> cells)
         {
             PlayerNumber = playerNumber;
             Cells = cells;
@@ -18,7 +18,7 @@ namespace PowersOfTwo.Services.Replay
 
         #region Public Properties
 
-        public List<NumberCell> Cells
+        public List<int?> Cells
         {
             get; set;
         }
