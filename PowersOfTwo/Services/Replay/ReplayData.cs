@@ -1,21 +1,21 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace PowersOfTwo.Services.Replay
 {
-    public abstract class ReplayEvent
+    public class ReplayData
     {
         #region Constructors
 
-        protected ReplayEvent()
+        public ReplayData()
         {
-            RecordTime = DateTime.Now;
+            Events = new List<ReplayEvent>();
         }
 
         #endregion Constructors
 
         #region Public Properties
 
-        public DateTime RecordTime
+        public List<ReplayEvent> Events
         {
             get; private set;
         }
@@ -24,7 +24,10 @@ namespace PowersOfTwo.Services.Replay
 
         #region Public Methods
 
-        public abstract void Replay(IReplayTarget replayTarget);
+        public void AddEvent(ReplayEvent replayEvent)
+        {
+            Events.Add(replayEvent);
+        }
 
         #endregion Public Methods
     }

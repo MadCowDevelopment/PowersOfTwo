@@ -12,7 +12,6 @@ namespace PowersOfTwo.Services
 
         private readonly string _fileName;
 
-
         #endregion Fields
 
         #region Constructors

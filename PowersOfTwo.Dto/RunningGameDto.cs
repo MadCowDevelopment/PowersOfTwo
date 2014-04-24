@@ -2,9 +2,7 @@
 {
     public class RunningGameDto
     {
-        public string GroupName { get; private set; }
-        public PlayerDto Player1 { get; private set; }
-        public PlayerDto Player2 { get; private set; }
+        #region Constructors
 
         public RunningGameDto(string groupName, PlayerDto player1, PlayerDto player2)
         {
@@ -12,6 +10,29 @@
             Player1 = player1;
             Player2 = player2;
         }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public string GroupName
+        {
+            get; private set;
+        }
+
+        public PlayerDto Player1
+        {
+            get; private set;
+        }
+
+        public PlayerDto Player2
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public override bool Equals(object obj)
         {
@@ -24,5 +45,7 @@
         {
             return GroupName.GetHashCode();
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+
 using PowersOfTwo.Core;
 
 namespace PowersOfTwo.Services.Replay
 {
     public class CellsChangedEvent : ReplayEvent
     {
-        public int PlayerNumber { get; set; }
-        public List<NumberCell> Cells { get; set; }
+        #region Constructors
 
         public CellsChangedEvent(int playerNumber, List<NumberCell> cells)
         {
@@ -14,10 +14,30 @@ namespace PowersOfTwo.Services.Replay
             Cells = cells;
         }
 
+        #endregion Constructors
+
+        #region Public Properties
+
+        public List<NumberCell> Cells
+        {
+            get; set;
+        }
+
+        public int PlayerNumber
+        {
+            get; set;
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public override void Replay(IReplayTarget replayTarget)
         {
             var player = PlayerNumber == 1 ? replayTarget.Player1 : replayTarget.Player2;
             player.Cells = Cells;
         }
+
+        #endregion Public Methods
     }
 }

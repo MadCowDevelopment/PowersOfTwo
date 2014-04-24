@@ -4,13 +4,28 @@ namespace PowersOfTwo.Dto
 {
     public class QueueRequest
     {
-        public string UserName { get; private set; }
-        public int GameModeId { get; private set; }
+        #region Constructors
 
         public QueueRequest(string userName, int gameModeId)
         {
             UserName = userName;
             GameModeId = gameModeId;
         }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public int GameModeId
+        {
+            get; private set;
+        }
+
+        public string UserName
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
     }
 }

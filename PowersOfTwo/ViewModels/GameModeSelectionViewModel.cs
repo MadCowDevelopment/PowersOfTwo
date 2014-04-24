@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+
 using PowersOfTwo.Core;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
@@ -7,9 +8,15 @@ namespace PowersOfTwo.ViewModels
 {
     public class GameModeSelectionViewModel : ObservableObject
     {
+        #region Fields
+
+        private readonly GameProxy _gameProxy;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly OverlayViewModel _overlayViewModel;
-        private readonly GameProxy _gameProxy;
+
+        #endregion Fields
+
+        #region Constructors
 
         public GameModeSelectionViewModel(MainWindowViewModel mainWindowViewModel, OverlayViewModel overlayViewModel, GameProxy gameProxy)
         {
@@ -23,7 +30,11 @@ namespace PowersOfTwo.ViewModels
             LeaveCommand = new RelayCommand(p => _mainWindowViewModel.ShowMainMenu());
         }
 
-        public ICommand PlayShortCommand
+        #endregion Constructors
+
+        #region Public Properties
+
+        public ICommand LeaveCommand
         {
             get;
             private set;
@@ -34,18 +45,22 @@ namespace PowersOfTwo.ViewModels
             get;
             private set;
         }
-        
+
         public ICommand PlayRankedCommand
         {
             get;
             private set;
         }
 
-        public ICommand LeaveCommand
+        public ICommand PlayShortCommand
         {
             get;
             private set;
         }
+
+        #endregion Public Properties
+
+        #region Private Methods
 
         private void QueueForDuelGame(GameMode gameMode)
         {
@@ -60,5 +75,7 @@ namespace PowersOfTwo.ViewModels
             duelPlayViewModel.Start();
             _mainWindowViewModel.Content = duelPlayViewModel;
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 using PowersOfTwo.Core;
+using PowersOfTwo.Services;
 using PowersOfTwo.Services.Replay;
 
 namespace PowersOfTwo.ViewModels
@@ -12,7 +14,6 @@ namespace PowersOfTwo.ViewModels
 
         private readonly GameLogic _gameLogic;
         private readonly MainWindowViewModel _mainWindowViewModel;
-
         private readonly ReplayRecorder _replayRecorder;
 
         #endregion Fields
@@ -69,12 +70,6 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void UpdateCells()
-        {
-            Player.Cells = _gameLogic.Cells.ToList();
-            _replayRecorder.Record(new CellsChangedEvent(1, Player.Cells.ToList()));
-        }
-
         private void GameLogicCellsMatched(int points)
         {
             Player.Points += points;
@@ -83,8 +78,15 @@ namespace PowersOfTwo.ViewModels
 
         private void GameLogicOutOfMoves()
         {
+            _replayRecorder.Save();
             OverlayViewModel.Show(new OverlayTextViewModel("Game Over", 72),
                 p => _mainWindowViewModel.ShowHighscore(Player.Points));
+        }
+
+        private void UpdateCells()
+        {
+            Player.Cells = _gameLogic.Cells.ToList();
+            _replayRecorder.Record(new CellsChangedEvent(1, Player.Cells.ToList()));
         }
 
         #endregion Private Methods

@@ -1,22 +1,28 @@
-﻿using Ionic.Zip;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
+
+using Ionic.Zip;
+
+using Newtonsoft.Json;
 
 namespace PowersOfTwo.Services.Replay
 {
     public class ReplayLoader
     {
-        private readonly JsonSerializerSettings _settings
-            = new JsonSerializerSettings
+        #region Fields
+
+        private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
               {
                   TypeNameHandling =
                       TypeNameHandling.All
               };
 
-        public List<ReplayEvent> Load(string filename)
+        #endregion Fields
+
+        #region Public Methods
+
+        public ReplayData Load(string filename)
         {
             using (var zip = new ZipFile(filename))
             {
@@ -35,7 +41,7 @@ namespace PowersOfTwo.Services.Replay
 
                     streamReader = new StreamReader(memoryStream);
                     var content = streamReader.ReadToEnd();
-                    return JsonConvert.DeserializeObject<List<ReplayEvent>>(content, _settings);
+                    return JsonConvert.DeserializeObject<ReplayData>(content, _settings);
                 }
                 finally
                 {
@@ -45,5 +51,6 @@ namespace PowersOfTwo.Services.Replay
             }
         }
 
+        #endregion Public Methods
     }
 }

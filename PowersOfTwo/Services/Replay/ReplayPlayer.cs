@@ -1,90 +1,114 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using PowersOfTwo.Framework;
+
 namespace PowersOfTwo.Services.Replay
 {
-    public class ReplayPlayer
+    public class ReplayPlayer : ObservableObject
     {
-        private readonly List<ReplayEvent> _events;
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private bool _paused;
-        private int _currentFrame;
-        private TimeSpan _currentTime;
+        #region Fields
 
-        public ReplayPlayer(IEnumerable<ReplayEvent> events)
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly ManualResetEvent _pauseResetEvent = new ManualResetEvent(true);
+        private readonly ReplayData _replayData;
+
+        private bool _playing;
+
+        #endregion Fields
+
+        #region Constructors
+
+        public ReplayPlayer(ReplayData replayData)
         {
-            _events = events.ToList();
-            SpeedFactor = 1;
+            _replayData = replayData;
 
             InitializeTotalDuration();
         }
 
-        private void InitializeTotalDuration()
+        #endregion Constructors
+
+        #region Public Properties
+
+        public int CurrentFrame
         {
-            if (_events.Count <= 2) TotalDuration = TimeSpan.FromSeconds(0);
+            get; set;
+        }
+
+        public TimeSpan TotalDuration
+        {
+            get; private set;
+        }
+
+        public int TotalFrames
+        {
+            get { return _replayData.Events.Count; }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void Pause()
+        {
+            _pauseResetEvent.Reset();
         }
 
         public void Play(IReplayTarget replayTarget)
         {
+            if (_playing)
+            {
+                _pauseResetEvent.Set();
+                return;
+            }
+
+            _playing = true;
+            CurrentFrame = 0;
+
             var cancellationToken = _cancellationTokenSource.Token;
             var task = new Task(
                 () =>
                 {
-                    _currentFrame = 0;
-                    for (int i = _currentFrame; i < _events.Count; i++)
+                    for (CurrentFrame = 0; CurrentFrame < TotalFrames; CurrentFrame++)
                     {
-                        while (_paused)
-                        {
-                            if (cancellationToken.IsCancellationRequested) break;
-                            Thread.Sleep(100);
-                        }
-
+                        _pauseResetEvent.WaitOne();
                         if (cancellationToken.IsCancellationRequested) break;
 
-                        _events[i].Replay(replayTarget);
+                        _replayData.Events[CurrentFrame].Replay(replayTarget);
 
-                        if (i + 1 < _events.Count)
+                        if (CurrentFrame + 1 < _replayData.Events.Count)
                         {
-                            var currentEventTime = _events[i].RecordTime;
-                            var nextEventTime = _events[i + 1].RecordTime;
-                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds / SpeedFactor);
+                            var currentEventTime = _replayData.Events[CurrentFrame].RecordTime;
+                            var nextEventTime = _replayData.Events[CurrentFrame + 1].RecordTime;
+                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds);
                             Thread.Sleep(sleepTime);
                         }
                     }
-                }, cancellationToken);
+                }, cancellationToken).ContinueWith(p =>
+                {
+                    _playing = false;
+                });
             task.Start();
-        }
-
-        public TimeSpan TotalDuration { get; private set; }
-
-        public int TotalFrames { get; private set; }
-
-        public TimeSpan CurrentTime
-        {
-            get
-            {
-                return _currentTime;
-            }
-
-            set
-            {
-                _currentTime = value;
-            }
-        }
-
-        public void Pause()
-        {
-            _paused = !_paused;
         }
 
         public void Stop()
         {
+            _pauseResetEvent.Set();
             _cancellationTokenSource.Cancel();
         }
 
-        public double SpeedFactor { get; set; }
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void InitializeTotalDuration()
+        {
+            if (_replayData.Events.Count() <= 2) TotalDuration = TimeSpan.FromSeconds(0);
+            else TotalDuration = _replayData.Events.Last().RecordTime - _replayData.Events.First().RecordTime;
+        }
+
+        #endregion Private Methods
     }
 }

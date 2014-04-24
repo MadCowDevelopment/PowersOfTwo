@@ -20,9 +20,13 @@ namespace PowersOfTwo.Views
     /// </summary>
     public partial class GameModeSelectionView : UserControl
     {
+        #region Constructors
+
         public GameModeSelectionView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

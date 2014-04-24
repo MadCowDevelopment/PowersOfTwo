@@ -7,12 +7,14 @@ namespace PowersOfTwo.ViewModels
 {
     public class PlayerViewModel : ObservableObject
     {
-        public string Name { get; private set; }
+        #region Constructors
 
         public PlayerViewModel(string name)
         {
             Name = name;
         }
+
+        #endregion Constructors
 
         #region Public Properties
 
@@ -20,6 +22,11 @@ namespace PowersOfTwo.ViewModels
         {
             get;
             set;
+        }
+
+        public string Name
+        {
+            get; private set;
         }
 
         public int Points

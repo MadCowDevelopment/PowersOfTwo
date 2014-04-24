@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using PowersOfTwo.Core;
 
 namespace PowersOfTwo.Dto
@@ -38,13 +39,16 @@ namespace PowersOfTwo.Dto
             private set;
         }
 
+        public string OpponentName
+        {
+            get; set;
+        }
+
         public int StartPoints
         {
             get;
             private set;
         }
-
-        public string OpponentName { get; set; }
 
         #endregion Public Properties
     }

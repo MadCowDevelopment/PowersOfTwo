@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using PowersOfTwo.Core;
 
 namespace WebService
@@ -20,13 +21,16 @@ namespace WebService
 
         #region Public Properties
 
+        public GameMode GameMode
+        {
+            get; private set;
+        }
+
         public string GroupName
         {
             get;
             private set;
         }
-
-        public GameMode GameMode { get; private set; }
 
         public bool IsFinished
         {
@@ -46,7 +50,10 @@ namespace WebService
             private set;
         }
 
-        public List<Spectator> Spectators { get; private set; }
+        public List<Spectator> Spectators
+        {
+            get; private set;
+        }
 
         #endregion Public Properties
 
@@ -81,5 +88,4 @@ namespace WebService
 
         #endregion Public Methods
     }
-
 }

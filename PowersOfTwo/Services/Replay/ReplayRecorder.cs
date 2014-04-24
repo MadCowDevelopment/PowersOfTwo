@@ -1,35 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Timers;
+
 using Ionic.Zip;
+
 using Newtonsoft.Json;
 
 namespace PowersOfTwo.Services.Replay
 {
     public class ReplayRecorder
     {
-        private readonly List<ReplayEvent> _events = new List<ReplayEvent>();
+        #region Fields
 
-        private readonly JsonSerializerSettings _settings
-            = new JsonSerializerSettings
+        private readonly ReplayData _replayData = new ReplayData();
+        private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
               {
                   TypeNameHandling =
                       TypeNameHandling.All
               };
 
-        public void Record(ReplayEvent action)
+        #endregion Fields
+
+        #region Public Methods
+
+        public void Record(ReplayEvent replayEvent)
         {
-            _events.Add(action);
+            _replayData.AddEvent(replayEvent);
         }
 
-        public void Save(string filename)
+        public void Save()
         {
+            if (_replayData == null || _replayData.Events.Count < 2)
+                throw new InvalidOperationException("No events recorded.");
+
+            var filename = Path.Combine(Folders.Replays,
+                _replayData.Events.First().RecordTime.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture) +
+                ".potr");
+
             var serializedString = JsonConvert.SerializeObject(
-                _events,
-                typeof(List<ReplayEvent>),
+                _replayData,
+                typeof(ReplayData),
                 Formatting.Indented,
                 _settings);
 
@@ -41,5 +53,7 @@ namespace PowersOfTwo.Services.Replay
                 zip.Save(filename);
             }
         }
+
+        #endregion Public Methods
     }
 }

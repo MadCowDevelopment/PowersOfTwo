@@ -10,6 +10,7 @@ namespace PowersOfTwo.ViewModels
         #region Fields
 
         private readonly MainMenuViewModel _mainMenuViewModel;
+
         private ObservableObject _content;
 
         #endregion Fields

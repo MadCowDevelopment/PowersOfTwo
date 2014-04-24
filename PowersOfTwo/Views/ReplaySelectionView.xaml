@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="PowersOfTwo.Views.ReplaySelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:PowersOfTwo.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <controls:MenuHeader Grid.Row="0" Text="Replays" Image="../Images/Replay.png"/>
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20,0,20,0">
+      <ListBox ItemsSource="{Binding AvailableReplays}" SelectedItem="{Binding SelectedReplay}">
+        <ListBox.ItemContainerStyle>
+          <Style TargetType="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+          </Style>
+        </ListBox.ItemContainerStyle>
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Filename}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </ScrollViewer>
+
+    <controls:MenuButton Grid.Row="2" Margin="0,10,0,0"
+                         Text="Watch replay" Image="../Images/Replay/Play.png"
+                         Command="{Binding WatchReplayCommand}"/>
+
+    <controls:MenuButton Grid.Row="3" Margin="0,0,0,10"
+                         Text="Back to Menu" Image="../Images/Back.png"
+                         Command="{Binding LeaveCommand}"/>
+  </Grid>
+</UserControl>

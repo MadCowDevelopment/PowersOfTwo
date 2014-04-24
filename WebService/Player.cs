@@ -39,22 +39,40 @@ namespace WebService
 
     public abstract class User
     {
-        public string ConnectionId { get; private set; }
-        public string Name { get; private set; }
+        #region Constructors
 
         protected User(string connectionId, string name)
         {
             ConnectionId = connectionId;
             Name = name;
         }
+
+        #endregion Constructors
+
+        #region Public Properties
+
+        public string ConnectionId
+        {
+            get; private set;
+        }
+
+        public string Name
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
     }
 
     public class Spectator : User
     {
+        #region Constructors
+
         public Spectator(string connectionId, string name)
             : base(connectionId, name)
         {
-
         }
+
+        #endregion Constructors
     }
 }

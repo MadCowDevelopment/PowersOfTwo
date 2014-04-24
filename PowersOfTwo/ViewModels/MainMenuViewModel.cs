@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 
 using Microsoft.AspNet.SignalR.Client;
+
 using PowersOfTwo.Dto;
 using PowersOfTwo.Framework;
 using PowersOfTwo.Services;
@@ -37,17 +38,17 @@ namespace PowersOfTwo.ViewModels
             PlaySoloCommand = new RelayCommand(p => StartSoloGame());
             ObserveGameCommand = new RelayCommand(p => ObserveGame());
             QuitCommand = new RelayCommand(p => Application.Current.Shutdown());
-            ReplayCommand = new RelayCommand(p => Replay(), p => false);
-        }
-
-        private void Replay()
-        {
-            
+            ReplayCommand = new RelayCommand(p => Replay());
         }
 
         #endregion Constructors
 
         #region Public Properties
+
+        public bool CanObserveGame
+        {
+            get; private set;
+        }
 
         public bool CanStartDuel
         {
@@ -55,7 +56,10 @@ namespace PowersOfTwo.ViewModels
             private set;
         }
 
-        public bool CanObserveGame { get; private set; }
+        public ICommand ObserveGameCommand
+        {
+            get; private set;
+        }
 
         public ICommand PlayDuelCommand
         {
@@ -75,9 +79,10 @@ namespace PowersOfTwo.ViewModels
             private set;
         }
 
-        public ICommand ReplayCommand { get; private set; }
-
-        public ICommand ObserveGameCommand { get; private set; }
+        public ICommand ReplayCommand
+        {
+            get; private set;
+        }
 
         #endregion Public Properties
 
@@ -92,9 +97,18 @@ namespace PowersOfTwo.ViewModels
 
         #region Private Methods
 
-        private void StartSoloGame()
+        private void ObserveGame()
         {
-            _mainWindowViewModel.Content = new SoloPlayViewModel(_overlayViewModel, _mainWindowViewModel);
+            var runningGamesViewModel = new RunningGamesViewModel(_mainWindowViewModel, _overlayViewModel, _gameProxy);
+            _mainWindowViewModel.Content = runningGamesViewModel;
+            runningGamesViewModel.Initialize();
+        }
+
+        private void Replay()
+        {
+            var replayViewModel = new ReplaySelectionViewModel(_mainWindowViewModel, _overlayViewModel);
+            _mainWindowViewModel.Content = replayViewModel;
+            replayViewModel.Initialize();
         }
 
         private void SelectDuelGameMode()
@@ -103,13 +117,10 @@ namespace PowersOfTwo.ViewModels
                 _gameProxy);
         }
 
-        private void ObserveGame()
+        private void StartSoloGame()
         {
-            var runningGamesViewModel = new RunningGamesViewModel(_mainWindowViewModel, _overlayViewModel, _gameProxy);
-            _mainWindowViewModel.Content = runningGamesViewModel;
-            runningGamesViewModel.Initialize();
+            _mainWindowViewModel.Content = new SoloPlayViewModel(_overlayViewModel, _mainWindowViewModel);
         }
-
 
         #endregion Private Methods
     }

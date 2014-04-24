@@ -16,17 +16,13 @@ using System.Windows.Shapes;
 namespace PowersOfTwo.Views
 {
     /// <summary>
-    /// Interaction logic for ObserveGameView.xaml
+    /// Interaction logic for ReplayPlayerView.xaml
     /// </summary>
-    public partial class ObserveGameView : UserControl
+    public partial class ReplayPlayerView : UserControl
     {
-        #region Constructors
-
-        public ObserveGameView()
+        public ReplayPlayerView()
         {
             InitializeComponent();
         }
-
-        #endregion Constructors
     }
 }

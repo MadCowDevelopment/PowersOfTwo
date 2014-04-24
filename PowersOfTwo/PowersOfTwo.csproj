@@ -128,7 +128,10 @@
     <Compile Include="Services\Replay\GameStartedEvent.cs" />
     <Compile Include="Services\Replay\IReplayTarget.cs" />
     <Compile Include="Services\Replay\PointsChangedEvent.cs" />
+    <Compile Include="Services\Replay\ReplayData.cs" />
+    <Compile Include="Services\Replay\ReplayDiscoverer.cs" />
     <Compile Include="Services\Replay\ReplayEvent.cs" />
+    <Compile Include="Services\Replay\ReplayInformation.cs" />
     <Compile Include="Services\Replay\ReplayLoader.cs" />
     <Compile Include="Services\Replay\ReplayPlayer.cs" />
     <Compile Include="Services\Replay\ReplayRecorder.cs" />
@@ -138,6 +141,8 @@
     <Compile Include="ViewModels\OverlayTextViewModel.cs" />
     <Compile Include="ViewModels\OverlayViewModel.cs" />
     <Compile Include="ViewModels\QueueTimerViewModel.cs" />
+    <Compile Include="ViewModels\ReplayPlayerViewModel.cs" />
+    <Compile Include="ViewModels\ReplaySelectionViewModel.cs" />
     <Compile Include="ViewModels\RunningGamesViewModel.cs" />
     <Compile Include="ViewModels\StartGameCountdownViewModel.cs" />
     <Compile Include="ViewModels\WaitingForOpponentViewModel.cs" />
@@ -182,6 +187,12 @@
     </Compile>
     <Compile Include="ViewModels\QueueViewModel.cs" />
     <Compile Include="Framework\RelayCommand.cs" />
+    <Compile Include="Views\ReplayPlayerView.xaml.cs">
+      <DependentUpon>ReplayPlayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReplaySelectionView.xaml.cs">
+      <DependentUpon>ReplaySelectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RunningGamesView.xaml.cs">
       <DependentUpon>RunningGamesView.xaml</DependentUpon>
     </Compile>
@@ -265,6 +276,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReplayPlayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReplaySelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

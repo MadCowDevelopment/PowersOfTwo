@@ -19,49 +19,25 @@ namespace WebService
         private const int Columns = 4;
         private const int Rows = 4;
 
-        private static readonly Dictionary<int, List<Player>> PlayerQueues =
+        private static readonly Dictionary<int, List<Player>> PlayerQueues = 
             new Dictionary<int, List<Player>>();
-        private static readonly Dictionary<string, ReadyGameInformation> ReadyGames =
+        private static readonly Dictionary<string, ReadyGameInformation> ReadyGames = 
             new Dictionary<string, ReadyGameInformation>();
-
-        private static readonly ObservableCollection<GameInformation> RunningGames =
+        private static readonly ObservableCollection<GameInformation> RunningGames = 
             new ObservableCollection<GameInformation>();
 
         private bool _isSubscribedForRunningGameChanges;
 
         #endregion Fields
 
+        #region Constructors
+
         public GameHub()
         {
             RunningGames.CollectionChanged += RunningGames_CollectionChanged;
         }
 
-        private void RunningGames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (!_isSubscribedForRunningGameChanges) return;
-
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (var gameInfo in e.NewItems.OfType<GameInformation>())
-                {
-                    Clients.Client(Context.ConnectionId)
-                        .RunningGameChanged(
-                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
-                                RunningGameChange.Added));
-
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var gameInfo in e.OldItems.OfType<GameInformation>())
-                {
-                    Clients.Client(Context.ConnectionId)
-                        .RunningGameChanged(
-                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
-                                RunningGameChange.Removed));
-                }
-            }
-        }
+        #endregion Constructors
 
         #region Enumerations
 
@@ -105,39 +81,6 @@ namespace WebService
                     player1.GameLogic.Cells));
         }
 
-        public void LeaveQueue()
-        {
-            lock (PlayerQueues)
-            {
-                var queueWithPlayer =
-                    PlayerQueues.Values.FirstOrDefault(
-                        queues => queues.Any(p => p.ConnectionId == Context.ConnectionId));
-
-                if (queueWithPlayer == null) return;
-
-                var player = queueWithPlayer.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
-                queueWithPlayer.Remove(player);
-            }
-        }
-
-        public void SubscribeRunningGames()
-        {
-            _isSubscribedForRunningGameChanges = true;
-        }
-
-        public void UnsubscribeRunningGames()
-        {
-            _isSubscribedForRunningGameChanges = false;
-        }
-
-        public Task<List<RunningGameDto>> GetRunningGames()
-        {
-            var getGamesTask = new TaskFactory<List<RunningGameDto>>().StartNew(() =>
-                RunningGames.Select(ConvertGameInfoToRunningGameDto).ToList());
-
-            return getGamesTask;
-        }
-
         public Task<RunningGameDto> GetRunningGame(string groupName)
         {
             var getGameTask = new TaskFactory<RunningGameDto>().StartNew(() =>
@@ -151,11 +94,12 @@ namespace WebService
             return getGameTask;
         }
 
-        private RunningGameDto ConvertGameInfoToRunningGameDto(GameInformation p)
+        public Task<List<RunningGameDto>> GetRunningGames()
         {
-            return new RunningGameDto(p.GroupName,
-                new PlayerDto(p.Player1.Name, p.Player1.GameLogic.Cells, (int)p.Player1.RemainingPoints),
-                new PlayerDto(p.Player2.Name, p.Player2.GameLogic.Cells, (int)p.Player2.RemainingPoints));
+            var getGamesTask = new TaskFactory<List<RunningGameDto>>().StartNew(() =>
+                RunningGames.Select(ConvertGameInfoToRunningGameDto).ToList());
+
+            return getGamesTask;
         }
 
         public void JoinAsSpectator(string groupName, string name)
@@ -167,15 +111,19 @@ namespace WebService
             game.Spectators.Add(new Spectator(Context.ConnectionId, name));
         }
 
-        public void StopSpectating(string groupName)
+        public void LeaveQueue()
         {
-            GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
-            if (game == null) return;
-            if (game.IsFinished) return;
+            lock (PlayerQueues)
+            {
+                var queueWithPlayer =
+                    PlayerQueues.Values.FirstOrDefault(
+                        queues => queues.Any(p => p.ConnectionId == Context.ConnectionId));
 
-            var spectator = game.Spectators.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
-            if (spectator == null) return;
-            game.Spectators.Remove(spectator);
+                if (queueWithPlayer == null) return;
+
+                var player = queueWithPlayer.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
+                queueWithPlayer.Remove(player);
+            }
         }
 
         public void MoveDown(string groupName)
@@ -272,9 +220,37 @@ namespace WebService
             Clients.Client(otherPlayer.ConnectionId).OpponentLeft();
         }
 
+        public void StopSpectating(string groupName)
+        {
+            GameInformation game = RunningGames.FirstOrDefault(p => p.GroupName == groupName);
+            if (game == null) return;
+            if (game.IsFinished) return;
+
+            var spectator = game.Spectators.FirstOrDefault(p => p.ConnectionId == Context.ConnectionId);
+            if (spectator == null) return;
+            game.Spectators.Remove(spectator);
+        }
+
+        public void SubscribeRunningGames()
+        {
+            _isSubscribedForRunningGameChanges = true;
+        }
+
+        public void UnsubscribeRunningGames()
+        {
+            _isSubscribedForRunningGameChanges = false;
+        }
+
         #endregion Public Methods
 
         #region Private Methods
+
+        private RunningGameDto ConvertGameInfoToRunningGameDto(GameInformation p)
+        {
+            return new RunningGameDto(p.GroupName,
+                new PlayerDto(p.Player1.Name, p.Player1.GameLogic.Cells, (int)p.Player1.RemainingPoints),
+                new PlayerDto(p.Player2.Name, p.Player2.GameLogic.Cells, (int)p.Player2.RemainingPoints));
+        }
 
         private void DisposeReadyGame(ReadyGameInformation readyGameInfo)
         {
@@ -354,6 +330,33 @@ namespace WebService
                 DisposeReadyGame(readyGameInfo);
                 Clients.Client(args.GameInformation.Player1.ConnectionId).GameCanceled();
                 Clients.Client(args.GameInformation.Player2.ConnectionId).GameCanceled();
+            }
+        }
+
+        private void RunningGames_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!_isSubscribedForRunningGameChanges) return;
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var gameInfo in e.NewItems.OfType<GameInformation>())
+                {
+                    Clients.Client(Context.ConnectionId)
+                        .RunningGameChanged(
+                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
+                                RunningGameChange.Added));
+
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var gameInfo in e.OldItems.OfType<GameInformation>())
+                {
+                    Clients.Client(Context.ConnectionId)
+                        .RunningGameChanged(
+                            new RunningGameChangedDto(ConvertGameInfoToRunningGameDto(gameInfo),
+                                RunningGameChange.Removed));
+                }
             }
         }
 

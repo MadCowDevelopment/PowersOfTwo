@@ -6,7 +6,11 @@ namespace PowersOfTwo.ViewModels
 {
     public class OverlayViewModel : ObservableObject
     {
+        #region Fields
+
         private Action<bool?> _callback;
+
+        #endregion Fields
 
         #region Constructors
 

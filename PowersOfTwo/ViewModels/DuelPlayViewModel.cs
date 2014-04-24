@@ -13,7 +13,6 @@ namespace PowersOfTwo.ViewModels
 
         private readonly GameProxy _gameProxy;
         private readonly MainWindowViewModel _mainWindowViewModel;
-
         private readonly ReplayRecorder _replayRecorder;
 
         #endregion Fields

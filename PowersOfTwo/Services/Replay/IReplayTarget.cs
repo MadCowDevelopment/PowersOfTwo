@@ -4,7 +4,18 @@ namespace PowersOfTwo.Services.Replay
 {
     public interface IReplayTarget
     {
-        PlayerViewModel Player1 { get; set; }
-        PlayerViewModel Player2 { get; set; }
+        #region Properties
+
+        PlayerViewModel Player1
+        {
+            get; set;
+        }
+
+        PlayerViewModel Player2
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

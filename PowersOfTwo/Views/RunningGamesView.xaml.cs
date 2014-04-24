@@ -20,9 +20,13 @@ namespace PowersOfTwo.Views
     /// </summary>
     public partial class RunningGamesView : UserControl
     {
+        #region Constructors
+
         public RunningGamesView()
         {
             InitializeComponent();
         }
+
+        #endregion Constructors
     }
 }

@@ -1,20 +1,39 @@
 ﻿namespace PowersOfTwo.Dto
 {
+    #region Enumerations
+
+    public enum RunningGameChange
+    {
+        Added,
+        Removed
+    }
+
+    #endregion Enumerations
+
     public class RunningGameChangedDto
     {
-        public RunningGameDto RunningGame { get; private set; }
-        public RunningGameChange Change { get; private set; }
+        #region Constructors
 
         public RunningGameChangedDto(RunningGameDto runningGame, RunningGameChange change)
         {
             RunningGame = runningGame;
             Change = change;
         }
-    }
 
-    public enum RunningGameChange
-    {
-        Added,
-        Removed
+        #endregion Constructors
+
+        #region Public Properties
+
+        public RunningGameChange Change
+        {
+            get; private set;
+        }
+
+        public RunningGameDto RunningGame
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
     }
 }
