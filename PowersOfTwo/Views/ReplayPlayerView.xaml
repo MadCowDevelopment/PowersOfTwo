@@ -9,21 +9,25 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <Grid Grid.Row="0">
+    <Grid Grid.Row="1" Visibility="{Binding Player2, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=true}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <ContentControl Grid.Column="0" Content="{Binding Player1}" Margin="10"/>
+    </Grid>
+    <Grid Grid.Row="1" Visibility="{Binding Player2, Converter={StaticResource NullToVisibilityConverter}}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
-      <ContentControl Grid.Column="1" Content="{Binding Player1}" Margin="10"/>
-      <ContentControl Grid.Column="2" Content="{Binding Player2}" Margin="10" 
-                      Visibility="{Binding Player2, Converter={StaticResource NullToVisibilityConverter}}"/>
+      <ContentControl Grid.Column="0" Content="{Binding Player1}" Margin="10"/>
+      <ContentControl Grid.Column="1" Content="{Binding Player2}" Margin="10"/>
     </Grid>
     
-    <Grid Grid.Row="1">
+    <Grid Grid.Row="2">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>

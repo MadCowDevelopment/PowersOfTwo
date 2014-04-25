@@ -49,7 +49,7 @@ namespace PowersOfTwo.Services.Replay
         public override void Replay(IReplayTarget replayTarget)
         {
             replayTarget.Player1 = new PlayerViewModel(Player1) { Points = Points };
-            if (string.IsNullOrEmpty(Player1)) replayTarget.Player2 = new PlayerViewModel(Player2) { Points = Points };
+            if (!string.IsNullOrEmpty(Player2)) replayTarget.Player2 = new PlayerViewModel(Player2) { Points = Points };
         }
 
         #endregion Public Methods

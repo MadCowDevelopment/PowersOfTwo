@@ -3,160 +3,162 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Core="clr-namespace:PowersOfTwo.Core;assembly=PowersOfTwo.Core" mc:Ignorable="d" 
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-  <Grid>
-    <Border CornerRadius="5" Background="#BBADA0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-      <Border.Effect>
-        <DropShadowEffect BlurRadius="5"/>
-      </Border.Effect>
-    </Border>
-    <ItemsControl Margin="10" ItemsSource="{Binding}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate>
-          <Grid Margin="5">
-            <Border CornerRadius="2">
-              <Border.Style>
-                <Style TargetType="Border">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding}" Value="{x:Null}">
-                      <Setter Property="Background" Value="#CCC0B3"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="2">
-                      <Setter Property="Background" Value="#EEE4DA"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="4">
-                      <Setter Property="Background" Value="#EDE0C8"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="8">
-                      <Setter Property="Background" Value="#F2B179"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="16">
-                      <Setter Property="Background" Value="#F59563"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="32">
-                      <Setter Property="Background" Value="#F67C5F"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="64">
-                      <Setter Property="Background" Value="#F65E3B"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="128">
-                      <Setter Property="Background" Value="#EDCF72"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDCF72" BlurRadius="12" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="256">
-                      <Setter Property="Background" Value="#EDCC61"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDCC61" BlurRadius="16" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="512">
-                      <Setter Property="Background" Value="#EDC850"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDC850" BlurRadius="20" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="1024">
-                      <Setter Property="Background" Value="#EDC53F"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDC53F" BlurRadius="22" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="2048">
-                      <Setter Property="Background" Value="#EDC22E"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDC22E" BlurRadius="24" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="4096">
-                      <Setter Property="Background" Value="#EDC11A"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDC11A" BlurRadius="26" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding}" Value="8192">
-                      <Setter Property="Background" Value="#EDC000"/>
-                      <Setter Property="Effect">
-                        <Setter.Value>
-                          <DropShadowEffect Color="#EDC000" BlurRadius="32" ShadowDepth="0"/>
-                        </Setter.Value>
-                      </Setter>
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </Border.Style>
-            </Border>
-            <Viewbox Stretch="Fill">
-              <TextBlock Text="{Binding}" FontWeight="Bold" Margin="5">
-                <TextBlock.Style>
-                  <Style TargetType="TextBlock">
+  <Viewbox Stretch="Uniform" StretchDirection="Both">
+    <Grid MinWidth="220" MinHeight="220">
+      <Border CornerRadius="5" Background="#BBADA0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border.Effect>
+          <DropShadowEffect BlurRadius="5"/>
+        </Border.Effect>
+      </Border>
+      <ItemsControl Margin="10" ItemsSource="{Binding}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Grid Margin="5">
+              <Border CornerRadius="2">
+                <Border.Style>
+                  <Style TargetType="Border">
                     <Style.Triggers>
+                      <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                        <Setter Property="Background" Value="#CCC0B3"/>
+                      </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="2">
-                        <Setter Property="Foreground" Value="#776E65"/>
+                        <Setter Property="Background" Value="#EEE4DA"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="4">
-                        <Setter Property="Foreground" Value="#776E65"/>
+                        <Setter Property="Background" Value="#EDE0C8"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="8">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#F2B179"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="16">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#F59563"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="32">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#F67C5F"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="64">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#F65E3B"/>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="128">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#EDCF72"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDCF72" BlurRadius="12" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="256">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#EDCC61"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDCC61" BlurRadius="16" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="512">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#EDC850"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDC850" BlurRadius="20" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="1024">
-                        <Setter Property="Foreground" Value="#F9F6F2"/>
+                        <Setter Property="Background" Value="#EDC53F"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDC53F" BlurRadius="22" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="2048">
-                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                        <Setter Property="Background" Value="#EDC22E"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDC22E" BlurRadius="24" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="4096">
-                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                        <Setter Property="Background" Value="#EDC11A"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDC11A" BlurRadius="26" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                       <DataTrigger Binding="{Binding}" Value="8192">
-                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                        <Setter Property="Background" Value="#EDC000"/>
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#EDC000" BlurRadius="32" ShadowDepth="0"/>
+                          </Setter.Value>
+                        </Setter>
                       </DataTrigger>
                     </Style.Triggers>
                   </Style>
-                </TextBlock.Style>
-              </TextBlock>
-            </Viewbox>
-          </Grid>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-      <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-          <UniformGrid Columns="4" Rows="4"/>
-        </ItemsPanelTemplate>
-      </ItemsControl.ItemsPanel>
-    </ItemsControl>
-  </Grid>
+                </Border.Style>
+              </Border>
+              <Viewbox Stretch="Fill">
+                <TextBlock Text="{Binding}" FontWeight="Bold" Margin="5">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding}" Value="2">
+                          <Setter Property="Foreground" Value="#776E65"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="4">
+                          <Setter Property="Foreground" Value="#776E65"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="8">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="16">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="32">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="64">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="128">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="256">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="512">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="1024">
+                          <Setter Property="Foreground" Value="#F9F6F2"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="2048">
+                          <Setter Property="Foreground" Value="#FFFFFF"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="4096">
+                          <Setter Property="Foreground" Value="#FFFFFF"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding}" Value="8192">
+                          <Setter Property="Foreground" Value="#FFFFFF"/>
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </Viewbox>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <UniformGrid Columns="4" Rows="4"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+    </Grid>
+  </Viewbox>
 </UserControl>
