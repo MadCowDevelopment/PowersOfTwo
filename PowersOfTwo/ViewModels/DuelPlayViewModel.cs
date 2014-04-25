@@ -52,7 +52,9 @@ namespace PowersOfTwo.ViewModels
 
         public void Start()
         {
-            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel), allowAccept: false);
+            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel),
+                b => _replayRecorder.Record(new GameStartedEvent(Player.Name, Opponent.Name, Player.Points)),
+                allowAccept: false);
         }
 
         #endregion Public Methods
@@ -105,8 +107,6 @@ namespace PowersOfTwo.ViewModels
             Opponent = new PlayerViewModel(startGameInformation.OpponentName);
             Opponent.Cells = startGameInformation.OpponentCells;
             Opponent.Points = startGameInformation.StartPoints;
-
-            _replayRecorder.Record(new GameStartedEvent(Player.Name, Opponent.Name, startGameInformation.StartPoints));
         }
 
         private void OpponentCellsChanged(List<int?> cells)

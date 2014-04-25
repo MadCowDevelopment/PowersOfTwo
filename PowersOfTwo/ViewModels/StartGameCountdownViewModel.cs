@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System.Globalization;
+using System.Timers;
 
 using PowersOfTwo.Framework;
 
@@ -11,6 +12,8 @@ namespace PowersOfTwo.ViewModels
         private readonly OverlayViewModel _overlayViewModel;
         private readonly Timer _timer;
 
+        private int _remainingTime;
+
         #endregion Fields
 
         #region Constructors
@@ -18,7 +21,9 @@ namespace PowersOfTwo.ViewModels
         public StartGameCountdownViewModel(OverlayViewModel overlayViewModel)
         {
             _overlayViewModel = overlayViewModel;
-            RemainingTime = 3;
+            _remainingTime = 3;
+            RemainingTime = _remainingTime.ToString(CultureInfo.InvariantCulture);
+
             _timer = new Timer(1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
@@ -28,7 +33,7 @@ namespace PowersOfTwo.ViewModels
 
         #region Public Properties
 
-        public int RemainingTime
+        public string RemainingTime
         {
             get; private set;
         }
@@ -39,11 +44,19 @@ namespace PowersOfTwo.ViewModels
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            RemainingTime--;
-            if (RemainingTime == 0)
+            _remainingTime--;
+            if (_remainingTime == 0)
+            {
+                RemainingTime = "Go!";
+            }
+            else if (_remainingTime == -1)
             {
                 _timer.Stop();
                 _overlayViewModel.Hide(null);
+            }
+            else
+            {
+                RemainingTime = _remainingTime.ToString(CultureInfo.InvariantCulture);
             }
         }
 

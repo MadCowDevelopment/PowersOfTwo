@@ -202,8 +202,8 @@
     </Compile>
     <Compile Include="ViewModels\SoloPlayViewModel.cs" />
     <Compile Include="Framework\ObservableObject.cs" />
-    <Compile Include="Views\StartGameCountdownViewModel.xaml.cs">
-      <DependentUpon>StartGameCountdownViewModel.xaml</DependentUpon>
+    <Compile Include="Views\StartGameCountdownView.xaml.cs">
+      <DependentUpon>StartGameCountdownView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WaitingForOpponentView.xaml.cs">
       <DependentUpon>WaitingForOpponentView.xaml</DependentUpon>
@@ -300,7 +300,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\StartGameCountdownViewModel.xaml">
+    <Page Include="Views\StartGameCountdownView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -380,12 +380,12 @@
   <ItemGroup>
     <PublishFile Include="PropertyChanged">
       <Visible>False</Visible>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
