@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace PowersOfTwo.Services.Replay
 {
@@ -17,7 +19,8 @@ namespace PowersOfTwo.Services.Replay
 
         public List<ReplayEvent> Events
         {
-            get; private set;
+            get;
+            private set;
         }
 
         #endregion Public Properties
@@ -30,5 +33,16 @@ namespace PowersOfTwo.Services.Replay
         }
 
         #endregion Public Methods
+
+        public string GetFilename()
+        {
+            var players = IsSinglePlayer ? "Solo" : string.Format("{0} vs {1}", Player1, Player2);
+            var time = Events.First().RecordTime.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
+            return string.Format("{0}_{1}.potr", players, time);
+        }
+
+        private string Player1 { get { return (Events.First() as GameStartedEvent).Player1; } }
+        private string Player2 { get { return (Events.First() as GameStartedEvent).Player2; } }
+        private bool IsSinglePlayer { get { return (Events.First() as GameStartedEvent).Player2 == null; } }
     }
 }

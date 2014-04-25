@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using Ionic.Zip;
@@ -35,9 +33,7 @@ namespace PowersOfTwo.Services.Replay
             if (_replayData == null || _replayData.Events.Count < 2)
                 throw new InvalidOperationException("No events recorded.");
 
-            var filename = Path.Combine(Folders.Replays,
-                _replayData.Events.First().RecordTime.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture) +
-                ".potr");
+            var filename = Path.Combine(Folders.Replays, _replayData.GetFilename());
 
             var serializedString = JsonConvert.SerializeObject(
                 _replayData,

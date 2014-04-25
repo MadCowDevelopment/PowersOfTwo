@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using PowersOfTwo.Core;
 using PowersOfTwo.Dto;
 using PowersOfTwo.Services;
 using PowersOfTwo.Services.Replay;
@@ -92,6 +91,7 @@ namespace PowersOfTwo.ViewModels
 
         private void GameOver(bool win)
         {
+            _replayRecorder.Save();
             var text = win ? "You win!" : "You lose!";
             OverlayViewModel.Show(new OverlayTextViewModel(text, 72), p => _mainWindowViewModel.ShowMainMenu());
         }

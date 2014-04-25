@@ -64,6 +64,7 @@ namespace PowersOfTwo.ViewModels
             var replayData = await new ReplayLoader().Load(replayInformation.Fullpath);
             _overlayViewModel.Hide(null);
             Player = new ReplayPlayer(replayData);
+            Player.Initialize(this);
         }
 
         public ReplayPlayer Player { get; private set; }

@@ -54,6 +54,11 @@ namespace PowersOfTwo.Services.Replay
 
         #region Public Methods
 
+        public void Initialize(IReplayTarget replayTarget)
+        {
+            _replayData.Events[0].Replay(replayTarget);
+        }
+
         public void Pause()
         {
             _pauseResetEvent.Reset();
@@ -74,7 +79,7 @@ namespace PowersOfTwo.Services.Replay
             var task = new Task(
                 () =>
                 {
-                    for (CurrentFrame = 0; CurrentFrame < TotalFrames; CurrentFrame++)
+                    for (CurrentFrame = 1; CurrentFrame < TotalFrames; CurrentFrame++)
                     {
                         _pauseResetEvent.WaitOne();
                         if (cancellationToken.IsCancellationRequested) break;
