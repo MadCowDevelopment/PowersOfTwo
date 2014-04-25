@@ -7,6 +7,8 @@ namespace PowersOfTwo.Converters
 {
     public class NullToVisibilityConverter : IValueConverter
     {
+        #region Public Methods
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (parameter == null) return value != null ? Visibility.Visible : Visibility.Collapsed;
@@ -21,5 +23,7 @@ namespace PowersOfTwo.Converters
         {
             return null;
         }
+
+        #endregion Public Methods
     }
 }

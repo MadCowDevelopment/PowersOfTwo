@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using PowersOfTwo.Framework;
 
 namespace PowersOfTwo.Services.Replay
@@ -10,21 +11,22 @@ namespace PowersOfTwo.Services.Replay
     {
         #region Fields
 
-        private CancellationTokenSource _cancellationTokenSource;
         private readonly ManualResetEvent _pauseResetEvent = new ManualResetEvent(true);
         private readonly ReplayData _replayData;
+        private readonly IReplayTarget _replayTarget;
 
-        private double _speedFactor = 1;
-
+        private CancellationTokenSource _cancellationTokenSource;
         private bool _playing;
+        private double _speedFactor = 1;
 
         #endregion Fields
 
         #region Constructors
 
-        public ReplayPlayer(ReplayData replayData)
+        public ReplayPlayer(ReplayData replayData, IReplayTarget replayTarget)
         {
             _replayData = replayData;
+            _replayTarget = replayTarget;
 
             InitializeTotalDuration();
         }
@@ -54,9 +56,22 @@ namespace PowersOfTwo.Services.Replay
 
         #region Public Methods
 
-        public void Initialize(IReplayTarget replayTarget)
+        public void DecreaseSpeed()
         {
-            _replayData.Events[0].Replay(replayTarget);
+            if (_speedFactor <= 0.0625) return;
+            _speedFactor /= 2;
+        }
+
+        public void IncreaseSpeed()
+        {
+            if (_speedFactor >= 16) return;
+            _speedFactor *= 2;
+        }
+
+        public void Initialize()
+        {
+            CurrentFrame = 0;
+            ReplayCurrentFrame();
         }
 
         public void Pause()
@@ -64,7 +79,7 @@ namespace PowersOfTwo.Services.Replay
             _pauseResetEvent.Reset();
         }
 
-        public void Play(IReplayTarget replayTarget)
+        public void Play()
         {
             if (_playing)
             {
@@ -79,12 +94,12 @@ namespace PowersOfTwo.Services.Replay
             var task = new Task(
                 () =>
                 {
-                    for (CurrentFrame = 1; CurrentFrame < TotalFrames; CurrentFrame++)
+                    for (CurrentFrame = CurrentFrame; CurrentFrame < TotalFrames; CurrentFrame++)
                     {
                         _pauseResetEvent.WaitOne();
                         if (cancellationToken.IsCancellationRequested) break;
 
-                        _replayData.Events[CurrentFrame].Replay(replayTarget);
+                        ReplayCurrentFrame();
 
                         if (CurrentFrame + 1 < _replayData.Events.Count)
                         {
@@ -104,6 +119,12 @@ namespace PowersOfTwo.Services.Replay
             task.Start();
         }
 
+        public void Seek(int frame)
+        {
+            CurrentFrame = frame;
+            ResetStateToFrame();
+        }
+
         public void Stop()
         {
             _pauseResetEvent.Set();
@@ -120,19 +141,87 @@ namespace PowersOfTwo.Services.Replay
             else TotalDuration = _replayData.Events.Last().RecordTime - _replayData.Events.First().RecordTime;
         }
 
+        private void ReplayCurrentFrame()
+        {
+            lock (_replayData.Events)
+            {
+                _replayData.Events[CurrentFrame].Replay(_replayTarget);
+            }
+        }
+
+        private void ResetStateToFrame()
+        {
+            lock (_replayData.Events)
+            {
+                int index = CurrentFrame;
+
+                if (_replayData.IsSinglePlayer)
+                {
+                    var cellEventFound = false;
+                    var pointEventFound = false;
+                    do
+                    {
+                        var currentEvent = _replayData.Events[index];
+                        if (currentEvent is PointsChangedEvent && !pointEventFound)
+                        {
+                            (currentEvent as PointsChangedEvent).Replay(_replayTarget);
+                            pointEventFound = true;
+                        }
+                        else if (currentEvent is CellsChangedEvent && !cellEventFound)
+                        {
+                            (currentEvent as CellsChangedEvent).Replay(_replayTarget);
+                            cellEventFound = true;
+                        }
+
+                        index--;
+                    } while (index > 0 && (!cellEventFound || !pointEventFound));
+                }
+                else
+                {
+                    var cellEventFound1 = false;
+                    var pointEventFound1 = false;
+                    var cellEventFound2 = false;
+                    var pointEventFound2 = false;
+                    do
+                    {
+                        var currentEvent = _replayData.Events[index];
+
+                        if (currentEvent is PointsChangedEvent)
+                        {
+                            var pointsChangedEvent = currentEvent as PointsChangedEvent;
+                            if (pointsChangedEvent.PlayerNumber == 1 && !pointEventFound1)
+                            {
+                                pointsChangedEvent.Replay(_replayTarget);
+                                pointEventFound1 = true;
+                            }
+                            else if (pointsChangedEvent.PlayerNumber == 2 && !pointEventFound2)
+                            {
+                                pointsChangedEvent.Replay(_replayTarget);
+                                pointEventFound2 = true;
+                            }
+                        }
+                        else if (currentEvent is CellsChangedEvent)
+                        {
+                            var cellsChangedEvent = currentEvent as CellsChangedEvent;
+                            if (cellsChangedEvent.PlayerNumber == 1 && !cellEventFound1)
+                            {
+                                cellsChangedEvent.Replay(_replayTarget);
+                                cellEventFound1 = true;
+                            }
+                            else if (cellsChangedEvent.PlayerNumber == 2 && !cellEventFound2)
+                            {
+                                cellsChangedEvent.Replay(_replayTarget);
+                                cellEventFound2 = true;
+                            }
+                        }
+
+                        index--;
+                    } while (index > 0 &&
+                             (!cellEventFound1 || !pointEventFound1 || !cellEventFound2 || !pointEventFound2));
+                }
+            }
+        }
+
         #endregion Private Methods
-
-
-        public void IncreaseSpeed()
-        {
-            if (_speedFactor >= 16) return;
-            _speedFactor *= 2;
-        }
-
-        public void DecreaseSpeed()
-        {
-            if (_speedFactor <= 0.0625) return;
-            _speedFactor /= 2;
-        }
     }
 }

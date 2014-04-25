@@ -1,28 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using PowersOfTwo.ViewModels;
 
 namespace PowersOfTwo.Views
 {
     /// <summary>
     /// Interaction logic for ReplayPlayerView.xaml
     /// </summary>
-    public partial class ReplayPlayerView : UserControl
+    public partial class ReplayPlayerView
     {
+        #region Constructors
+
         public ReplayPlayerView()
         {
             InitializeComponent();
+        }
+
+        #endregion Constructors
+
+        private void UIElement_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var progressBar = sender as ProgressBar;
+            if (progressBar == null) return;
+            var position = e.GetPosition(progressBar);
+            var player = (DataContext as ReplayPlayerViewModel).Player;
+            var frame = position.X / progressBar.ActualWidth * player.TotalFrames;
+            player.Seek((int) frame);
         }
     }
 }

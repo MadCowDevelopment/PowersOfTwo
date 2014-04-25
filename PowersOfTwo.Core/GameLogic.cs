@@ -35,13 +35,10 @@ namespace PowersOfTwo.Core
 
         #region Public Properties
 
-        private List<NumberCell> InternalCells
+        public List<int?> Cells
         {
-            get;
-            set;
+            get { return InternalCells.Select(p => p.Number).ToList(); }
         }
-
-        public List<int?> Cells { get { return InternalCells.Select(p => p.Number).ToList(); } }
 
         public int Columns
         {
@@ -56,6 +53,16 @@ namespace PowersOfTwo.Core
         }
 
         #endregion Public Properties
+
+        #region Private Properties
+
+        private List<NumberCell> InternalCells
+        {
+            get;
+            set;
+        }
+
+        #endregion Private Properties
 
         #region Public Methods
 
@@ -307,6 +314,10 @@ namespace PowersOfTwo.Core
             if (handler != null) handler();
         }
 
+        #endregion Private Methods
+
+        #region Nested Types
+
         private class NumberCell
         {
             #region Fields
@@ -332,6 +343,7 @@ namespace PowersOfTwo.Core
 
             #endregion Public Properties
         }
-        #endregion Private Methods
+
+        #endregion Nested Types
     }
 }

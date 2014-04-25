@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <Viewbox Stretch="Uniform" StretchDirection="Both">
-    <Grid MinWidth="220" MinHeight="220">
+    <Grid Width="220" Height="220">
       <Border CornerRadius="5" Background="#BBADA0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Border.Effect>
           <DropShadowEffect BlurRadius="5"/>

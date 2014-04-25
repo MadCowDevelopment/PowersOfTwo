@@ -25,14 +25,31 @@ namespace PowersOfTwo.Services.Replay
 
         #endregion Public Properties
 
+        #region Private Properties
+
+        public bool IsSinglePlayer
+        {
+            get { return (Events.First() as GameStartedEvent).Player2 == null; }
+        }
+
+        private string Player1
+        {
+            get { return (Events.First() as GameStartedEvent).Player1; }
+        }
+
+        private string Player2
+        {
+            get { return (Events.First() as GameStartedEvent).Player2; }
+        }
+
+        #endregion Private Properties
+
         #region Public Methods
 
         public void AddEvent(ReplayEvent replayEvent)
         {
             Events.Add(replayEvent);
         }
-
-        #endregion Public Methods
 
         public string GetFilename()
         {
@@ -41,8 +58,6 @@ namespace PowersOfTwo.Services.Replay
             return string.Format("{0}_{1}.potr", players, time);
         }
 
-        private string Player1 { get { return (Events.First() as GameStartedEvent).Player1; } }
-        private string Player2 { get { return (Events.First() as GameStartedEvent).Player2; } }
-        private bool IsSinglePlayer { get { return (Events.First() as GameStartedEvent).Player2 == null; } }
+        #endregion Public Methods
     }
 }

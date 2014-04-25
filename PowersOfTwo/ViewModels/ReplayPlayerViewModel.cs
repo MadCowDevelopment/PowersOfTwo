@@ -24,7 +24,7 @@ namespace PowersOfTwo.ViewModels
 
         private void Play()
         {
-            Player.Play(this);
+            Player.Play();
             IsPlaying = true;
         }
 
@@ -40,6 +40,7 @@ namespace PowersOfTwo.ViewModels
         {
             Player.Stop();
             IsPlaying = false;
+            Player.Initialize();
         }
 
         private void IncreaseSpeed()
@@ -63,8 +64,8 @@ namespace PowersOfTwo.ViewModels
             _overlayViewModel.Show(new OverlayTextViewModel("Loading replay...", 32));
             var replayData = await new ReplayLoader().Load(replayInformation.Fullpath);
             _overlayViewModel.Hide(null);
-            Player = new ReplayPlayer(replayData);
-            Player.Initialize(this);
+            Player = new ReplayPlayer(replayData, this);
+            Player.Initialize();
         }
 
         public ReplayPlayer Player { get; private set; }
