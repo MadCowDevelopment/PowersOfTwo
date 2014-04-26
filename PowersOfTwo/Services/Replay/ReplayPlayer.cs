@@ -17,7 +17,7 @@ namespace PowersOfTwo.Services.Replay
 
         private CancellationTokenSource _cancellationTokenSource;
         private bool _playing;
-        private double _speedFactor = 1;
+        private double SpeedFactor { get; set; }
 
         #endregion Fields
 
@@ -27,6 +27,8 @@ namespace PowersOfTwo.Services.Replay
         {
             _replayData = replayData;
             _replayTarget = replayTarget;
+
+            SpeedFactor = 1;
 
             InitializeTotalDuration();
         }
@@ -41,10 +43,29 @@ namespace PowersOfTwo.Services.Replay
             set;
         }
 
-        public TimeSpan TotalDuration
+        private TimeSpan TotalDuration
         {
-            get;
-            private set;
+            get; set;
+        }
+
+        public string TotalTime
+        {
+            get { return TotalDuration.ToString(@"mm\:ss"); }
+        }
+
+        public string CurrentTime
+        {
+            get
+            {
+                var currentFrame = CurrentFrame >= TotalFrames ? TotalFrames - 1 : CurrentFrame;
+                return (_replayData.Events[currentFrame].RecordTime -
+                        _replayData.Events.First().RecordTime).ToString(@"mm\:ss");
+            }
+        }
+
+        public string PlaybackSpeed
+        {
+            get { return SpeedFactor.ToString("#0.###x"); }
         }
 
         public int TotalFrames
@@ -58,14 +79,14 @@ namespace PowersOfTwo.Services.Replay
 
         public void DecreaseSpeed()
         {
-            if (_speedFactor <= 0.0625) return;
-            _speedFactor /= 2;
+            if (SpeedFactor <= 0.0625) return;
+            SpeedFactor /= 2;
         }
 
         public void IncreaseSpeed()
         {
-            if (_speedFactor >= 16) return;
-            _speedFactor *= 2;
+            if (SpeedFactor >= 16) return;
+            SpeedFactor *= 2;
         }
 
         public void Initialize()
@@ -105,7 +126,7 @@ namespace PowersOfTwo.Services.Replay
                         {
                             var currentEventTime = _replayData.Events[CurrentFrame].RecordTime;
                             var nextEventTime = _replayData.Events[CurrentFrame + 1].RecordTime;
-                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds / _speedFactor);
+                            var sleepTime = (int)((nextEventTime - currentEventTime).TotalMilliseconds / SpeedFactor);
                             Thread.Sleep(sleepTime);
                         }
                     }
