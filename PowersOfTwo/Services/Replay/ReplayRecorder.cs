@@ -12,7 +12,8 @@ namespace PowersOfTwo.Services.Replay
     {
         #region Fields
 
-        private readonly ReplayData _replayData = new ReplayData();
+        private readonly ReplayData _replayData;
+
         private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
               {
                   TypeNameHandling =
@@ -20,6 +21,11 @@ namespace PowersOfTwo.Services.Replay
               };
 
         #endregion Fields
+
+        public ReplayRecorder(ReplayData replayData)
+        {
+            _replayData = replayData;
+        }
 
         #region Public Methods
 

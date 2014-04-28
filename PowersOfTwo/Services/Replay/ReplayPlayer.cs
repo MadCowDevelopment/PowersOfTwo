@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using PowersOfTwo.Framework;
+using PowersOfTwo.ViewModels;
 
 namespace PowersOfTwo.Services.Replay
 {
@@ -33,6 +34,22 @@ namespace PowersOfTwo.Services.Replay
             InitializeTotalDuration();
         }
 
+        private void InitializeData()
+        {
+            _replayTarget.Player1 = new PlayerViewModel(_replayData.Player1Name)
+            {
+                Points = _replayData.Points,
+                Cells = _replayData.Player1Cells
+            };
+
+            if (!_replayData.IsSinglePlayer)
+                _replayTarget.Player2 = new PlayerViewModel(_replayData.Player2Name)
+                {
+                    Points = _replayData.Points,
+                    Cells = _replayData.Player2Cells
+                };
+        }
+
         #endregion Constructors
 
         #region Public Properties
@@ -45,7 +62,8 @@ namespace PowersOfTwo.Services.Replay
 
         private TimeSpan TotalDuration
         {
-            get; set;
+            get;
+            set;
         }
 
         public string TotalTime
@@ -92,7 +110,7 @@ namespace PowersOfTwo.Services.Replay
         public void Initialize()
         {
             CurrentFrame = 0;
-            ReplayCurrentFrame();
+            InitializeData();
         }
 
         public void Pause()
@@ -172,6 +190,12 @@ namespace PowersOfTwo.Services.Replay
 
         private void ResetStateToFrame()
         {
+            if (CurrentFrame == 0)
+            {
+                InitializeData();
+                return;
+            }
+
             lock (_replayData.Events)
             {
                 int index = CurrentFrame;

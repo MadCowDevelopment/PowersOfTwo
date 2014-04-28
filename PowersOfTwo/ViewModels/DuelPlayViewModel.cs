@@ -12,7 +12,7 @@ namespace PowersOfTwo.ViewModels
 
         private readonly GameProxy _gameProxy;
         private readonly MainWindowViewModel _mainWindowViewModel;
-        private readonly ReplayRecorder _replayRecorder;
+        private ReplayRecorder _replayRecorder;
 
         #endregion Fields
 
@@ -33,7 +33,7 @@ namespace PowersOfTwo.ViewModels
             _gameProxy.OpponentCellsChanged += OpponentCellsChanged;
             _gameProxy.OpponentPointsUpdated += OpponentPointsUpdated;
 
-            _replayRecorder = new ReplayRecorder();
+
         }
 
         #endregion Constructors
@@ -52,9 +52,7 @@ namespace PowersOfTwo.ViewModels
 
         public void Start()
         {
-            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel),
-                b => _replayRecorder.Record(new GameStartedEvent(Player.Name, Opponent.Name, Player.Points)),
-                allowAccept: false);
+            OverlayViewModel.Show(new StartGameCountdownViewModel(OverlayViewModel), allowAccept: false);
         }
 
         #endregion Public Methods
@@ -107,6 +105,10 @@ namespace PowersOfTwo.ViewModels
             Opponent = new PlayerViewModel(startGameInformation.OpponentName);
             Opponent.Cells = startGameInformation.OpponentCells;
             Opponent.Points = startGameInformation.StartPoints;
+
+            _replayRecorder =
+                new ReplayRecorder(new ReplayData(startGameInformation.StartPoints, Player.Name, Player.Cells,
+                    Opponent.Name, Opponent.Cells));
         }
 
         private void OpponentCellsChanged(List<int?> cells)

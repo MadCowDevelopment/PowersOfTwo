@@ -126,7 +126,6 @@
     <Compile Include="Services\Folders.cs" />
     <Compile Include="Services\HighscoreService.cs" />
     <Compile Include="Services\Replay\CellsChangedEvent.cs" />
-    <Compile Include="Services\Replay\GameStartedEvent.cs" />
     <Compile Include="Services\Replay\IReplayTarget.cs" />
     <Compile Include="Services\Replay\PointsChangedEvent.cs" />
     <Compile Include="Services\Replay\ReplayData.cs" />

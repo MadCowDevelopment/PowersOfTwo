@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 using PowersOfTwo.Core;
-using PowersOfTwo.Services;
 using PowersOfTwo.Services.Replay;
 
 namespace PowersOfTwo.ViewModels
@@ -31,11 +29,9 @@ namespace PowersOfTwo.ViewModels
 
             Player = new PlayerViewModel(Environment.MachineName);
             Player.Points = 0;
+            Player.Cells = _gameLogic.Cells.ToList();
 
-            _replayRecorder = new ReplayRecorder();
-            _replayRecorder.Record(new GameStartedEvent(Player.Name, Player.Points));
-
-            UpdateCells();
+            _replayRecorder = new ReplayRecorder(new ReplayData(Player.Points, Player.Name, Player.Cells));
         }
 
         #endregion Constructors
