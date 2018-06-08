@@ -146,7 +146,7 @@ namespace WebService
             Move(groupName, Direction.Up);
         }
 
-        public override Task OnDisconnected()
+        public override Task OnDisconnected(bool stopCalled)
         {
             LeaveQueue();
             UnsubscribeRunningGames();
@@ -173,7 +173,7 @@ namespace WebService
                 }
             }
 
-            return base.OnDisconnected();
+            return base.OnDisconnected(stopCalled);
         }
 
         public void Queue(QueueRequest queueRequest)
